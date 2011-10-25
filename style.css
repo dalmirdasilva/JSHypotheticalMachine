@@ -1,0 +1,103 @@
+/**
+ * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * 
+ * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+* {
+    font-family: verdana;
+    font-size: 13px;
+}
+
+button {
+    margin: 4px 0px;
+}
+
+textarea {
+    border: 1px solid #aaa;
+}
+
+#memory-grid-holder {
+    border: 1px solid #ccc;
+}
+
+#assembly-code-box, #compiled-code-box {
+    height: 400px;
+    overflow: auto;
+}
+
+#assembly-code-box {
+    width: 250px;
+}
+
+#compiled-code-box {
+    width: 150px;
+}
+
+.footer {
+    color: #aaa;
+}
+
+.header {
+    font-size: 20px;
+    padding: 4px;
+    margin-bottom: 4px;
+}
+
+.title {
+    background-color: #eee;
+    padding: 4px;
+}
+
+.sub-title {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 2px;
+}
+
+#memory-grid-holder {
+    width: 250px;
+    height: 400px;
+    overflow: auto;
+}
+
+.short-input {
+    width: 60px;
+}
+
+.medium-input {
+    width: 100px;
+}
+
+.memory-reg-address {
+    text-align: right;
+}
+
+.memory-reg-position {
+    text-align: right;
+    width: 12px;
+}
+
+#assembly-code-box-message, #compiled-code-box-message {
+    border: red;
+    background: #f90;
+}
+
+#assembly-code-box-message {
+    width: 250px;
+}
+
+#compiled-code-box-message {
+    width: 150px;
+}
