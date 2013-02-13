@@ -35,11 +35,11 @@ function UI(cpu) {
         $("#erase-memory-button").click(function() {
             ui.eraseMemory();
         });
-        $("#compile-button").click(function() {
-            ui.compile();
+        $("#assemble-button").click(function() {
+            ui.assemble();
         });
-        $("#load-compiled-button").click(function() {
-            ui.loadCompiled();
+        $("#load-assembled-button").click(function() {
+            ui.loadAssembled();
         });
         $("#clock-tick-button").click(function() {
             ui.clockTick();
@@ -191,7 +191,7 @@ function UI(cpu) {
         $("#memory-grid-holder").html(grid);
     }
     
-    this.compile = function() {
+    this.assemble = function() {
         var assemblyCode = $("#assembly-code-box").val();
         $("#assembly-code-box-message").text("");
         if(assemblyCode.length == 0) {
@@ -199,26 +199,26 @@ function UI(cpu) {
             return;
         }
         try {
-            var compiledCode = compiler.compile(assemblyCode);
+            var assembledCode = assembler.assemble(assemblyCode);
         } catch(e) {
             $("#assembly-code-box-message").text("Error: " + e);
             return;
         }
-        var compiledCodeString = "";
-        for(var i = 0; i < compiledCode.length; i++) {
-            compiledCodeString += converter.toString(compiledCode[i]) + "\n";
+        var assembledCodeString = "";
+        for(var i = 0; i < assembledCode.length; i++) {
+            assembledCodeString += converter.toString(assembledCode[i]) + "\n";
         }
-        $("#compiled-code-box").val(compiledCodeString);
+        $("#assembled-code-box").val(assembledCodeString);
     }
     
-    this.loadCompiled = function() {
-        var compiledCode = $("#compiled-code-box").val();
-        $("#compiled-code-box-message").text("");
-        if(compiledCode.length == 0) {
-            $("#compiled-code-box-message").text("Error.");
+    this.loadAssembled = function() {
+        var assembledCode = $("#assembled-code-box").val();
+        $("#assembled-code-box-message").text("");
+        if(assembledCode.length == 0) {
+            $("#assembled-code-box-message").text("Error.");
             return;
         }
-        var lines = compiledCode.split("\n");
+        var lines = assembledCode.split("\n");
         for(var i = 0; i < lines.length; i++) {
             cpu.getMemory().write(i, converter.toNumber(lines[i]));
         }

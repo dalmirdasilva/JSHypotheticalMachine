@@ -18,33 +18,33 @@
  */
  
 /**
- * Compiler class
+ * Assembler class
  */
- function Compiler() {
+ function Assembler() {
   
     this.commentIndicator = '#';
     this.symbolIndicator = ':';
-    this.dataDefinitionIndicator = '.data';
-    this.opcodes = [0, 16, 32, 48, 64, 80, 96, 128, 144, 160, 240, 241, 242];
-    this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "hlt", "call", "ret"];
-    this.compiledCode;
+    this.dataDefinitionIndicator = ".data";
+    this.opcodes = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0xb, 0xff];
+    this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "call", "ret", "hlt"];
+    this.assembledCode;
     this.dataDefinition;
     this.symbolTable;
     
-    this.compile = function(assemblyCode) {
+    this.assemble = function(assemblyCode) {
         assemblyCode = this.sanitizeAssembly(assemblyCode);
         this.init();
         var lines = assemblyCode.toLowerCase().split("\n");
         for(var i = 0; i < lines.length; i++) {
-            this.compileLine(lines[i]);
+            this.assembleLine(lines[i]);
         }
         this.addDataDefinition();
         this.addNopInstructionOnGaps();
         this.replaceSymbols();
-        return this.compiledCode;
+        return this.assembledCode;
     }
     
-    this.compileLine = function(line) {
+    this.assembleLine = function(line) {
         line = this.sanitizeAssembly(line);
         if(this.isTheLineEmpty(line) || this.isTheLineAComment(line)) {
             return;
@@ -54,16 +54,16 @@
             return;
         }
         if(this.isTheLineADataDefinition(line)) {
-            this.compileDataDefinition(line);
+            this.assembleDataDefinition(line);
             return;
         }
         var chunks = line.split(" ");
         for(var i = 0; i < chunks.length; i++) {
-            this.compileChunk(chunks[i]);
+            this.assembleChunk(chunks[i]);
         }
     }
     
-    this.compileChunk = function(chunk) {
+    this.assembleChunk = function(chunk) {
         chunk = this.sanitizeAssembly(chunk);
         if(chunk.length == 0) {
             return;
@@ -83,10 +83,10 @@
                 code = parseInt(chunk);
             }
         }
-        this.compiledCode.push(code);
+        this.assembledCode.push(code);
     }
     
-    this.compileDataDefinition = function(line) {
+    this.assembleDataDefinition = function(line) {
         var parts = line.split(" ");
         if(parts.length != 3 || isNaN(parts[1]) || isNaN(parts[2]) || parseInt(parts[1]) < 0) {
             throw "Wrong data definition: " + line;
@@ -96,36 +96,36 @@
     
     this.replaceSymbols = function() {
         var piece = null;
-        for(var i = 0; i < this.compiledCode.length; i++) {
-            piece = this.compiledCode[i];
+        for(var i = 0; i < this.assembledCode.length; i++) {
+            piece = this.assembledCode[i];
             if(this.isTheLineASymbol(piece)) {
                 var symbolAddress = this.symbolTable[piece];
                 if(symbolAddress == undefined) {
                     throw "Reference to undifined symbol: " + piece;
                     return;
                 }
-                this.compiledCode[i] = symbolAddress;
+                this.assembledCode[i] = symbolAddress;
             }
         }
     }
     
     this.addNopInstructionOnGaps = function() {
-        for(var i = 0; i < this.compiledCode.length; i++) {
-            if(this.compiledCode[i] == undefined) {
-               this.compiledCode[i] = 0; 
+        for(var i = 0; i < this.assembledCode.length; i++) {
+            if(this.assembledCode[i] == undefined) {
+               this.assembledCode[i] = 0; 
             }
         }
     }
     
     this.addSysmbolToTable = function(symbol) {
         symbol = symbol.split(" ")[0];
-        var currentAddress = this.compiledCode.length;
+        var currentAddress = this.assembledCode.length;
         this.symbolTable[symbol] = currentAddress;
     }
     
     this.addDataDefinition = function() {
         for(var i = 0; i < this.dataDefinition.length; i++) {
-            this.compiledCode[this.dataDefinition[i].address] = this.dataDefinition[i].data;
+            this.assembledCode[this.dataDefinition[i].address] = this.dataDefinition[i].data;
         }
     }
     
@@ -152,7 +152,7 @@
     }
     
     this.init = function() {
-        this.compiledCode = new Array();
+        this.assembledCode = new Array();
         this.symbolTable = {};
         this.dataDefinition = new Array();
     }

@@ -33,7 +33,7 @@ textarea {
     border: 1px solid #ccc;
 }
 
-#assembly-code-box, #compiled-code-box {
+#assembly-code-box, #assembled-code-box {
     height: 400px;
     overflow: auto;
 }
@@ -42,7 +42,7 @@ textarea {
     width: 250px;
 }
 
-#compiled-code-box {
+#assembled-code-box {
     width: 150px;
 }
 
@@ -89,7 +89,7 @@ textarea {
     width: 12px;
 }
 
-#assembly-code-box-message, #compiled-code-box-message {
+#assembly-code-box-message, #assembled-code-box-message {
     border: red;
     background: #f90;
 }
@@ -98,6 +98,6 @@ textarea {
     width: 250px;
 }
 
-#compiled-code-box-message {
+#assembled-code-box-message {
     width: 150px;
 }

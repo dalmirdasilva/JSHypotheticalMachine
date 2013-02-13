@@ -114,8 +114,8 @@ function Cpu() {
         return this.stack.pop();
     }
     
-    this.pushStack = function(data) {
-        return this.stack.pushh(data);
+    this.pushStack = function(value) {
+        return this.stack.push(value);
     }
     
     this.readMemory = function(address) {
@@ -123,9 +123,9 @@ function Cpu() {
         return this.memory.read(address);
     }
     
-    this.writeMemory = function(address, data) {
+    this.writeMemory = function(address, value) {
         this.memoryAccess.write++;
-        this.memory.write(address, data);
+        this.memory.write(address, value);
     }
     
     this.setClockFrequency = function(clockFrequency) {

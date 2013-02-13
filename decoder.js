@@ -21,46 +21,64 @@
  * Decoder class
  */
 function Decoder() {
+
+    /**
+     * Decode table
+     * 
+     * 0x00 nop
+     * 0x01 sta
+     * 0x02 lda
+     * 0x03 add
+     * 0x04 or
+     * 0x05 and
+     * 0x06 not
+     * 0x07 jmp
+     * 0x08 jn
+     * 0x09 jz
+     * 0x0a call
+     * 0x0b ret
+     * 0xff hlt
+     */
     this.decode = function(opcode) {
         switch(opcode) {
-            case 0:
+            case 0x00:
                 return new Nop();
                 break;
-            case 16:
+            case 0x01:
                 return new Sta();
                 break;
-            case 32:
+            case 0x02:
                 return new Lda();
                 break;
-            case 48:
+            case 0x03:
                 return new Add();
                 break;
-            case 64:
+            case 0x04:
                 return new Or();
                 break;
-            case 80:
+            case 0x05:
                 return new And();
                 break;
-            case 96:
+            case 0x06:
                 return new Not();
                 break;
-            case 128:
+            case 0x07:
                 return new Jmp();
                 break;
-            case 144:
+            case 0x08:
                 return new Jn();
                 break;
-            case 160:
+            case 0x09:
                 return new Jz();
                 break;
-            case 240:
-                return new Hlt();
-                break;
-            case 241:
+            case 0x0a:
                 return new Call();
                 break;
-            case 242:
+            case 0x0b:
                 return new Ret();
+                break;
+            case 0xff:
+                return new Hlt();
                 break;
             default:
                 return new Nop();
