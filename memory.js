@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -17,32 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-/**
+ /**
  * Memory class
  */
 function Memory(size) {
     
-    this.data = new Array(size);
-    
-    this.mask = 0xffffffff;
-    
-    this.size = function() {
-        return this.data.length;
-    }
+    this.size = size;
+    this.buf = new ArrayBuffer(size);
+    this.dv = new DataView(this.buf);
     
     this.read = function(address) {
-        return (this.data[address] & this.mask);
+        if (address < 0 || address >= this.size) {
+            throw "Memory access violation.";
+        }
+        return this.dv.getInt8(address);
     }
     
-    this.write = function(address, data) {
-        if(address < this.size()) {
-            this.data[address] = (data & this.mask);
+    this.write = function(address, value) {
+        if(address < this.getSize()) {
+            this.dv.setInt8(address, value);
         }
     }
     
     this.erase = function() {
-        for(var i = 0; i < this.size(); i++) {
-            this.data[i] = 0;
+        for(var i = 0; i < this.size; i++) {
+            this.dv.setInt8(i, 0);
         }
+    }
+    
+    this.getSize = function() {
+        return this.size;
     }
 }

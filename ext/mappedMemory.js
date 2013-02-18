@@ -18,48 +18,31 @@
  */
 
 /**
- * Stack class
+ * Stack MappedMemory
  */
-function Stack(size) {
+function MappedMemory(memory, from, size) {
     
+    this.memory = memory;
+    this.from = from;
     this.size = size;
-    this.tos = 0;
-    this.buf = new ArrayBuffer(size);
-    this.dv = new DataView(this.buf);
     
-    this.pop = function() {
-        if(this.tos == 0) {
-            throw "Stack underflow."
-        }
-        this.tos--;
-        var b = this.dv.getInt8(this.tos);
-        this.dv.setInt8(this.tos, 0);
-        return b;
-    }
-    
-    this.push = function(b) {
-        if(this.tos >= this.size) {
-            throw "Stack overflow."
-        }
-        this.dv.setInt8(this.tos++, b);
-    }
-    
-    this.erase = function() {
-        for(var i = this.size -1; i >= 0; i--) {
-            this.dv.setInt8(i, 0);
-        }
-        this.tos = 0;
-    }
-    
-    this.read = function(address) {
-        return this.dv.getInt8(address);
-    }
-    
-    this.getSize = function() {
+    this.size = function() {
         return this.size;
     }
     
-    this.getTop = function() {
-        return this.tos;
+    this.read = function(address) {
+        return memory.read(from + address);
+    }
+    
+    this.write = function(address, value) {
+        if(address < this.size()) {
+            memory.write(address + from, value);
+        }
+    }
+    
+    this.erase = function() {
+        for(var i = 0; i < this.size(); i++) {
+            this.write(from + i, 0);
+        }
     }
 } 

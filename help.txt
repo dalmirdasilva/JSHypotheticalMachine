@@ -32,8 +32,10 @@ Extended instructions
 
 Code	Instruction		Description
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-1011	CALL			Call a subroutine (STCK << PC, PC << adr)
-1100	RET			Returns from a subroutine (PC << STCK)
+1011	CALL			Call a subroutine (TOS << PC, PC << adr)
+1100	RET			Returns from a subroutine (PC << TOS)
+1011	PUSH			Push the AC into TOS (TOS << AC)
+1011	POP			Pop the TOS into AC (AC << TOS)
 
 
 Compilador:

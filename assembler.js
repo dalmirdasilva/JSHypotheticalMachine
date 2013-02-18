@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -17,6 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
+ function SeekableArray(size) {
+    
+    this.size = size;
+    this.pos = 0;
+    this.buf = new Array(size);
+    
+    this.push = function(b) {
+        if (this.pos >= size) {
+            throw "SeekableStack overflow.";
+        }
+        this.buf[this.pos++] = b;
+    }
+    
+    this.pop = function() {
+        if (this.pos <= 0) {
+            throw "SeekableStack underflow.";
+        }
+        return this.buf[--this.pos];
+    }
+    
+    this.seek = function(position) {
+        if (position > this.size) {
+            throw "SeekableStack array out of bounds.";
+        }
+        this.pos = position;
+    }
+
+    this.content = function() {
+        return this.buf;
+    }
+ }
+ 
 /**
  * Assembler class
  */
@@ -25,8 +57,9 @@
     this.commentIndicator = '#';
     this.symbolIndicator = ':';
     this.dataDefinitionIndicator = ".data";
-    this.opcodes = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0xb, 0xff];
-    this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "call", "ret", "hlt"];
+    this.positionDefinitionIndicator = "_at"
+    this.opcodes = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0xff];
+    this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "call", "ret", "push", "pop", "hlt"];
     this.assembledCode;
     this.dataDefinition;
     this.symbolTable;
@@ -41,7 +74,7 @@
         this.addDataDefinition();
         this.addNopInstructionOnGaps();
         this.replaceSymbols();
-        return this.assembledCode;
+        return this.assembledCode.content();
     }
     
     this.assembleLine = function(line) {
@@ -55,6 +88,10 @@
         }
         if(this.isTheLineADataDefinition(line)) {
             this.assembleDataDefinition(line);
+            return;
+        }
+        if(this.isTheLineAPositionDefinition(line)) {
+            this.assemblePositionDefinition(line);
             return;
         }
         var chunks = line.split(" ");
@@ -94,38 +131,47 @@
         this.dataDefinition.push({"address": parseInt(parts[1]), "data": parseInt(parts[2])});
     }
     
+    this.assemblePositionDefinition = function(line) {
+        var parts = line.split(" ");
+        if(parts.length != 2 || isNaN(parts[1])) {
+            throw "Wrong data definition: " + line;
+        }
+        var position = parseInt(parts[1]);
+        this.assembledCode.seek(position);
+    }
+    
     this.replaceSymbols = function() {
         var piece = null;
-        for(var i = 0; i < this.assembledCode.length; i++) {
-            piece = this.assembledCode[i];
+        for(var i = 0; i < this.assembledCode.content().length; i++) {
+            piece = this.assembledCode.content()[i];
             if(this.isTheLineASymbol(piece)) {
                 var symbolAddress = this.symbolTable[piece];
                 if(symbolAddress == undefined) {
                     throw "Reference to undifined symbol: " + piece;
                     return;
                 }
-                this.assembledCode[i] = symbolAddress;
+                this.assembledCode.content()[i] = symbolAddress;
             }
         }
     }
     
     this.addNopInstructionOnGaps = function() {
-        for(var i = 0; i < this.assembledCode.length; i++) {
-            if(this.assembledCode[i] == undefined) {
-               this.assembledCode[i] = 0; 
+        for(var i = 0; i < this.assembledCode.content().length; i++) {
+            if(this.assembledCode.content()[i] == undefined) {
+               this.assembledCode.content()[i] = 0; 
             }
         }
     }
     
     this.addSysmbolToTable = function(symbol) {
         symbol = symbol.split(" ")[0];
-        var currentAddress = this.assembledCode.length;
+        var currentAddress = this.assembledCode.content().length;
         this.symbolTable[symbol] = currentAddress;
     }
     
     this.addDataDefinition = function() {
         for(var i = 0; i < this.dataDefinition.length; i++) {
-            this.assembledCode[this.dataDefinition[i].address] = this.dataDefinition[i].data;
+            this.assembledCode.content()[this.dataDefinition[i].address] = this.dataDefinition[i].data;
         }
     }
     
@@ -137,6 +183,10 @@
     
     this.isTheLineADataDefinition = function(line) {
         return (line.slice(0, this.dataDefinitionIndicator.length) == this.dataDefinitionIndicator);
+    }
+    
+    this.isTheLineAPositionDefinition = function(line) {
+        return (line.slice(0, this.positionDefinitionIndicator.length) == this.positionDefinitionIndicator);
     }
     
     this.isTheLineAComment = function(line) {
@@ -152,7 +202,7 @@
     }
     
     this.init = function() {
-        this.assembledCode = new Array();
+        this.assembledCode = new SeekableArray(256);
         this.symbolTable = {};
         this.dataDefinition = new Array();
     }
