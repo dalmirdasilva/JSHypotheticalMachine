@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
- function SeekableArray(size) {
+ function SeekableArray() {
     
-    this.size = size;
     this.pos = 0;
-    this.buf = new Array(size);
+    this.buf = new Array();
     
     this.push = function(b) {
-        if (this.pos >= size) {
-            throw "SeekableStack overflow.";
+        if (this.pos >= this.buf.length) {
+            this.buf.push(b);
+        } else {
+            this.buf[this.pos] = b;
         }
-        this.buf[this.pos++] = b;
+        this.pos++;
     }
     
     this.pop = function() {
@@ -38,8 +39,11 @@
     }
     
     this.seek = function(position) {
-        if (position > this.size) {
-            throw "SeekableStack array out of bounds.";
+        if (position > this.buf.length) {
+            var count = position - this.buf.length;
+            while (count-- != 0) {
+                this.buf.push(0);
+            }
         }
         this.pos = position;
     }
@@ -202,7 +206,7 @@
     }
     
     this.init = function() {
-        this.assembledCode = new SeekableArray(256);
+        this.assembledCode = new SeekableArray();
         this.symbolTable = {};
         this.dataDefinition = new Array();
     }

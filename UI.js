@@ -230,7 +230,6 @@ function UI(cpu) {
         var assembledCode = null;
         try {
             assembledCode = assembler.assemble(assemblyCode);
-            alert(assembledCode);
         } catch(e) {
             $("#assembly-code-box-message").text("Error: " + e);
             throw e;
