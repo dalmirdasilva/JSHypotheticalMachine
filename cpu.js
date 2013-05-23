@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -27,6 +27,7 @@ function Cpu() {
     this.z = false;
     this.n = false;
     this.sleeping = false;
+    this.powered = false;
 
     this.memoryAccess = {read: 0, write: 0};
     
@@ -38,7 +39,7 @@ function Cpu() {
   
     this.masks = {
         pc: 0xff,
-        ac: 0xffffffff
+        ac: 0xff
     };
     this._interval;
     
@@ -61,10 +62,15 @@ function Cpu() {
     }
     
     this.clockTick = function() {
-        if(!this.sleeping) {
+        if(!this.isSleeping()) {
             var opcode = this.fetchInstruction();
             var instruction = this.decodeInstruction(opcode);
-            this.executeInstruction(instruction);
+            try {
+                this.executeInstruction(instruction);
+            } catch(e) {
+                this.sleep();
+                throw e;
+            }
         }
     }
 
@@ -74,12 +80,18 @@ function Cpu() {
         this._interval = setInterval(function() {
             self.clockTick();
         }, tcy);
+        this.powered = true;
     }
 
     this.powerOff = function() {
         clearInterval(this._interval);
         this.reset();
         this.awake();
+        this.powered = false;
+    }
+    
+    this.isPowered = function() {
+        return this.powered;
     }
     
     this.sleep = function() {
@@ -105,8 +117,9 @@ function Cpu() {
         this.z = false;
         this.n = false;
         this.memoryAccess = {read: 0, write: 0};
+        this.getStack().erase();
         if(eraseMemory) {
-            this.memory.erase();
+            this.getMemory().erase();
         }
     }
     

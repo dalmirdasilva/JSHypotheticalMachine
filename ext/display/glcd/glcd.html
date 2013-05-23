@@ -1,0 +1,54 @@
+
+<link rel="stylesheet" type="text/css" href="ext/display/glcd/glcd.css">
+<script src="ext/display/glcd/glcd.js" type="text/javascript"></script>
+
+<div id="glcd-box">
+    <div id="glcd-title">Glcd <span id="glcd-text"></span></div>
+    <div id="glcd-grid"></div>
+    <div id="glcd-grid-footer"><button id="glcd-power-button">Power on</button></div>
+</div>
+
+<script type="text/javascript">
+    
+    function createGrid(width, height) {
+        var grid = "<table border='0' cellspacing='1' cellpadding='0'>";
+        for(var i = 0; i < height; i++) {
+            grid += "<tr>";
+            for (var j = 0; j < width; j++) {
+                grid += "<td class='glcd-pixel-on glcd-cell' id='glcd-cell-"+j+"-"+i+"'></td>";
+            }
+            grid += "</tr>";
+        }
+        grid += "</table>";
+        $("#glcd-grid").html(grid);
+    }
+    
+    function writePixel(x, y, value) {
+        var cell = $("#glcd-cell-"+x+"-"+y);
+        cell.removeClass("glcd-pixel-on glcd-pixel-off");
+        if(value != 0) {
+            cell.addClass("glcd-pixel-on");
+        } else {
+            cell.addClass("glcd-pixel-off");
+        }
+    }
+    
+    var width = 16;
+    var height = 16;
+    var mapSize = (width * height) / 8;
+    var graphicMamory = new MappedMemory(memory.getBuffer(), memory.getSize() - mapSize, mapSize);
+    var glcd = new Glcd(width, height, graphicMamory, 10, writePixel);
+    createGrid(width, height);
+    
+    $("#glcd-text").html("("+width+"x"+height+")");    
+    $("#glcd-power-button").click(function() {
+        if (glcd.getPowered()) {
+            glcd.stop();
+            $(this).text("Power on");
+        } else {
+            glcd.init();
+            $(this).text("Power off");
+        }
+    });
+    
+</script>

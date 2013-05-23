@@ -1,0 +1,35 @@
+.lcd-cell {
+    width: 5px;
+    height: 5px;
+}
+
+.lcd-pixel-on {
+    background-color: #00a;
+}
+
+.lcd-pixel-off {
+    background-color: #fafafa;
+}
+
+#lcd-box {
+    border: 1px solid #aaa;
+}
+
+#lcd-title {
+    background-color: #eee;
+    padding: 2px 4px;
+}
+
+#lcd-grid {
+    padding: 2px;
+}
+
+#lcd-text {
+    font-size: 10px;
+}
+
+#lcd-grid-footer {
+    padding: 2px 4px;
+}
+
+

@@ -16,40 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- /**
- * Memory class
+
+/**
+ * Stack MappedMemory
  */
-function Memory(size) {
+function MappedMemory(arrayBuffer, from, size) {
     
+    this.mapped = new DataView(arrayBuffer, from, size);
     this.size = size;
-    this.buf = new ArrayBuffer(size);
-    this.dv = new DataView(this.buf);
+    
+    this.size = function() {
+        return this.size;
+    }
     
     this.read = function(address) {
-        if (address < 0 || address >= this.size) {
-            throw "Memory access violation.";
-        }
-        return this.dv.getUint8(address);
+        return this.mapped.getUint8(address);
     }
     
     this.write = function(address, value) {
-        if(address < this.getSize()) {
-            this.dv.setUint8(address, value);
-        }
+        this.mapped.setUint8(address, value);
     }
     
     this.erase = function() {
         for(var i = 0; i < this.size; i++) {
-            this.dv.setUint8(i, 0);
+            this.mapped.setUint8(i, 0);
         }
     }
-    
-    this.getSize = function() {
-        return this.size;
-    }
-    
-    this.getBuffer = function() {
-        return this.buf;
-    }
-}
+} 

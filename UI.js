@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -24,11 +24,12 @@ function UI(cpu) {
     
     this.cpu = cpu;
     this.cpuPowered;
-    this.refreshInterval;
+    this._interval;
     
     this.init = function() {
-        this.createMemoryGrid();
         var ui = this;
+        ui.createMemoryGrid();
+        ui.createStackGrid();
         $("#save-memory-button").click(function() {
             ui.saveMemory();
         });
@@ -84,15 +85,15 @@ function UI(cpu) {
     
     this.powerCpuOn = function() {
         var self = this;
-        cpu.powerOn(cpu);
-        this.refreshInterval = setInterval(function() {
+        cpu.powerOn();
+        this._interval = setInterval(function() {
             self.update();
         }, 1000 / cpu.getClockFrequency());
     }
     
     this.powerCpuOff = function() {
         cpu.powerOff();
-        clearInterval(this.refreshInterval);
+        clearInterval(this._interval);
     }
     
     this.clockTick = function() {
@@ -107,11 +108,13 @@ function UI(cpu) {
     
     this.update = function() {
         this.updateMemoryGrid();
+        this.updateStackGrid();
         this.updateCpuInfo();
         this.updateFlags();
         this.updateMemoryAccess();
         this.updateButtons();
         this.updateExecutionPosition();
+        this.updateTopOfStackPosition();
         this.updateMemoryHolderScroll();
     }
     
@@ -145,6 +148,11 @@ function UI(cpu) {
         $("#memory-reg-position-" + cpu.getPc()).html("&gt;");
     }
     
+    this.updateTopOfStackPosition = function() {
+        $(".stack-reg-position").html("");
+        $("#stack-reg-position-" + cpu.getStack().getTop()).html("&gt;");
+    }
+    
     this.updateMemoryHolderScroll = function() {
         var firstMemoryPosition = $("#memory-reg-position-0");
         var secondMemoryPosition = $("#memory-reg-position-1");
@@ -164,8 +172,15 @@ function UI(cpu) {
     }
     
     this.updateMemoryGrid = function() {
-        for(var i = 0; i < cpu.getMemory().size(); i++) {
+        for(var i = 0; i < cpu.getMemory().getSize(); i++) {
             $("#memory-reg-"+i).val(converter.toString(cpu.getMemory().read(i)));
+        }
+    }
+    
+    this.updateStackGrid = function() {
+        var stack = cpu.getStack();
+        for(var i = 0; i < stack.getSize(); i++) {
+            $("#stack-reg-"+i).val(converter.toString(stack.read(i)));
         }
     }
     
@@ -181,14 +196,28 @@ function UI(cpu) {
     
     this.createMemoryGrid = function() {
         var grid = "<table>";
-        for(var i = 0; i < cpu.getMemory().size(); i++) {
-            grid += "<tr><td class='memory-reg-address'>"+i+": </td>"
+        for(var i = 0; i < cpu.getMemory().getSize(); i++) {
+            grid += "<tr>"
+                 + "<td class='memory-reg-address'>"+i+": </td>"
                  + "<td id='memory-reg-position-"+i+"' class='memory-reg-position'></td>"
-                 + "<td><input type='text' id='memory-reg-"+i+"' value='0' /></td>"
+                 + "<td><input type='text' id='memory-reg-"+i+"' class='short-input' value='0' /></td>"
                  + "</tr>";
         }
         grid += "</table>";
         $("#memory-grid-holder").html(grid);
+    }
+    
+    this.createStackGrid = function() {
+        var grid = "<table>";
+        for(var i = cpu.getStack().getSize() - 1; i >= 0; i--) {
+            grid += "<tr>"
+                 + "<td class='stack-reg-address'>"+i+": </td>"
+                 + "<td id='stack-reg-position-"+i+"' class='stack-reg-position'></td>"
+                 + "<td><input type='text' id='stack-reg-"+i+"' class='short-input' value='0' /></td>"
+                 + "</tr>";
+        }
+        grid += "</table>";
+        $("#stack-grid-holder").html(grid);
     }
     
     this.assemble = function() {
@@ -198,11 +227,12 @@ function UI(cpu) {
             $("#assembly-code-box-message").text("Error: Empty code.");
             return;
         }
+        var assembledCode = null;
         try {
-            var assembledCode = assembler.assemble(assemblyCode);
+            assembledCode = assembler.assemble(assemblyCode);
         } catch(e) {
             $("#assembly-code-box-message").text("Error: " + e);
-            return;
+            throw e;
         }
         var assembledCodeString = "";
         for(var i = 0; i < assembledCode.length; i++) {
@@ -226,7 +256,7 @@ function UI(cpu) {
     } 
     
     this.saveMemory = function() {
-        for(var i = 0; i < cpu.getMemory().size(); i++) {
+        for(var i = 0; i < cpu.getMemory().getSize(); i++) {
             cpu.getMemory().write(i, converter.toNumber($("#memory-reg-"+i).val()));
         }
         cpu.setAc(converter.toNumber($("#ac-box").val()));
@@ -236,6 +266,11 @@ function UI(cpu) {
     
     this.eraseMemory = function() {
         cpu.getMemory().erase();
+        this.update();
+    }
+    
+    this.eraseStack = function() {
+        cpu.getStack().erase();
         this.update();
     }
     

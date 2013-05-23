@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 

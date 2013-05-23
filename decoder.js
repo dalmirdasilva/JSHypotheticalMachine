@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -37,6 +37,8 @@ function Decoder() {
      * 0x09 jz
      * 0x0a call
      * 0x0b ret
+     * 0x0c push
+     * 0x0d pop
      * 0xff hlt
      */
     this.decode = function(opcode) {
@@ -76,6 +78,12 @@ function Decoder() {
                 break;
             case 0x0b:
                 return new Ret();
+                break;
+            case 0x0c:
+                return new Push();
+                break;
+            case 0x0d:
+                return new Pop();
                 break;
             case 0xff:
                 return new Hlt();

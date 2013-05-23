@@ -1,5 +1,5 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  * 
  * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -107,6 +107,7 @@ function Jz() {
 
 function Hlt() {
     this.exec = function(cpu) {
+        alert(1);
         cpu.sleep();
     }
 }
@@ -122,6 +123,20 @@ function Call() {
 function Ret() {
     this.exec = function(cpu) {
         cpu.setPc(cpu.popStack());
+    }
+}
+
+function Push() {
+    this.exec = function(cpu) {
+        var value = cpu.getAc();
+        cpu.pushStack(value);
+    }
+}
+
+function Pop() {
+    this.exec = function(cpu) {
+        var value = cpu.popStack();
+        cpu.setAc(value);
     }
 }
 
