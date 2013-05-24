@@ -35,10 +35,14 @@ function Decoder() {
      * 0x07 jmp
      * 0x08 jn
      * 0x09 jz
+     * 
      * 0x0a call
      * 0x0b ret
      * 0x0c push
      * 0x0d pop
+     * 
+     * 0x0e retfie
+     * 
      * 0xff hlt
      */
     this.decode = function(opcode) {

@@ -30,16 +30,24 @@ function MappedMemory(arrayBuffer, from, size) {
     }
     
     this.read = function(address) {
+        checkBoundaries(address);
         return this.mapped.getUint8(address);
     }
     
     this.write = function(address, value) {
+        checkBoundaries(address);
         this.mapped.setUint8(address, value);
     }
     
     this.erase = function() {
         for(var i = 0; i < this.size; i++) {
             this.mapped.setUint8(i, 0);
+        }
+    }
+    
+    this.checkBoundaries(address) {
+        if (address < 0 || address >= this.size) {
+            throw new "Index out of boundaries exception.";
         }
     }
 } 
