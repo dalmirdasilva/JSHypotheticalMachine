@@ -1,7 +1,7 @@
 /**
  * JS Hypothetical Machine
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,38 +28,34 @@ function Cpu() {
     this.n = false;
     this.sleeping = false;
     this.powered = false;
-
-    this.memoryAccess = {read: 0, write: 0};
     
     this.stack;
     this.memory;
     this.decoder;
     
-    this.clockFrequency = 10;
-  
     this.masks = {
         pc: 0xff,
         ac: 0xff
     };
-    this._interval;
+    this._id;
     
     this.fetchInstruction = function() {
         return this.readMemory(this.nextPc());
-    }
-    
+    };
+        
     this.decodeInstruction = function(opcode) {
         return this.decoder.decode(opcode);
-    }
+    };
     
     this.executeInstruction = function(instruction) {
         instruction.exec(this);
-    }
+    };
     
     this.nextPc = function() {
         var pc = this.pc++;
         this.pc &= this.masks.pc;
         return pc;
-    }
+    };
     
     this.clockTick = function() {
         if(!this.isSleeping()) {
@@ -72,120 +68,125 @@ function Cpu() {
                 throw e;
             }
         }
-    }
-
+    };
+    
     this.powerOn = function() {
-        var tcy = 1000 / this.clockFrequency;
         var self = this;
-        this._interval = setInterval(function() {
+        this._id = this.oscillator.attachListener(function() {
             self.clockTick();
-        }, tcy);
+        });
         this.powered = true;
-    }
+    };
 
     this.powerOff = function() {
-        clearInterval(this._interval);
+        this.oscillator.unattachListener(this._id);
         this.reset();
         this.awake();
+        this.memory.resetAccess();
         this.powered = false;
-    }
+    };
     
     this.isPowered = function() {
         return this.powered;
-    }
+    };
     
     this.sleep = function() {
         this.sleeping = true;
-    }
+    };
     
     this.awake = function() {
         this.sleeping = false;
-    }
+    };
     
     this.isSleeping = function() {
         return this.sleeping;
-    }
+    };
     
     this.updateFlags = function() {
         cpu.z = (this.ac == 0) ? true : false;
         cpu.n = (this.ac < 0) ? true : false;
-    }
+    };
     
     this.reset = function(eraseMemory) {
         this.pc = 0;
         this.ac = 0;
         this.z = false;
         this.n = false;
-        this.memoryAccess = {read: 0, write: 0};
         this.getStack().erase();
         if(eraseMemory) {
             this.getMemory().erase();
         }
-    }
+    };
     
     this.popStack = function() {
         return this.stack.pop();
-    }
+    };
     
     this.pushStack = function(value) {
         return this.stack.push(value);
-    }
+    };
     
     this.readMemory = function(address) {
-        this.memoryAccess.read++;
         return this.memory.read(address);
-    }
+    };
     
     this.writeMemory = function(address, value) {
-        this.memoryAccess.write++;
         this.memory.write(address, value);
-    }
+    };
+    
+    this.setOscillator = function(oscillator) {
+        this.oscillator = oscillator;
+    };
+    
+    this.getOscillator = function() {
+        return this.oscillator;
+    };
     
     this.setClockFrequency = function(clockFrequency) {
         this.clockFrequency = clockFrequency;
-    }
+    };
     
     this.getClockFrequency = function() {
         return this.clockFrequency;
-    }
+    };
     
     this.setStack = function(stack) {
         this.stack = stack;
-    }
+    };
     
     this.getStack = function() {
         return this.stack;
-    }
+    };
     
     this.setMemory = function(memory) {
         this.memory = memory;
-    }
+    };
     
     this.getMemory = function() {
         return this.memory;
-    }
+    };
     
     this.setDecoder = function(decoder) {
         this.decoder = decoder;
-    }
+    };
     
     this.setPc = function(pc) {
         this.pc = (pc & this.masks.pc);
-    }
+    };
     
     this.setAc = function(ac) {
         this.ac = (ac & this.masks.ac);
-    }
+    };
     
     this.getPc = function() {
         return (this.pc & this.masks.pc);
-    }
+    };
     
     this.getAc = function() {
         return (this.ac & this.masks.ac);
-    }
+    };
     
-    this.getMemoryAccess = function() {
-        return this.memoryAccess;
-    }
+    this.getFlags = function() {
+        return {"z": this.z, "n": this.n};
+    };
 }

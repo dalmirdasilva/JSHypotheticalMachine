@@ -1,7 +1,7 @@
 /**
  * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ textarea {
 }
 
 #assembly-code-box {
-    width: 250px;
+    width: 350px;
 }
 
 #assembled-code-box {
@@ -107,4 +107,109 @@ textarea {
 
 #assembled-code-box-message {
     width: 150px;
+}
+
+#memory-grid, #stack-grid, #cpu-settings {
+    background-color: #eee;
+    border: 1px solid #aaa; 
+    position: absolute; 
+    padding: 4px;
+}
+
+#memory-grid-title, #stack-grid-title, #cpu-settings-title {
+    margin-bottom: 6px;
+    padding: 4px;
+    background-color: #eee;
+    font-weight: bold;
+    font-size: 110.5%;
+    cursor: default;
+}
+
+#memory-grid-body, #stack-grid-body, #cpu-settings-body {
+    margin:10px;
+    border: 2px solid #fff;
+}
+
+#cpu-settings-body {
+    padding: 6px;
+    background-color: #fff;
+}
+
+#cpu-frequency-spinner {
+    width: 40px;
+    font-size: 13px;
+    padding: 2px;
+}
+
+.settings-sub-title {
+    padding: 8px 2px 2px 2px;
+}
+
+#memery-cell-edit-input, #stack-cell-edit-input {
+    display: none;
+    width: 35px;
+    height: 30px;
+    border: 2px solid orange;
+    text-align: center;
+    position: absolute;
+}
+
+#memory-grid-tooltip {
+    display: none;
+    position: absolute;
+}
+
+#cpu-settings {
+    width: 250px;
+}
+
+.memery-cell-corner {
+    padding: 6px 8px;
+    background-color: #eee;
+}
+
+.memery-cell-side, .memery-cell-top, .stack-cell-side {
+    color: #646464;
+    background-color: #ddd;
+    padding: 6px 8px;
+    text-align: center;
+    min-width: 15px;
+}
+
+.memery-cell, .stack-cell {
+    color: #000;
+    text-align: center;
+    background-color: #fff;
+    padding: 6px 8px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.memery-cell {
+    cursor: pointer;
+}
+
+.memery-cell-current {
+    background-color: #f90;
+}
+
+.stack-cell-current {
+    background-color: #f90;
+}
+
+.stack-cell-used {
+}
+
+.stack-cell-empty {
+    color: #aaa;
+}
+
+#cpu-frequency-slider {
+    margin: 6px 0px;
+}
+
+.icon-holder {
+    display: inline-block; 
+    margin-bottom: -2; 
+    margin-right: -2;
 }

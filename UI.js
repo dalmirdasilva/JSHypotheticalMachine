@@ -1,7 +1,7 @@
 /**
  * JS Hypothetical Machine
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ function UI(cpu) {
         var ui = this;
         ui.createMemoryGrid();
         ui.createStackGrid();
+        ui.setBase();
         $("#save-memory-button").click(function() {
             ui.saveMemory();
         });
@@ -48,9 +49,6 @@ function UI(cpu) {
         $("#reset-button").click(function() {
             ui.reset();
         });
-        $("#base-selector-dropbox").change(function() {
-            ui.setBase();
-        });
         $("input").change(function() {
             ui.saveMemory();
         });
@@ -59,6 +57,60 @@ function UI(cpu) {
         });
         $("#sleep-button").click(function() {
             ui.sleepClick();
+        });
+        $("#memory-grid").draggable({
+            handle: "#memory-grid-title",
+            stack: ".draggable-item"
+        });
+        $("#stack-grid").draggable({
+            handle:"#stack-grid-title",
+            stack: ".draggable-item"
+        });
+        $("#memery-cell-edit-input")
+            .keyup(function(event) {
+                if (event.which == 13) {
+                    ui.commitMemoryEdition();
+                }
+                if (event.which == 27) {
+                    ui.dismissMemoryEdition();
+                }
+            }).blur(function(event){
+                ui.dismissMemoryEdition();
+            });
+        $("#memory-grid-tooltip").draggable({});
+        $("#cpu-settings").draggable({
+            handle: "#cpu-settings-title",
+            stack: ".draggable-item"
+        });
+        $(".draggable-item").disableSelection();
+        $("#base-selector-radio").buttonset()
+        $("input[name=radio]:radio").click(function() {
+            ui.setBase(parseInt($(this).val()));
+        }); 
+        $("#cpu-frequency-spinner").spinner({
+            min: 1,
+            max: 1000,
+            step: 1,
+            start: 100,
+            change: function(event, ui) {
+                var value = parseInt($(event.target).spinner("value"));
+                $("#cpu-frequency-slider").slider({"value": value});
+                cpu.setClockFrequency(value);
+            },
+            spin: function(event, ui) {
+                var value = parseInt($(event.target).spinner("value"));
+                $("#cpu-frequency-slider").slider({"value": value});
+                cpu.setClockFrequency(value);
+            }
+        });
+        $("#cpu-frequency-slider").slider({
+            value: 100,
+            min: 1,
+            max: 1000,
+            step: 1,
+            slide: function(event, ui) {
+                $("#cpu-frequency-spinner").val(ui.value).trigger("change");
+            }
         });
         this.update();
     }
@@ -88,7 +140,7 @@ function UI(cpu) {
         cpu.powerOn();
         this._interval = setInterval(function() {
             self.update();
-        }, 1000 / cpu.getClockFrequency());
+        }, 1000 / 30);
     }
     
     this.powerCpuOff = function() {
@@ -107,15 +159,17 @@ function UI(cpu) {
     }
     
     this.update = function() {
-        this.updateMemoryGrid();
-        this.updateStackGrid();
-        this.updateCpuInfo();
-        this.updateFlags();
-        this.updateMemoryAccess();
-        this.updateButtons();
-        this.updateExecutionPosition();
-        this.updateTopOfStackPosition();
-        this.updateMemoryHolderScroll();
+        if(!cpu.isSleeping()) {
+            this.updateButtons();
+            this.updateMemoryGrid();
+            this.updateStackGrid();
+            this.updateCpuInfo();
+            this.updateFlags();
+            this.updateMemoryAccess();
+            this.updateExecutionPosition();
+            this.updateTopOfStackPosition();
+            
+        }
     }
     
     this.updateButtons = function() {
@@ -125,10 +179,8 @@ function UI(cpu) {
             if(powerButton.text() == "Power on") {
                 powerButton.text("Power off");
             }
-            $("#clock-frequency").attr("disabled", "disabled");
         } else {
             powerButton.text("Power on");
-            $("#clock-frequency").removeAttr("disabled");
         }
         if(cpu.isSleeping()) {
             if(sleepButton.text() == "Sleep") {
@@ -143,50 +195,73 @@ function UI(cpu) {
         }
     }
     
+    this.isEditingMemoryCell = function() {
+        return $("#memery-cell-edit-input").attr("editing") == "true";
+    }
+    
+    this.setEditingMemoryCell = function(is) {
+        $("#memery-cell-edit-input").attr("editing", is ? "true" : "false");
+    }
+    
+    this.commitMemoryEdition = function() {
+        var input = $("#memery-cell-edit-input");
+        input.hide();
+        this.setEditingMemoryCell(false);
+        var memoryPosition = parseInt(input.attr("position"));
+        var value = parseInt(input.val(), Converter.getBase());
+        cpu.getMemory().write(memoryPosition, value);
+        this.update();
+    }
+    
+    this.dismissMemoryEdition = function() {
+        $("#memery-cell-edit-input").hide();
+    }
+    
     this.updateExecutionPosition = function() {
-        $(".memory-reg-position").html("");
-        $("#memory-reg-position-" + cpu.getPc()).html("&gt;");
+        $(".memery-cell-center").removeClass("memery-cell-current");
+        $("#memory-reg-" + cpu.getPc()).addClass("memery-cell-current");
     }
     
     this.updateTopOfStackPosition = function() {
-        $(".stack-reg-position").html("");
-        $("#stack-reg-position-" + cpu.getStack().getTop()).html("&gt;");
-    }
-    
-    this.updateMemoryHolderScroll = function() {
-        var firstMemoryPosition = $("#memory-reg-position-0");
-        var secondMemoryPosition = $("#memory-reg-position-1");
-        var memoryPositionHeight = secondMemoryPosition.offset().top - firstMemoryPosition.offset().top;
-        var memoryHolderScrollTop = $("#memory-grid-holder").scrollTop();
-        var memoryHolderHeight = parseInt($("#memory-grid-holder").css("height"));
-        if(memoryHolderScrollTop > (cpu.getPc() * memoryPositionHeight) || (cpu.getPc() * memoryPositionHeight) > memoryHolderScrollTop + memoryHolderHeight) {
-            $("#memory-grid-holder").scrollTop(cpu.getPc() * memoryPositionHeight);
+        var tos = cpu.getStack().getTop();
+        for (var i = 0; i < cpu.getStack().getSize(); i++) {
+            var stackReg = $("#stack-reg-" +  i);
+            stackReg.removeClass("stack-cell-used")
+                .removeClass("stack-cell-empty")
+                .removeClass("stack-cell-current");
+            if (i == tos) {
+                stackReg.addClass("stack-cell-current");
+            } else if(i < tos) {
+                stackReg.addClass("stack-cell-used");
+            } else {
+                stackReg.addClass("stack-cell-empty");
+            }
         }
     }
     
     this.updateMemoryAccess = function() {
-        var memoryAccess = cpu.getMemoryAccess();
-        $("#memory-read-access").text(converter.toString(memoryAccess.read));
-        $("#memory-write-access").text(converter.toString(memoryAccess.write));
+        var memoryAccess = cpu.getMemory().getAccess();
+        $("#memory-read-access").text(Converter.toString(memoryAccess.read));
+        $("#memory-write-access").text(Converter.toString(memoryAccess.write));
         
     }
     
     this.updateMemoryGrid = function() {
         for(var i = 0; i < cpu.getMemory().getSize(); i++) {
-            $("#memory-reg-"+i).val(converter.toString(cpu.getMemory().read(i)));
+            $("#memory-reg-"+i).text(Converter.toString(cpu.getMemory().read(i), 2));
         }
     }
     
     this.updateStackGrid = function() {
         var stack = cpu.getStack();
         for(var i = 0; i < stack.getSize(); i++) {
-            $("#stack-reg-"+i).val(converter.toString(stack.read(i)));
+            $("#stack-reg-" + i).text(Converter.toString(stack.read(i), 2));
         }
     }
     
     this.updateCpuInfo = function() {
-        $("#ac-box").val(converter.toString(cpu.getAc()));
-        $("#pc-box").val(converter.toString(cpu.getPc()));
+        $("#ac-box").val(Converter.toString(cpu.getAc()));
+        $("#pc-box").val(Converter.toString(cpu.getPc()));
     }
     
     this.updateFlags = function() {
@@ -195,29 +270,75 @@ function UI(cpu) {
     }
     
     this.createMemoryGrid = function() {
-        var grid = "<table>";
-        for(var i = 0; i < cpu.getMemory().getSize(); i++) {
-            grid += "<tr>"
-                 + "<td class='memory-reg-address'>"+i+": </td>"
-                 + "<td id='memory-reg-position-"+i+"' class='memory-reg-position'></td>"
-                 + "<td><input type='text' id='memory-reg-"+i+"' class='short-input' value='0' /></td>"
-                 + "</tr>";
+        var table = $("<table border='0' cellspacing='0' cellpadding='2'></table>");        
+        var rows = cpu.getMemory().getSize() / 16;
+        for (var y = -1; y < rows; y++) {
+            var tr = $("<tr></tr>");
+            for (var x = -1; x < 16; x++) {
+                var td = $("<td></td>");
+                if (y < 0) {
+                    if (x < 0) {
+                        td.html("").addClass("memery-cell-corner");
+                    } else {
+                        td.html("_" + x.toString(16).toUpperCase()).addClass("memery-cell-top");
+                    }
+                } else {
+                    if (x < 0) {
+                        td.html(y.toString(16).toUpperCase() + "_").addClass("memery-cell-side");
+                    } else {
+                        var address = y * 16 + x;
+                        var cellId = "memory-reg-" + address;
+                        td.html("")
+                            .addClass("memery-cell-center")
+                            .attr("id", cellId)
+                            .attr("position", address)
+                            .addClass("memery-cell")
+                            .click({id: "#" + cellId + ""}, function(event) {
+                                var self = $(this);
+                                var target = $(event.data.id);
+                                $("#memery-cell-edit-input")
+                                    .show()
+                                    .val(self.text())
+                                    .attr("editing", "true")
+                                    .attr("position", self.attr("position"))
+                                    .offset(target.offset())
+                                    .width(target.innerWidth()-4)
+                                    .focus()
+                                    .select();
+                            });
+                    }
+                }
+                tr.append(td);
+            }
+            table.append(tr);
         }
-        grid += "</table>";
-        $("#memory-grid-holder").html(grid);
+        table.appendTo("#memory-grid-body");
     }
     
     this.createStackGrid = function() {
-        var grid = "<table>";
-        for(var i = cpu.getStack().getSize() - 1; i >= 0; i--) {
-            grid += "<tr>"
-                 + "<td class='stack-reg-address'>"+i+": </td>"
-                 + "<td id='stack-reg-position-"+i+"' class='stack-reg-position'></td>"
-                 + "<td><input type='text' id='stack-reg-"+i+"' class='short-input' value='0' /></td>"
-                 + "</tr>";
+        var table = $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>");        
+        var stackSize = cpu.getStack().getSize();
+        var tr = $("<tr>s</tr>");
+        var positionTd = $("<td></td>");
+        var valueTd = $("<td>&nbsp;</td>");
+            valueTd.addClass("stack-cell-side");
+            tr.append(positionTd);
+            tr.append(valueTd);
+            table.append(tr);
+        for (var i = stackSize - 1; i >= 0; i--) {
+            tr = $("<tr></tr>");
+            positionTd = $("<td>" + i.toString(16).toUpperCase() + "</td>");
+            positionTd.addClass("stack-cell-side");
+            valueTd = $("<td>00</td>");
+            var stackCellId = "stack-reg-" + i;
+            valueTd.attr("id", stackCellId)
+                .attr("position", i)
+                .addClass("stack-cell");
+            tr.append(positionTd);
+            tr.append(valueTd);
+            table.append(tr);
         }
-        grid += "</table>";
-        $("#stack-grid-holder").html(grid);
+        table.appendTo("#stack-grid-body");
     }
     
     this.assemble = function() {
@@ -236,7 +357,7 @@ function UI(cpu) {
         }
         var assembledCodeString = "";
         for(var i = 0; i < assembledCode.length; i++) {
-            assembledCodeString += converter.toString(assembledCode[i]) + "\n";
+            assembledCodeString += Converter.toString(assembledCode[i]) + "\n";
         }
         $("#assembled-code-box").val(assembledCodeString);
     }
@@ -250,18 +371,19 @@ function UI(cpu) {
         }
         var lines = assembledCode.split("\n");
         for(var i = 0; i < lines.length; i++) {
-            cpu.getMemory().write(i, converter.toNumber(lines[i]));
+            cpu.getMemory().write(i, Converter.toNumber(lines[i]));
         }
         this.update();
     } 
     
     this.saveMemory = function() {
         for(var i = 0; i < cpu.getMemory().getSize(); i++) {
-            cpu.getMemory().write(i, converter.toNumber($("#memory-reg-"+i).val()));
+            var value = Converter.toNumber($("#memory-reg-"+i).text());
+            cpu.getMemory().write(i, value);
         }
-        cpu.setAc(converter.toNumber($("#ac-box").val()));
-        cpu.setPc(converter.toNumber($("#pc-box").val()));
-        cpu.setClockFrequency(converter.toNumber($("#clock-frequency").val()));
+        cpu.setAc(Converter.toNumber($("#ac-box").val()));
+        cpu.setPc(Converter.toNumber($("#pc-box").val()));
+        cpu.setClockFrequency(Converter.toNumber($("#cpu-frequency-spinner").val()));
     }
     
     this.eraseMemory = function() {
@@ -274,9 +396,8 @@ function UI(cpu) {
         this.update();
     }
     
-    this.setBase = function() {
-        var base = parseInt($("#base-selector-dropbox").val());
-        converter.setBase(base);
+    this.setBase = function(base) {
+        Converter.setBase(base);
         this.update();
     }
 } 

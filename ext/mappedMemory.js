@@ -45,7 +45,7 @@ function MappedMemory(arrayBuffer, from, size) {
         }
     }
     
-    this.checkBoundaries(address) {
+    this.checkBoundaries = function(address) {
         if (address < 0 || address >= this.size) {
             throw new "Index out of boundaries exception.";
         }

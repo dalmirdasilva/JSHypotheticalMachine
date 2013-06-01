@@ -4,19 +4,6 @@
         <td class="title">
             <div>Editor:</div>
         </td>
-        <td class="title">
-            <div>
-                <span>Simulator:</span>
-                <select id="base-selector-dropbox">
-                    <option value="2">Bin</option>
-                    <option value="8">Oct</option>
-                    <option value="10" selected="selected">Dec</option>
-                    <option value="16">Hex</option>
-                </select>
-                Clock frequency (1Hz~1kHz):
-                <input class="short-input" type="text" value="10" id="clock-frequency" /> Hz
-            </div>
-        </td>
     </tr>
     <tr>
         <td valign="top">
@@ -128,11 +115,73 @@ ret
     </tr>
 </table>
 
+<div id="memory-grid" class="draggable-item">
+    <input type="text" id="memery-cell-edit-input" maxlength="8"/>
+    <div id="memory-grid-tooltip">
+        <table>
+            <tr>
+                <td>Mnemonic: </td>
+                <td><span id="memory-grid-tooltip-mnemonic"></span></td>
+            </tr>
+            <tr>
+                <td>Bin: </td>
+                <td><span id="memory-grid-tooltip-bin"></span></td>
+            </tr>
+            <tr>
+                <td>Hex: </td>
+                <td><span id="memory-grid-tooltip-hex"></span></td>
+            </tr>
+            <tr>
+                <td>Dec: </td>
+                <td><span id="memory-grid-tooltip-dec"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="memory-grid-title" class="draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-tag"></span>
+        </div> 
+        Main memory
+    </div>
+    <div id="memory-grid-body"></div>
+</div>
+
+<div id="stack-grid" class="draggable-item">
+    <div id="stack-grid-title" class="draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-bookmark"></span>
+        </div> 
+        Stack
+    </div>
+    <div id="stack-grid-body"></div>
+</div>
+              
+<div id="cpu-settings" class="draggable-item">
+    <div id="cpu-settings-title" class="draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-wrench"></span>
+        </div> 
+        Settings
+    </div>
+    <div id="cpu-settings-body">
+        <div class="settings-sub-title">Base: </div>
+        <div id="base-selector-radio">
+            <input type="radio" id="radio-bin" name="radio" value="2" /><label for="radio-bin">Bin</label>
+            <input type="radio" id="radio-oct" name="radio" value="8" /><label for="radio-oct">Oct</label>
+            <input type="radio" id="radio-dec" name="radio" value="10" /><label for="radio-dec">Dec</label>
+            <input type="radio" id="radio-hex" name="radio" value="16" checked="checked" /><label for="radio-hex">Hex</label>
+        </div>
+        <div class="settings-sub-title">Clock frequency  (1Hz~1kHz): </div>
+        <input id="cpu-frequency-spinner" name="cpu-frequency" value="100" /> Hz
+        <div id="cpu-frequency-slider"></div>
+    </div>
+</div>
+
 <div id="ext-glcd" style="position: absolute; left: 920px; top: 45px;"></div>
 
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/custom/jquery-ui-1.10.3.custom.css">
-<script src="jquery.js" type="text/javascript"></script>
+<script src="lib/jquery.js" type="text/javascript"></script>
 <script src="lib/jquery-ui/js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
 <script src="converter.js" type="text/javascript"></script>
 <script src="instructions.js" type="text/javascript"></script>
@@ -141,75 +190,47 @@ ret
 <script src="stack.js" type="text/javascript"></script>
 <script src="cpu.js" type="text/javascript"></script>
 <script src="assembler.js" type="text/javascript"></script>
+<script src="oscillator.js" type="text/javascript"></script>
+<script src="message.js" type="text/javascript"></script>
+<script src="web_worker_launcher.js" type="text/javascript"></script>
 <script src="ext/mappedMemory.js" type="text/javascript"></script>
 <script src="UI.js" type="text/javascript"></script>
 
+
+
 <script type="text/javascript">
     
-    var DEFAULT_BASE = 10;
-    
+    var DEFAULT_BASE = 16;
     var assembler = new Assembler();
-    var converter = new Converter(DEFAULT_BASE);
+    Converter.setBase(DEFAULT_BASE);
     
-    var stack = new Stack(16);
-    var memory = new Memory(256);
-    var decoder = new Decoder();
-    var cpu = new Cpu();
+    workerLauncher = new WebWorkerLauncher();
+    workerLauncher.launch("simulator.js");
     
-    memory.erase();
-    stack.erase();
+    workerLauncher.exchangeMessage(new Message(Message.GET_STACK_BUFFER, "content"), function(message) {
+        var dv = new DataView(message.getContent());
+        dv.setInt8(0, 0x0a);
+        console.log(dv.getInt8(0));
+    });
     
-    cpu.setStack(stack);
-    cpu.setMemory(memory);
-    cpu.setDecoder(decoder);
+    workerLauncher.exchangeMessage(new Message(Message.GET_SERIALIZED_CPU, "content"), function(message) {
+        console.log(message.getContent())
+    });
     
-    var ui = new UI(cpu);
-    ui.init();
+    workerLauncher.exchangeMessage(new Message(Message.SET_OSC_FREQUENCY, 100), function(message) {
+        console.log(message.getContent())
+    });
+    
+    workerLauncher.exchangeMessage(new Message(Message.SET_CPU_POWER, true), function(message) {
+        console.log(message.getContent())
+    });
+    
+    //var ui = new UI(cpu);
+    //ui.init();
 
-
-    $('#ext-glcd').load('ext/display/glcd/glcd.html');
+//    $('#ext-glcd').load('ext/display/glcd/glcd.html');
     
 </script>
-
-<table>
-    <tr>
-        <td>-</td>
-        <td>0</td>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-        <td>8</td>
-        <td>9</td>
-        <td>A</td>
-        <td>B</td>
-        <td>C</td>
-        <td>D</td>
-        <td>E</td>
-        <td>F</td>
-    </tr>
-    <tr>
-        <td>0</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-        <td>0x00</td>
-    </tr>
-</table>
-
 <div class="footer">Written by Dalmir da Silva &lt;dalmirdasilva@gmail.com&gt;</div>
+</body>
+</html>

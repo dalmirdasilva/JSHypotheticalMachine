@@ -1,7 +1,7 @@
 /**
  * JS Hypothetical Machine
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@ function Nop() {
     this.exec = function(cpu) {}
 }
 
+/**
+ * Stores the ACC to a memory address.
+ */
 function Sta() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());
@@ -33,6 +36,9 @@ function Sta() {
     }
 }
 
+/**
+ * Loads a memory address to the ACC.
+ */
 function Lda() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());
@@ -42,6 +48,9 @@ function Lda() {
     }
 }
 
+/**
+ * Performs a logic ADD between a memory address value with the ACC.
+ */
 function Add() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());

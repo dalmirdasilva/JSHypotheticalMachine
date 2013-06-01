@@ -1,7 +1,7 @@
 /**
  * JS Hypothetical Machine
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,34 +32,36 @@ function Stack(size) {
             throw "Stack underflow."
         }
         this.tos--;
-        var b = this.dv.getInt8(this.tos);
-        this.dv.setUint8(this.tos, 0);
-        return b;
-    }
+        return this.dv.getInt8(this.tos);
+    };
     
     this.push = function(b) {
         if(this.tos >= this.size) {
             throw "Stack overflow."
         }
         this.dv.setUint8(this.tos++, b);
-    }
+    };
     
     this.erase = function() {
-        for(var i = this.size -1; i >= 0; i--) {
+        for(var i = 0; i < this.size / 4; i += 4) {
             this.dv.setUint8(i, 0);
         }
         this.tos = 0;
-    }
+    };
     
     this.read = function(address) {
         return this.dv.getUint8(address);
-    }
+    };
     
     this.getSize = function() {
         return this.size;
-    }
+    };
     
     this.getTop = function() {
         return this.tos;
-    }
+    };
+    
+    this.getBuffer = function() {
+        return this.buf;
+    };
 } 

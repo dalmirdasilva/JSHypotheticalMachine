@@ -1,7 +1,7 @@
 /**
  * JS Hypothetical Machine
  * 
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +19,33 @@
  
 /**
  * Converter class
- */
-function Converter() {
+ */ 
+var Converter = {
     
-    this.base = 10;
-    this.availableBases = new Array(2, 8, 10, 16);
+    base: 10,
+    availableBases: new Array(2, 8, 10, 16),
+    baseByteLength: new Array(8, 3, 3, 2),
     
-    this.setBase = function(base) {
+    setBase: function(base) {
         if(this.availableBases.indexOf(base) >= 0) {
             this.base = base;
         }
-    }
+    },
     
-    this.toNumber = function(string) {
+    getBase: function() {
+        return this.base;
+    },
+    
+    toNumber: function(string) {
         return parseInt(string, this.base);
-    }
+    },
     
-    this.toString = function(number) {
-        return number.toString(this.base);
+    toString: function(number) {
+        var s = number.toString(this.base);
+        var v = s;
+        for (var i = 0; i < (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length); i++) {
+            v = "0" + v;
+        }
+        return v;
     }
 }
