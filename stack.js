@@ -24,33 +24,33 @@ function Stack(size) {
     
     this.size = size;
     this.tos = 0;
-    this.buf = new ArrayBuffer(size);
-    this.dv = new DataView(this.buf);
+    this.buffer = new ArrayBuffer(size);
+    this.dataView = new DataView(this.buffer);
     
     this.pop = function() {
         if(this.tos == 0) {
             throw "Stack underflow."
         }
         this.tos--;
-        return this.dv.getInt8(this.tos);
+        return this.dataView.getInt8(this.tos);
     };
     
     this.push = function(b) {
         if(this.tos >= this.size) {
             throw "Stack overflow."
         }
-        this.dv.setUint8(this.tos++, b);
+        this.dataView.setUint8(this.tos++, b);
     };
     
     this.erase = function() {
         for(var i = 0; i < this.size / 4; i += 4) {
-            this.dv.setUint8(i, 0);
+            this.dataView.setUint8(i, 0);
         }
         this.tos = 0;
     };
     
     this.read = function(address) {
-        return this.dv.getUint8(address);
+        return this.dataView.getUint8(address);
     };
     
     this.getSize = function() {
@@ -62,6 +62,10 @@ function Stack(size) {
     };
     
     this.getBuffer = function() {
-        return this.buf;
+        return this.buffer;
+    };
+    
+    this.setBuffer = function(buffer) {
+        this.buffer = buffer;
     };
 } 

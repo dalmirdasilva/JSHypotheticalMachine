@@ -37,7 +37,6 @@ function Cpu() {
         pc: 0xff,
         ac: 0xff
     };
-    this._id;
     
     this.fetchInstruction = function() {
         return this.readMemory(this.nextPc());
@@ -58,7 +57,7 @@ function Cpu() {
     };
     
     this.clockTick = function() {
-        if(!this.isSleeping()) {
+        if(!this.isSleeping() && this.isPowered()) {
             var opcode = this.fetchInstruction();
             var instruction = this.decodeInstruction(opcode);
             try {
@@ -71,19 +70,14 @@ function Cpu() {
     };
     
     this.powerOn = function() {
-        var self = this;
-        this._id = this.oscillator.attachListener(function() {
-            self.clockTick();
-        });
         this.powered = true;
     };
 
     this.powerOff = function() {
-        this.oscillator.unattachListener(this._id);
+        this.powered = false;
         this.reset();
         this.awake();
         this.memory.resetAccess();
-        this.powered = false;
     };
     
     this.isPowered = function() {
@@ -136,6 +130,11 @@ function Cpu() {
     
     this.setOscillator = function(oscillator) {
         this.oscillator = oscillator;
+        var self = this;
+        var listener = new OscillatorEventListener(1, function() {
+            self.clockTick();
+        });
+        this.oscillator.addEventListener(Oscillator.EVENT.ON_CLOCK, listener);
     };
     
     this.getOscillator = function() {

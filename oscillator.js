@@ -24,11 +24,9 @@ function Oscillator(frequency) {
     
     this.MAX_FREQUENCY = 1000;
     this.frequency = frequency;
-    this.attachedListeners = [];
+    this.eventListeners = {};
     this.tics = 0;
-    this.listenersIdCounter = 0;
     this._interval;
-    this.started = false;
     
     this.getFrequency = function() {
         return this.frequency;
@@ -63,48 +61,50 @@ function Oscillator(frequency) {
     
     this.clockOut = function() {
         this.tics++;
-        this.notifyListeners();
+        this.notifyEvent(Oscillator.EVENT.ON_CLOCK);
     };
     
-    this.attachListener = function(notify, prescaller) {
-        prescaller = ((typeof prescaller) !== "undefined" || prescaller == 0) ? prescaller : 1;
-        var id = this.nextListenersId();
-        var listener = {"notify": notify, "prescaller": prescaller, "counter": 0, "listenersId": id};
-        this.attachedListeners.push(listener);
-        return id;
-    };
-    
-    this.connect = function(notify, prescaller) {
-        return this.attachListener(notify, prescaller);
-    };
-    
-    this.unattachListener = function(listenersId) {
-        var position = -1;
-        this.attachedListeners.map(function(listener, index) {
-            if (listener["listenersId"] == listenersId) {
-                position = index;
-            }
-        });
-        if (~position) {
-            this.attachedListeners.splice(position, 1);
-            return true;
+    this.addEventListener = function(event, listener) {
+        if ((typeof listener.prescaller) !== "undefined" || listener.prescaller == 0) {
+            listener.prescaller = 1;
+        }        
+        listener.counter = 0;
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
         }
-        return false;
+        this.eventListeners[event].push(listener);
     };
     
-    this.notifyListeners = function() {
-        for (var i in this.attachedListeners) {
-            var listener = this.attachedListeners[i]
-            listener.counter++;
-            if (listener.counter >= listener.prescaller) {
-                listener.counter = 0;
-                listener.notify();
-            }
+    this.notifyEvent = function(event) {
+        var listeners = this.eventListeners[event];
+        if (listeners) {
+            listeners.map(function(listener) {
+                listener.counter++;
+                if (listener.counter >= listener.prescaller) {
+                    listener.counter = 0;
+                    listener.notify();
+                }
+            });
         }
     };
     
-    this.nextListenersId = function() {
-        return this.listenersIdCounter++;
+    this.generateNextListenersId = function() {
+        return this.nextListenerId++;
     };
 }
 
+Oscillator.EVENT = {
+    ON_CLOCK: 0x01
+};
+
+Oscillator.ACTION = {
+    RESUME_CLOCKING: 0x00,
+    STOP_NEXT_CLOCK: 0x01,
+    CLOCKOUT_NOW: 0x02
+};
+
+function OscillatorEventListener(prescaller, notify) {
+    this.counter = 0;
+    this.prescaller = prescaller;
+    this.notify = notify;
+}

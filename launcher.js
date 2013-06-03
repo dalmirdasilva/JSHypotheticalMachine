@@ -18,38 +18,69 @@
  */
 
 /**
- * WebWorkerLauncher class
+ * Launcher class
  */ 
-function WebWorkerLauncher(path) {
+function Launcher(path) {
     
     this.messageHandler = null;
     this.worker = null;
     this.launched = false;
+    this.eventListeners = {};
+    
+    this.asyncMessageHandler = function(message) {
+        this.notifyEvent(Launcher.EVENT.ASYNC_MESSAGE_RECEIVED, message);
+    };
     
     this.launch = function(path) {
         if (!this.launched) {
             var self = this;
-            this.worker = new Worker(path);
-            this.worker.addEventListener("message", function(event) {
+            this.worker = new SharedWorker(path);
+            this.worker.port.addEventListener("message", function(event) {
                 if (self.messageHandler != null && typeof self.messageHandler === "function") {
                     message = Message.newFromHash(event.data)
                     self.messageHandler(message);
+                    self.messageHandler = self.asyncMessageHandler;
                 }
             });
             this.launched = true;
+            this.worker.port.start();
         }
-    }
+    };
 
     this.exchangeMessage = function(message, responseHandler) {
         if (!this.launched) {
-            return false;
+            throw new Error("No launched worker to exchange message.");
         }
         this.messageHandler = responseHandler;
-        this.worker.postMessage(message.toHash());
+        this.worker.port.postMessage(message.toHash());
         return true;
-    }
+    };
+    
+    this.notifyEvent = function(event, message) {
+        var listeners = this.eventListeners[event];
+        if (listeners) {
+            listeners.map(function(listener) {
+                listener.notify(message);
+            });
+        }
+    };
+    
+    this.addEventListener = function(event, listener) {
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
+        }
+        this.eventListeners[event].push(listener);
+    };
     
     if (path != null) {
         this.launch(path);
     }
+}
+
+Launcher.EVENT = {
+    ASYNC_MESSAGE_RECEIVED: 0x01
+};
+
+function LauncherEventListener(notify) {
+    this.notify = notify;
 }

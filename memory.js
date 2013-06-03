@@ -23,26 +23,28 @@
 function Memory(size) {
     
     this.size = size;
-    this.buf = new ArrayBuffer(size);
-    this.dv = new DataView(this.buf);
+    this.buffer = new ArrayBuffer(size);
+    this.dataView = new DataView(this.buffer);
+    this.eventListeners = {};
     
     this.access = {read: 0, write: 0};
     
     this.read = function(address) {
         this.checkBoundaries(address);
         this.access.read++;
-        return this.dv.getUint8(address);
+        return this.dataView.getUint8(address);
     };
     
     this.write = function(address, value) {
         this.checkBoundaries(address);
         this.access.write++;
-        this.dv.setUint8(address, value);
+        this.dataView.setUint8(address, value);
+        this.notifyEvent(Memory.EVENT.AFTER_WRITE, address);
     };
     
     this.erase = function() {
         for(var i = 0; i < this.size / 4; i += 4) {
-            this.dv.setUint32(i, 0);
+            this.dataView.setUint32(i, 0);
         }
         this.resetAccess();
     };
@@ -61,7 +63,12 @@ function Memory(size) {
     };
     
     this.getBuffer = function() {
-        return this.buf;
+        return this.buffer;
+    };
+    
+    this.setBuffer = function(buffer) {
+        this.buffer = buffer;
+        this.dataView = new DataView(this.buffer);
     };
     
     this.checkBoundaries = function(address) {
@@ -69,4 +76,34 @@ function Memory(size) {
             throw "Memory access violation at " + address + ".";
         }
     };
+    
+    this.notifyEvent = function(event, address) {
+        var self = this;
+        var listeners = this.eventListeners[event];
+        if (listeners) {
+            listeners.map(function(listener) {
+                if (address >= listener.begin  && address <= listener.end) {
+                    var slice = self.buffer.slice(listener.begin, listener.end);
+                    listener.notify(slice);
+                }
+            });
+        }
+    };
+    
+    this.addEventListener = function(event, listener) {
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
+        }
+        this.eventListeners[event].push(listener);
+    };
+}
+
+Memory.EVENT = {
+    AFTER_WRITE: 0x01
+};
+
+function MemoryEventListener(begin, end, notify) {
+    this.begin = begin;
+    this.end = end;
+    this.notify = notify;
 }

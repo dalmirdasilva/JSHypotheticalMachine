@@ -20,10 +20,11 @@
 /**
  * Message class
  */
-function Message(type, content) {
+function Message(type, content, channel) {
     
     this.type = type;
     this.content = content;
+    this.channel = channel;
         
     this.getType = function() {
         return this.type;
@@ -40,14 +41,23 @@ function Message(type, content) {
     this.setContent = function(content) {
         this.content = content;
     };
+        
+    this.getChannel = function() {
+        return this.channel;
+    };
+    
+    this.setChannel = function(channel) {
+        this.channel = channel;
+    };
     
     this.toHash = function() {
-        return {"type": this.type, "content": this.content};
+        return {"type": this.type, "content": this.content, "channel": this.channel};
     };
     
     this.fromHash = function(hash) {
         this.setType(hash["type"]);
         this.setContent(hash["content"]);
+        this.setChannel(hash["channel"]);
     };
 }
 
@@ -55,10 +65,18 @@ Message.newFromHash = function(hash) {
     var message = new Message();
     message.fromHash(hash);
     return message;
-}
+};
 
-Message.GET_MEMEORY_BUFFER = 0x00;
-Message.GET_STACK_BUFFER = 0x01;
-Message.SET_CPU_POWER = 0x02;
-Message.GET_SERIALIZED_CPU = 0x03;
-Message.SET_OSC_FREQUENCY = 0x04;
+Message.TYPE = {
+    GET_MEMORY_BUFFER: 0x00,
+    SET_MEMORY_BUFFER: 0x01,
+    GET_STACK_BUFFER: 0x02,
+    SET_STACK_BUFFER: 0x03,
+    SET_CPU_POWER: 0x04,
+    GET_SERIALIZED_CPU: 0x05,
+    SET_OSC_FREQUENCY: 0x06,
+    SET_MEMORY_CELL: 0x07,
+    ADD_MEMORY_EVENT_LISTENER: 0x08,
+    MEMORY_EVENT_NOTIFICATION: 0x09,
+    RESET_CPU: 0x0a
+};

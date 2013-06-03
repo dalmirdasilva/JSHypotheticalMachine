@@ -39,13 +39,14 @@ hlt
 # Sum subroutime
 :sum_subroutine
 add 54
+sta 101
 ret
 
 </textarea>
                         </div>
                         <div id="assembly-code-box-message"></div>
                         <button id="assemble-button">Assemble</button>
-                        <span>(<a href="help.txt" target="_blank">ajuda</a>)</span>
+                        <span>(<a href="help.txt" channel="_blank">ajuda</a>)</span>
                     </td>
                     <td valign="top">
                         <div class="sub-title">Assembled code</div>
@@ -192,7 +193,7 @@ ret
 <script src="assembler.js" type="text/javascript"></script>
 <script src="oscillator.js" type="text/javascript"></script>
 <script src="message.js" type="text/javascript"></script>
-<script src="web_worker_launcher.js" type="text/javascript"></script>
+<script src="launcher.js" type="text/javascript"></script>
 <script src="ext/mappedMemory.js" type="text/javascript"></script>
 <script src="UI.js" type="text/javascript"></script>
 
@@ -200,31 +201,74 @@ ret
 
 <script type="text/javascript">
     
+    var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,-0x1,0x64];
+    
+    var mem = new ArrayBuffer(256);
+    var memDv = new DataView(mem);
+    for (var i = 0; i < prog.length; i++) {
+        memDv.setInt8(i, prog[i]);
+    }
+    
     var DEFAULT_BASE = 16;
     var assembler = new Assembler();
     Converter.setBase(DEFAULT_BASE);
     
-    workerLauncher = new WebWorkerLauncher();
-    workerLauncher.launch("simulator.js");
+    launcher = new Launcher();
+    launcher.launch("simulator.js");
     
-    workerLauncher.exchangeMessage(new Message(Message.GET_STACK_BUFFER, "content"), function(message) {
+    launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER, "content"), function(message) {
         var dv = new DataView(message.getContent());
         dv.setInt8(0, 0x0a);
         console.log(dv.getInt8(0));
     });
     
-    workerLauncher.exchangeMessage(new Message(Message.GET_SERIALIZED_CPU, "content"), function(message) {
+    launcher.exchangeMessage(new Message(Message.TYPE.GET_SERIALIZED_CPU, "content"), function(message) {
+        console.log(message.getContent());
+    });
+    
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_OSC_FREQUENCY, 10), function(message) {
+        console.log(message.getContent());
+    });
+    
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, true), function(message) {
+        console.log(message.getContent());
+    });
+    /*
+    
+    listener = new LauncherEventListener(function(message) {
+        if (message.getChannel() == 3) {
+            console.log("dne:" + message.getContent());
+        }
+    });
+    launcher3.addEventListener(Launcher.EVENT.ASYNC_MESSAGE_RECEIVED, listener);
+    
+    launcher2.exchangeMessage(new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {"event": Memory.EVENT.AFTER_WRITE, "begin": 0, "end": 255}, 2), function(message) {
         console.log(message.getContent())
     });
     
-    workerLauncher.exchangeMessage(new Message(Message.SET_OSC_FREQUENCY, 100), function(message) {
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
         console.log(message.getContent())
     });
     
-    workerLauncher.exchangeMessage(new Message(Message.SET_CPU_POWER, true), function(message) {
+    launcher.exchangeMessage(new Message(Message.TYPE.RESET_CPU, null), function(message) {
         console.log(message.getContent())
     });
     
+    
+    
+    
+    launcher.exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER, null), function(message) {
+        console.log("mem");
+        var dv = new DataView(message.getContent());
+        for (var i = 0; i < 255; i++) {
+            console.log(dv.getInt8(i));
+        }
+    });
+    
+    
+    */
     //var ui = new UI(cpu);
     //ui.init();
 

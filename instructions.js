@@ -116,7 +116,6 @@ function Jz() {
 
 function Hlt() {
     this.exec = function(cpu) {
-        alert(1);
         cpu.sleep();
     }
 }
