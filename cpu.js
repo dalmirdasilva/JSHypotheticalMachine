@@ -38,7 +38,7 @@ function Cpu() {
         ac: 0xff
     };
     
-    this.fetchInstruction = function() {
+    this.fetchNextInstruction = function() {
         return this.readMemory(this.nextPc());
     };
         
@@ -58,7 +58,7 @@ function Cpu() {
     
     this.clockTick = function() {
         if(!this.isSleeping() && this.isPowered()) {
-            var opcode = this.fetchInstruction();
+            var opcode = this.fetchNextInstruction();
             var instruction = this.decodeInstruction(opcode);
             try {
                 this.executeInstruction(instruction);

@@ -22,7 +22,7 @@
  */ 
 function Launcher(path) {
     
-    this.messageHandler = null;
+    this.messageHandlerQueue = [];
     this.worker = null;
     this.launched = false;
     this.eventListeners = {};
@@ -36,12 +36,18 @@ function Launcher(path) {
             var self = this;
             this.worker = new SharedWorker(path);
             this.worker.port.addEventListener("message", function(event) {
-                if (self.messageHandler != null && typeof self.messageHandler === "function") {
-                    message = Message.newFromHash(event.data)
-                    self.messageHandler(message);
-                    self.messageHandler = self.asyncMessageHandler;
+                var message = Message.newFromHash(event.data);
+                if (message.isAsync()) {
+                    self.asyncMessageHandler(message);
+                } else {
+                    var handler = self.messageHandlerQueue.shift();
+                    if (handler && (typeof handler === "function")) {
+                        handler(message);
+                    } else {
+                        throw new Error("No handler for message: " + message);
+                    }
                 }
-            });
+            }, false);
             this.launched = true;
             this.worker.port.start();
         }
@@ -51,7 +57,9 @@ function Launcher(path) {
         if (!this.launched) {
             throw new Error("No launched worker to exchange message.");
         }
-        this.messageHandler = responseHandler;
+        this.messageHandlerQueue.push(responseHandler);
+        
+        // What happens if at this moment a message comes from worker?
         this.worker.port.postMessage(message.toHash());
         return true;
     };

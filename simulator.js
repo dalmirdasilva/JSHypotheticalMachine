@@ -42,7 +42,7 @@ cpu.setDecoder(decoder);
          
 function processRequest(request, port) {
 
-    var response = new Message(request.getType(), true, null);
+    var response = new Message(request.getType(), true);
 
     switch(request.getType()) {
         
@@ -108,11 +108,15 @@ function processRequest(request, port) {
             stack.setBuffer(buffer);
         break;
         
+        case Message.TYPE.GET_TOP_OF_STACK:
+            response.setContent(stack.getTop());
+        break;
+        
         case Message.TYPE.ADD_MEMORY_EVENT_LISTENER:
             var channel = request.getChannel();
             var content = request.getContent();
             var listener = new MemoryEventListener(content["begin"], content["end"], function(slice) {
-                var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel);
+                var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
                 port.postMessage(asyncResponse.toHash());
             });
             memory.addEventListener(content["event"], listener);

@@ -87,10 +87,6 @@ function Oscillator(frequency) {
             });
         }
     };
-    
-    this.generateNextListenersId = function() {
-        return this.nextListenerId++;
-    };
 }
 
 Oscillator.EVENT = {

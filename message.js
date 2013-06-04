@@ -20,11 +20,12 @@
 /**
  * Message class
  */
-function Message(type, content, channel) {
+function Message(type, content, channel, async) {
     
     this.type = type;
     this.content = content;
-    this.channel = channel;
+    this.channel = channel || 0;
+    this.async = async || false;
         
     this.getType = function() {
         return this.type;
@@ -48,6 +49,14 @@ function Message(type, content, channel) {
     
     this.setChannel = function(channel) {
         this.channel = channel;
+    };
+    
+    this.setAsync = function(async) {
+        this.async = async;
+    };
+    
+    this.isAsync = function() {
+        return this.async;
     };
     
     this.toHash = function() {
@@ -78,5 +87,6 @@ Message.TYPE = {
     SET_MEMORY_CELL: 0x07,
     ADD_MEMORY_EVENT_LISTENER: 0x08,
     MEMORY_EVENT_NOTIFICATION: 0x09,
-    RESET_CPU: 0x0a
+    RESET_CPU: 0x0a,
+    GET_TOP_OF_STACK: 0x0b
 };
