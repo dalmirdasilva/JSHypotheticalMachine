@@ -7,20 +7,21 @@ var StackView = {
             stack: ".draggable-item"
         });
         self.createStackGrid();
-        UI.addEventListener(UI.EVENT.ON_REPAINT, function(launcher) {
-            self.repaint(launcher);
-        };
+        var listener = new UIEventListener(function() {
+            self.repaint();
+        });
+        UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
     },
     
-    repaint: function(launcher) {
+    repaint: function() {
         var self = this;
-        launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER), function(message) {
-            var arrayBuffer = message.getContent();
-            self.updateStackValues(arrayBuffer);
-        });
         launcher.exchangeMessage(new Message(Message.TYPE.GET_TOP_OF_STACK), function(message) {
             var topOfStack = message.getContent();
             self.updateTopOfStack(topOfStack);
+        });
+        launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER), function(message) {
+            var arrayBuffer = message.getContent();
+            self.updateStackValues(arrayBuffer);
         });
     },
     
@@ -32,7 +33,7 @@ var StackView = {
     updateStackValues: function(arrayBuffer) {
         var dv = new DataView(arrayBuffer);
         for (var i = 0; i < arrayBuffer.byteLength; i++) {
-            var byte = dv.readInt8(i);
+            var byte = dv.getInt8(i);
             var text = Converter.toString(byte);
             $("#stack-reg-" + i).text(text);
         }
@@ -40,8 +41,8 @@ var StackView = {
     
     createStackGrid: function() {
         var table = $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>");
-        var stackSize = cpu.getStack().getSize();
-        var tr = $("<tr>s</tr>");
+        var stackSize = Config.SIMULATOR_STACK_SIZE;
+        var tr = $("<tr></tr>");
         var positionTd = $("<td></td>");
         var valueTd = $("<td>&nbsp;</td>");
             valueTd.addClass("stack-cell-side");
@@ -63,4 +64,4 @@ var StackView = {
         }
         table.appendTo("#stack-grid-body");
     }
-}
+};

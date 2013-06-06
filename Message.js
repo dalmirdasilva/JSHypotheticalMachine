@@ -22,7 +22,7 @@
  */
 function Message(type, content, channel, async) {
     
-    this.type = type;
+    this.type = type || Message.TYPE.DEFAULT;
     this.content = content;
     this.channel = channel || 0;
     this.async = async || false;
@@ -77,16 +77,18 @@ Message.newFromHash = function(hash) {
 };
 
 Message.TYPE = {
-    GET_MEMORY_BUFFER: 0x00,
-    SET_MEMORY_BUFFER: 0x01,
-    GET_STACK_BUFFER: 0x02,
-    SET_STACK_BUFFER: 0x03,
-    SET_CPU_POWER: 0x04,
-    GET_SERIALIZED_CPU: 0x05,
-    SET_OSC_FREQUENCY: 0x06,
-    SET_MEMORY_CELL: 0x07,
-    ADD_MEMORY_EVENT_LISTENER: 0x08,
-    MEMORY_EVENT_NOTIFICATION: 0x09,
-    RESET_CPU: 0x0a,
-    GET_TOP_OF_STACK: 0x0b
+    DEFAULT: 0x00,
+    GET_MEMORY_BUFFER: 0x02,
+    SET_MEMORY_BUFFER: 0x03,
+    GET_STACK_BUFFER: 0x04,
+    SET_STACK_BUFFER: 0x05,
+    SET_CPU_POWER: 0x06,
+    GET_SERIALIZED_CPU: 0x07,
+    SET_OSC_FREQUENCY: 0x08,
+    SET_MEMORY_CELL: 0x09,
+    ADD_MEMORY_EVENT_LISTENER: 0x0a,
+    MEMORY_EVENT_NOTIFICATION: 0x0b,
+    RESET_CPU: 0x0c,
+    GET_TOP_OF_STACK: 0x0d,
+    GET_CPU_PC: 0x0e
 };

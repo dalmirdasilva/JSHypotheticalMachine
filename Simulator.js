@@ -17,21 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-importScripts("oscillator.js");
-importScripts("cpu.js");
-importScripts("memory.js");
-importScripts("stack.js");
-importScripts("decoder.js");
-importScripts("instructions.js");
-importScripts("message.js");
+importScripts("Config.js");
+importScripts("OscillatorEventListener.js");
+importScripts("Oscillator.js");
+importScripts("Cpu.js");
+importScripts("Memory.js");
+importScripts("Stack.js");
+importScripts("Decoder.js");
+importScripts("Instructions.js");
+importScripts("MemoryEventListener.js");
+importScripts("Message.js");
 
-var SIMULATOR_OSC_SPEED = 1000;
-var SIMULATOR_MEMORY_SIZE = 256;
-var SIMULATOR_STACK_SIZE = 16;
-
-var oscillator = new Oscillator(SIMULATOR_OSC_SPEED);
-var memory = new Memory(SIMULATOR_MEMORY_SIZE);
-var stack = new Stack(SIMULATOR_STACK_SIZE);
+var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
+var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
+var stack = new Stack(Config.SIMULATOR_STACK_SIZE);
 var decoder = new Decoder();
 var cpu = new Cpu();
 
@@ -39,7 +38,7 @@ cpu.setOscillator(oscillator);
 cpu.setMemory(memory);
 cpu.setStack(stack);
 cpu.setDecoder(decoder);
-         
+
 function processRequest(request, port) {
 
     var response = new Message(request.getType(), true);
@@ -52,6 +51,10 @@ function processRequest(request, port) {
         
         case Message.TYPE.RESET_CPU:
             cpu.reset();
+        break;
+        
+        case Message.TYPE.GET_CPU_PC:
+            response.setContent(cpu.getPc());
         break;
         
         case Message.TYPE.SET_CPU_POWER:
@@ -135,3 +138,5 @@ self.addEventListener("connect", function (event) {
 	}, false);
 	port.start();
 }, false);
+
+oscillator.startClocking();

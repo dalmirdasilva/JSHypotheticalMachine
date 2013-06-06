@@ -17,21 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#stack-grid-holder {
-    width: 110px;
+#memory-grid-holder {
+    width: 170px;
     height: 500px;
     overflow: auto;
-    padding: 0px 4px;
 }
- 
-#stack-grid {
+
+#memory-grid {
     background-color: #eee;
     border: 1px solid #aaa; 
     position: absolute; 
     padding: 4px;
 }
 
-#stack-grid-title {
+#memory-grid-title {
     margin-bottom: 6px;
     padding: 4px;
     background-color: #eee;
@@ -40,12 +39,13 @@
     cursor: default;
 }
 
-#stack-grid-body {
+#memory-grid-body {
     margin:10px;
     border: 2px solid #fff;
 }
 
-#stack-cell-edit-input {
+
+#memory-cell-edit-input {
     display: none;
     width: 35px;
     height: 30px;
@@ -54,7 +54,12 @@
     position: absolute;
 }
 
-.stack-cell-side {
+.memory-cell-corner {
+    padding: 6px 8px;
+    background-color: #eee;
+}
+
+.memory-cell-side, .memory-cell-top {
     color: #646464;
     background-color: #ddd;
     padding: 6px 8px;
@@ -62,7 +67,7 @@
     min-width: 15px;
 }
 
-.stack-cell {
+.memory-cell {
     color: #000;
     text-align: center;
     background-color: #fff;
@@ -71,13 +76,11 @@
     border-right: 1px solid #eee;
 }
 
-.stack-cell-current {
+.memory-cell {
+    cursor: pointer;
+}
+
+.memory-cell-current {
     background-color: #f90;
 }
 
-.stack-cell-used {
-}
-
-.stack-cell-empty {
-    color: #aaa;
-}

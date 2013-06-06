@@ -17,42 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
- function SeekableArray() {
-    
-    this.pos = 0;
-    this.buf = new Array();
-    
-    this.push = function(b) {
-        if (this.pos >= this.buf.length) {
-            this.buf.push(b);
-        } else {
-            this.buf[this.pos] = b;
-        }
-        this.pos++;
-    }
-    
-    this.pop = function() {
-        if (this.pos <= 0) {
-            throw "SeekableStack underflow.";
-        }
-        return this.buf[--this.pos];
-    }
-    
-    this.seek = function(position) {
-        if (position > this.buf.length) {
-            var count = position - this.buf.length;
-            while (count-- != 0) {
-                this.buf.push(0);
-            }
-        }
-        this.pos = position;
-    }
-
-    this.content = function() {
-        return this.buf;
-    }
- }
- 
 /**
  * Assembler class
  */

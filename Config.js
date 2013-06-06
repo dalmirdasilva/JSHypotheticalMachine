@@ -18,34 +18,15 @@
  */
  
 /**
- * Converter class
- */ 
-var Converter = {
+ * Config class
+ */
+var Config = {
     
-    base: 10,
-    availableBases: new Array(2, 8, 10, 16),
-    baseByteLength: new Array(8, 3, 3, 2),
-    
-    setBase: function(base) {
-        if(this.availableBases.indexOf(base) >= 0) {
-            this.base = base;
-        }
-    },
-    
-    getBase: function() {
-        return this.base;
-    },
-    
-    toNumber: function(string) {
-        return parseInt(string, this.base);
-    },
-    
-    toString: function(number) {
-        var s = number.toString(this.base);
-        var v = s;
-        for (var i = 0; i < (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length); i++) {
-            v = "0" + v;
-        }
-        return v;
-    }
-}
+    SIMULATOR_OSC_MAX_FREQUENCY: 1000,
+    SIMULATOR_OSC_INITIAL_FREQUENCY: 100,
+    SIMULATOR_CPU_PRESCALLER: 1,
+    SIMULATOR_MEMORY_SIZE: 256,
+    SIMULATOR_STACK_SIZE: 16,
+    UI_REFRESH_FREQUENCY: 15,
+    UI_DEFAULT_BASE: 16
+};

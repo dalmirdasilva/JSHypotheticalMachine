@@ -66,19 +66,6 @@ textarea {
     margin-bottom: 2px;
 }
 
-#memory-grid-holder {
-    width: 170px;
-    height: 500px;
-    overflow: auto;
-}
-
-#stack-grid-holder {
-    width: 110px;
-    height: 500px;
-    overflow: auto;
-    padding: 0px 4px;
-}
-
 .short-input {
     width: 60px;
 }
@@ -145,7 +132,7 @@ textarea {
     padding: 8px 2px 2px 2px;
 }
 
-#memery-cell-edit-input, #stack-cell-edit-input {
+#memory-cell-edit-input, #stack-cell-edit-input {
     display: none;
     width: 35px;
     height: 30px;
@@ -163,12 +150,12 @@ textarea {
     width: 250px;
 }
 
-.memery-cell-corner {
+.memory-cell-corner {
     padding: 6px 8px;
     background-color: #eee;
 }
 
-.memery-cell-side, .memery-cell-top, .stack-cell-side {
+.memory-cell-side, .memory-cell-top, .stack-cell-side {
     color: #646464;
     background-color: #ddd;
     padding: 6px 8px;
@@ -176,7 +163,7 @@ textarea {
     min-width: 15px;
 }
 
-.memery-cell, .stack-cell {
+.memory-cell, .stack-cell {
     color: #000;
     text-align: center;
     background-color: #fff;
@@ -185,11 +172,11 @@ textarea {
     border-right: 1px solid #eee;
 }
 
-.memery-cell {
+.memory-cell {
     cursor: pointer;
 }
 
-.memery-cell-current {
+.memory-cell-current {
     background-color: #f90;
 }
 

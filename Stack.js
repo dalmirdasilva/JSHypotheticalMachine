@@ -25,7 +25,7 @@ function Stack(size) {
     this.size = size;
     this.tos = 0;
     this.buffer = new ArrayBuffer(size);
-    this.dataView = new DataView(this.buffer);
+    this.dataView = null;
     
     this.pop = function() {
         if(this.tos == 0) {
@@ -67,5 +67,12 @@ function Stack(size) {
     
     this.setBuffer = function(buffer) {
         this.buffer = buffer;
+        this.updateDataView();
     };
+    
+    this.updateDataView = function() {
+        this.dataView = new DataView(this.buffer);
+    };
+    
+    this.updateDataView();
 } 

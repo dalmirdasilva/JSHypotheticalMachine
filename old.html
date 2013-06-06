@@ -117,7 +117,7 @@ ret
 </table>
 
 <div id="memory-grid" class="draggable-item">
-    <input type="text" id="memery-cell-edit-input" maxlength="8"/>
+    <input type="text" id="memory-cell-edit-input" maxlength="8"/>
     <div id="memory-grid-tooltip">
         <table>
             <tr>
@@ -209,6 +209,13 @@ ret
     
     
     
+    var DEFAULT_BASE = 16;
+    var assembler = new Assembler();
+    Converter.setBase(DEFAULT_BASE);
+    
+    launcher = new Launcher();
+    launcher.launch("simulator.js");
+    
     var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,-0x1,0x64];
@@ -219,12 +226,24 @@ ret
         memDv.setInt8(i, prog[i]);
     }
     
-    var DEFAULT_BASE = 16;
-    var assembler = new Assembler();
-    Converter.setBase(DEFAULT_BASE);
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
+        console.log(message.getContent())
+    });
     
-    launcher = new Launcher();
-    launcher.launch("simulator.js");
+    
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, false), function(message) {
+        console.log(message.getContent());
+    });
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, true), function(message) {
+        console.log(message.getContent());
+    });
+    
+    launcher.exchangeMessage(new Message(Message.TYPE.RESET_CPU, null), function(message) {
+        console.log(message.getContent())
+    });
+    
+    
+    
     
     launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER, "content"), function(message) {
         var dv = new DataView(message.getContent());
@@ -260,10 +279,6 @@ ret
         console.log(message.getContent())
     });
     
-    launcher.exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
-        console.log(message.getContent())
-    });
-    
     launcher.exchangeMessage(new Message(Message.TYPE.RESET_CPU, null), function(message) {
         console.log(message.getContent())
     });
@@ -278,6 +293,18 @@ ret
             console.log(dv.getInt8(i));
         }
     });
+    
+    var progSt = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00];
+    
+    var st = new ArrayBuffer(16);
+    var stDv = new DataView(st);
+    for (var i = 0; i < progSt.length; i++) {
+        stDv.setInt8(i, progSt[i]);
+    }
+    launcher.exchangeMessage(new Message(Message.TYPE.SET_STACK_BUFFER, st), function(message) {
+        console.log(message.getContent())
+    });
+    
     
     
     */

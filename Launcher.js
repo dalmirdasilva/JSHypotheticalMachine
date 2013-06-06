@@ -44,7 +44,7 @@ function Launcher(path) {
                     if (handler && (typeof handler === "function")) {
                         handler(message);
                     } else {
-                        throw new Error("No handler for message: " + message);
+                        throw new Error("No available handler for message: " + message);
                     }
                 }
             }, false);
@@ -88,7 +88,3 @@ function Launcher(path) {
 Launcher.EVENT = {
     ASYNC_MESSAGE_RECEIVED: 0x01
 };
-
-function LauncherEventListener(notify) {
-    this.notify = notify;
-}

@@ -22,7 +22,6 @@
  */
 var UI = {
     
-    REFRESH_FREQUENCY: 20,
     _interval: null,
     eventListeners: {},
     launcher: null,
@@ -35,17 +34,18 @@ var UI = {
     },
     
     notifyEvent: function(event) {
+        var self = this;
         var listeners = this.eventListeners[event];
         if (listeners) {
             listeners.map(function(listener) {
-                listener.notify(this.launcher);
+                listener.notify(self.launcher);
             });
         }
     },
     
     init: function(launcher) {
         this.launcher = launcher;
-        var interval = 1000 / this.REFRESH_FREQUENCY;
+        var interval = 1000 / Config.UI_REFRESH_FREQUENCY;
         var self = this;
         this._interval = setInterval(function() {
             self.notifyEvent(UI.EVENT.ON_REPAINT);
@@ -57,8 +57,4 @@ var UI = {
 UI.EVENT = {
     ON_INITIALIZE: 0x00,
     ON_REPAINT: 0x01
-};
-
-var UIEventListener = function(notify) {
-    this.notify = notify;
 };

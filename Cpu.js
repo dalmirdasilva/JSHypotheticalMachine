@@ -131,7 +131,7 @@ function Cpu() {
     this.setOscillator = function(oscillator) {
         this.oscillator = oscillator;
         var self = this;
-        var listener = new OscillatorEventListener(1, function() {
+        var listener = new OscillatorEventListener(Config.SIMULATOR_CPU_PRESCALLER, function() {
             self.clockTick();
         });
         this.oscillator.addEventListener(Oscillator.EVENT.ON_CLOCK, listener);

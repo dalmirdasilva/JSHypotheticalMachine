@@ -22,8 +22,7 @@
  */
 function Oscillator(frequency) {
     
-    this.MAX_FREQUENCY = 1000;
-    this.frequency = frequency;
+    this.frequency = frequency || 1000;
     this.eventListeners = {};
     this.tics = 0;
     this._interval;
@@ -33,8 +32,8 @@ function Oscillator(frequency) {
     };
     
     this.setFrequency = function(frequency) {
-        if (frequency > this.MAX_FREQUENCY || frequency < 1) {
-            throw "Oscillation frequency " + frequency + " out or range of 1.." + this.MAX_FREQUENCY + "";
+        if (frequency > Config.SIMULATOR_OSC_MAX_FREQUENCY || frequency < 1) {
+            throw "Oscillation frequency " + frequency + " out or range of 1.." + Config.SIMULATOR_OSC_MAX_FREQUENCY + "";
         }
         this.frequency = frequency;
         this.restartClocking();
@@ -65,10 +64,10 @@ function Oscillator(frequency) {
     };
     
     this.addEventListener = function(event, listener) {
-        if ((typeof listener.prescaller) !== "undefined" || listener.prescaller == 0) {
-            listener.prescaller = 1;
+        if ((typeof listener.getPrescaller()) !== "undefined" || listener.getPrescaller(0)) {
+            listener.setPrescaller(1);
         }        
-        listener.counter = 0;
+        listener.setCounter(0);
         if (!this.eventListeners[event]) {
             this.eventListeners[event] = [];
         }
@@ -79,9 +78,9 @@ function Oscillator(frequency) {
         var listeners = this.eventListeners[event];
         if (listeners) {
             listeners.map(function(listener) {
-                listener.counter++;
-                if (listener.counter >= listener.prescaller) {
-                    listener.counter = 0;
+                listener.increaseCounterBy(1);
+                if (listener.getCounter() >= listener.getPrescaller()) {
+                    listener.setCounter(0);
                     listener.notify();
                 }
             });
@@ -98,9 +97,3 @@ Oscillator.ACTION = {
     STOP_NEXT_CLOCK: 0x01,
     CLOCKOUT_NOW: 0x02
 };
-
-function OscillatorEventListener(prescaller, notify) {
-    this.counter = 0;
-    this.prescaller = prescaller;
-    this.notify = notify;
-}

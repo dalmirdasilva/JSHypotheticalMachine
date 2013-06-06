@@ -22,9 +22,9 @@
  */
 function Memory(size) {
     
-    this.size = size;
+    this.size = size || 256;
     this.buffer = new ArrayBuffer(size);
-    this.dataView = new DataView(this.buffer);
+    this.dataView;
     this.eventListeners = {};
     
     this.access = {read: 0, write: 0};
@@ -68,12 +68,12 @@ function Memory(size) {
     
     this.setBuffer = function(buffer) {
         this.buffer = buffer;
-        this.dataView = new DataView(this.buffer);
+        this.updateDataView();
     };
     
     this.checkBoundaries = function(address) {
         if (address < 0 || address >= this.size) {
-            throw "Memory access violation at " + address + ".";
+            throw new Error("Memory access violation at " + address + ".");
         }
     };
     
@@ -96,14 +96,14 @@ function Memory(size) {
         }
         this.eventListeners[event].push(listener);
     };
+    
+    this.updateDataView = function() {
+        this.dataView = new DataView(this.buffer);
+    };
+    
+    this.updateDataView();
 }
 
 Memory.EVENT = {
     AFTER_WRITE: 0x01
 };
-
-function MemoryEventListener(begin, end, notify) {
-    this.begin = begin;
-    this.end = end;
-    this.notify = notify;
-}
