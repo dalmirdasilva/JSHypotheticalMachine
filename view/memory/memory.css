@@ -17,33 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#memory-grid-holder {
-    width: 170px;
-    height: 500px;
-    overflow: auto;
-}
-
-#memory-grid {
-    background-color: #eee;
-    border: 1px solid #aaa; 
+#memory-holder {
+    background-color: #fff;
+    border: 1px solid #999; 
     position: absolute; 
-    padding: 4px;
+    left: 541px; 
 }
 
-#memory-grid-title {
-    margin-bottom: 6px;
-    padding: 4px;
-    background-color: #eee;
-    font-weight: bold;
-    font-size: 110.5%;
+#memory-title {
     cursor: default;
 }
 
-#memory-grid-body {
-    margin:10px;
-    border: 2px solid #fff;
+#memory-body {
+    margin: 4px;
 }
-
 
 #memory-cell-edit-input {
     display: none;
@@ -54,29 +41,37 @@
     position: absolute;
 }
 
+#memory-access {
+    text-align: right;
+    padding: 2px 6px;
+    background-color: #fff;
+}
+
 .memory-cell-corner {
-    padding: 6px 8px;
     background-color: #eee;
 }
 
 .memory-cell-side, .memory-cell-top {
     color: #646464;
     background-color: #ddd;
-    padding: 6px 8px;
+    padding: 4px 6px;
     text-align: center;
-    min-width: 15px;
+}
+
+.memory-cell-side {
+    border-bottom: 1px solid #fff;
+}
+
+.memory-cell-top {
+    border-right: 1px solid #fff;
 }
 
 .memory-cell {
     color: #000;
     text-align: center;
     background-color: #fff;
-    padding: 6px 8px;
     border-bottom: 1px solid #eee;
     border-right: 1px solid #eee;
-}
-
-.memory-cell {
     cursor: pointer;
 }
 

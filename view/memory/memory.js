@@ -1,11 +1,10 @@
 var MemoryView = {
     
+    cache: new Uint8Array(Config.SIMULATOR_MEMORY_SIZE),
+    access: {"read": 0, "write": 0},
+    
     init: function() {
         var self = this;
-        $("#memory-grid").draggable({
-            handle:"#memory-grid-title",
-            memory: ".draggable-item"
-        });
         self.createMemoryGrid();
         var listener = new UIEventListener(function() {
             self.repaint();
@@ -15,13 +14,17 @@ var MemoryView = {
     
     repaint: function() {
         var self = this;
-        launcher.exchangeMessage(new Message(Message.TYPE.GET_CPU_PC), function(message) {
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_CPU_PC), function(message) {
             var pc = message.getContent();
             self.updateCurrentPosition(pc);
         });
-        launcher.exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER), function(message) {
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER), function(message) {
             var arrayBuffer = message.getContent();
             self.updateMemoryValues(arrayBuffer);
+        });
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_MEMORY_ACCESS), function(message) {
+            var memoryAccess = message.getContent();
+            self.updateMemoryAccess(memoryAccess);
         });
     },
     
@@ -31,16 +34,30 @@ var MemoryView = {
     },
     
     updateMemoryValues: function(arrayBuffer) {
-        var dv = new DataView(arrayBuffer);
-        for (var i = 0; i < arrayBuffer.byteLength; i++) {
-            var byte = dv.getInt8(i);
-            var text = Converter.toString(byte);
-            $("#memory-reg-" + i).text(text);
+        var array = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < array.length; i++) {
+            var byte = array[i];
+            if (byte != this.cache[i]) {
+                this.cache[i] = byte;
+                var text = Converter.toString(byte);
+                $("#memory-reg-" + i).text(text);
+            }
+        }
+    },
+    
+    updateMemoryAccess: function(memoryAccess) {
+        if (memoryAccess["write"] != this.access["write"]) {
+            this.access["write"] = memoryAccess["write"];
+            $("#memory-access-write").text(this.access["write"]);
+        }
+        if (memoryAccess["read"] != this.access["read"]) {
+            this.access["read"] = memoryAccess["read"];
+            $("#memory-access-read").text(this.access["read"]);
         }
     },
     
     createMemoryGrid: function() {
-        var table = $("<table border='0' cellspacing='0' cellpadding='2'></table>");        
+        var table = $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>");        
         var rows = Config.SIMULATOR_MEMORY_SIZE / 16;
         for (var y = -1; y < rows; y++) {
             var tr = $("<tr></tr>");
@@ -82,7 +99,7 @@ var MemoryView = {
             }
             table.append(tr);
         }
-        table.appendTo("#memory-grid-body");
+        table.appendTo("#memory-body");
     }
     
 };

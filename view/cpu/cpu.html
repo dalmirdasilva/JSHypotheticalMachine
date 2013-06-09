@@ -1,1 +1,58 @@
+<link href="view/cpu/cpu.css" rel="stylesheet" type="text/css">
 
+<div id="cpu-holder" class="view-holder draggable-item">
+    <div id="cpu-title" class="view-title draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-link"></span>
+        </div> 
+        Cpu
+    </div>
+    <div id="cpu-body" class="view-body">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <td width="30%">AC</td>
+                        <td width="30%">PC</td>
+                        <td width="20%">Z</td>
+                        <td width="20%">N</td>
+                    </tr>
+                </thead> 
+                <tbody> 
+                    <tr>
+                        <td><span id="ac-box">-</span></td>
+                        <td><span id="pc-box">-</span></td>
+                        <td><span id="z-box">-</span></td>
+                        <td><span id="n-box">-</span></td>
+                    <tr>
+                </tbody> 
+            </table>
+        </div>
+    </div>
+    <div class="view-sub-title">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-bullet"></span>
+        </div> Buttons
+    </div>
+    <div class="view-body">
+        <div>
+            <table>
+                <tbody> 
+                    <tr>
+                        <td><button id="cpu-reset-button" class="cpu-button">Reset</button></td>
+                        <td><input type="checkbox" id="cpu-sleep-button" class="cpu-button" /><label for="cpu-sleep-button">Sleep</label></td>
+                        <td><input type="checkbox" id="cpu-power-button" class="cpu-button" /><label for="cpu-power-button">Power</label></td>
+                    </tr>
+                </tbody> 
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="view/cpu/cpu.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var listener = new UIEventListener(function() {
+        CpuView.init();
+    });
+    UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
+</script>

@@ -16,33 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#stack-grid-holder {
-    width: 110px;
-    height: 500px;
-    overflow: auto;
-    padding: 0px 4px;
-}
  
-#stack-grid {
-    background-color: #eee;
-    border: 1px solid #aaa; 
+#stack-holder {
+    background-color: #fff;
+    border: 1px solid #999; 
     position: absolute; 
-    padding: 4px;
+    left: 10px; 
+    min-width: 70px;
 }
 
-#stack-grid-title {
-    margin-bottom: 6px;
-    padding: 4px;
-    background-color: #eee;
-    font-weight: bold;
-    font-size: 110.5%;
+#stack-title {
     cursor: default;
 }
 
-#stack-grid-body {
-    margin:10px;
-    border: 2px solid #fff;
+#stack-body {
+    margin: 4px;
 }
 
 #stack-cell-edit-input {
@@ -54,30 +42,33 @@
     position: absolute;
 }
 
+.stack-cell-corner {
+    background-color: #eee;
+}
+
 .stack-cell-side {
     color: #646464;
     background-color: #ddd;
-    padding: 6px 8px;
+    padding: 4px 6px;
     text-align: center;
-    min-width: 15px;
+}
+
+.stack-cell-side {
+    border-bottom: 1px solid #fff;
+}
+
+.stack-cell-top {
+    border-right: 1px solid #fff;
 }
 
 .stack-cell {
     color: #000;
     text-align: center;
     background-color: #fff;
-    padding: 6px 8px;
     border-bottom: 1px solid #eee;
     border-right: 1px solid #eee;
 }
 
 .stack-cell-current {
     background-color: #f90;
-}
-
-.stack-cell-used {
-}
-
-.stack-cell-empty {
-    color: #aaa;
 }

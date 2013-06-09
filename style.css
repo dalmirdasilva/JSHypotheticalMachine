@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 * {
     font-family: verdana;
     font-size: 13px;
@@ -29,8 +30,21 @@ textarea {
     border: 1px solid #aaa;
 }
 
-#memory-grid-holder {
-    border: 1px solid #fff;
+.view-title, .view-sub-title {
+    padding: 6px;
+    background-color: #fdb;
+    font-weight: bold;
+    color: #444;
+}
+
+.view-sub-title {
+    border-bottom: 1px solid #bbb;
+    font-weight: normal;
+    background-color: #eee;
+}
+
+.view-body {
+    margin: 4px;
 }
 
 #assembly-code-box, #assembled-code-box {
@@ -74,15 +88,6 @@ textarea {
     width: 100px;
 }
 
-.memory-reg-address, .stack-reg-address {
-    text-align: right;
-}
-
-.memory-reg-position {
-    text-align: right;
-    width: 12px;
-}
-
 #assembly-code-box-message, #assembled-code-box-message {
     border: red;
     background: #f90;
@@ -96,107 +101,34 @@ textarea {
     width: 150px;
 }
 
-#memory-grid, #stack-grid, #cpu-settings {
-    background-color: #eee;
-    border: 1px solid #aaa; 
-    position: absolute; 
-    padding: 4px;
-}
-
-#memory-grid-title, #stack-grid-title, #cpu-settings-title {
-    margin-bottom: 6px;
-    padding: 4px;
-    background-color: #eee;
-    font-weight: bold;
-    font-size: 110.5%;
-    cursor: default;
-}
-
-#memory-grid-body, #stack-grid-body, #cpu-settings-body {
-    margin:10px;
-    border: 2px solid #fff;
-}
-
-#cpu-settings-body {
-    padding: 6px;
-    background-color: #fff;
-}
-
-#cpu-frequency-spinner {
-    width: 40px;
-    font-size: 13px;
-    padding: 2px;
-}
-
-.settings-sub-title {
-    padding: 8px 2px 2px 2px;
-}
-
-#memory-cell-edit-input, #stack-cell-edit-input {
-    display: none;
-    width: 35px;
-    height: 30px;
-    border: 2px solid orange;
-    text-align: center;
-    position: absolute;
-}
-
-#memory-grid-tooltip {
-    display: none;
-    position: absolute;
-}
-
-#cpu-settings {
-    width: 250px;
-}
-
-.memory-cell-corner {
-    padding: 6px 8px;
-    background-color: #eee;
-}
-
-.memory-cell-side, .memory-cell-top, .stack-cell-side {
-    color: #646464;
-    background-color: #ddd;
-    padding: 6px 8px;
-    text-align: center;
-    min-width: 15px;
-}
-
-.memory-cell, .stack-cell {
-    color: #000;
-    text-align: center;
-    background-color: #fff;
-    padding: 6px 8px;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-}
-
-.memory-cell {
-    cursor: pointer;
-}
-
-.memory-cell-current {
-    background-color: #f90;
-}
-
-.stack-cell-current {
-    background-color: #f90;
-}
-
-.stack-cell-used {
-}
-
-.stack-cell-empty {
-    color: #aaa;
-}
-
-#cpu-frequency-slider {
-    margin: 6px 0px;
-}
-
 .icon-holder {
     display: inline-block; 
     margin-bottom: -2; 
     margin-right: -2;
+}
+
+#views-container > div {
+    position: absolute;
+}
+
+#glass-layer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 9998;
+    top: 0px;
+    left: 0px;
+    background-color: #eee;
+}
+
+.ui-progressbar {
+    position: relative;
+}
+
+.progress-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
 }

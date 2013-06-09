@@ -1,5 +1,6 @@
-<div class="header">JS Hypothetical Machine (Neander Simulator with Extended Instruction Set)</div>
+<div class="header">JS Hypothetical Machine (Neander Machine with Extended Instruction Set)</div>
 
+<div id="glass-layer">Loading...</div>
 <div id="views-container"></div>
 
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -9,115 +10,71 @@
 <script src="Config.js" type="text/javascript"></script>
 <script src="Converter.js" type="text/javascript"></script>
 <script src="Assembler.js" type="text/javascript"></script>
+<script src="Oscillator.js" type="text/javascript"></script>
 <script src="Message.js" type="text/javascript"></script>
-<script src="Launcher.js" type="text/javascript"></script>
-<script src="LauncherEventListener.js" type="text/javascript"></script>
+<script src="Simulator.js" type="text/javascript"></script>
+<script src="SimulatorEventListener.js" type="text/javascript"></script>
 <script src="SeekableArray.js" type="text/javascript"></script>
 <script src="UIEventListener.js" type="text/javascript"></script>
 <script src="UI.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-        
+    
+    var availableViews = ["memory", "cpu", "stack", "oscillator"];
+    var loadedViews = 0;
+    
     function loadView(view) {
         var holder = $("<div></div>");
         $("#views-container").append(holder);
-        holder.load("view/" + view + "/" + view + ".html");
+        holder.load("view/" + view + "/" + view + ".html", function() {
+            loadedViews++;
+        });
     }
     
-    var launcher = new Launcher();
-    launcher.launch("Simulator.js");
-    
-    var availableViews = ["memory", "stack"];
-    
-    UI.init(launcher);
+    Simulator.getInstance().simulate("Machine.js");
     
     availableViews.map(function(view) {
         loadView(view);
     });
     
-    
-    /*
-    
-    
-    
-    var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,-0x1,0x64];
-    
-    var mem = new ArrayBuffer(256);
-    var memDv = new DataView(mem);
-    for (var i = 0; i < prog.length; i++) {
-        memDv.setInt8(i, prog[i]);
-    }
-    
-    var DEFAULT_BASE = 16;
-    var assembler = new Assembler();
-    Converter.setBase(DEFAULT_BASE);
-    
-    launcher = new Launcher();
-    launcher.launch("simulator.js");
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER, "content"), function(message) {
-        var dv = new DataView(message.getContent());
-        dv.setInt8(0, 0x0a);
-        console.log(dv.getInt8(0));
-    });
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.GET_SERIALIZED_CPU, "content"), function(message) {
-        console.log(message.getContent());
-    });
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.SET_OSC_FREQUENCY, 10), function(message) {
-        console.log(message.getContent());
-    });
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, true), function(message) {
-        console.log(message.getContent());
-    });
-    
-    
-    
-    
-    
-    
-    listener = new LauncherEventListener(function(message) {
-        if (message.getChannel() == 3) {
-            console.log("dne:" + message.getContent());
+    var interval;
+    interval = setInterval(function() {
+        if (loadedViews == availableViews.length) {
+            UI.init();
+            $("#glass-layer").remove();
+            $(".draggable-item").draggable({
+                handle: ".draggable-handler",
+                stack: ".draggable-item"
+            });
+            clearInterval(interval);
         }
-    });
-    launcher3.addEventListener(Launcher.EVENT.ASYNC_MESSAGE_RECEIVED, listener);
-    
-    launcher2.exchangeMessage(new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {"event": Memory.EVENT.AFTER_WRITE, "begin": 0, "end": 255}, 2), function(message) {
-        console.log(message.getContent())
-    });
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
-        console.log(message.getContent())
-    });
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.RESET_CPU, null), function(message) {
-        console.log(message.getContent())
-    });
-    
-    
-    
-    
-    launcher.exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER, null), function(message) {
-        console.log("mem");
-        var dv = new DataView(message.getContent());
-        for (var i = 0; i < 255; i++) {
-            console.log(dv.getInt8(i));
-        }
-    });
-    
-    
-    */
-    //var ui = new UI(cpu);
-    //ui.init();
-
-//    $('#ext-glcd').load('ext/display/glcd/glcd.html');
-    
+    }, 500);
 </script>
+
+<pre>
+var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,-0x1,0x64];
+
+var mem = new ArrayBuffer(256);
+var memDv = new DataView(mem);
+for (var i = 0; i < prog.length; i++) {
+    memDv.setInt8(i, prog[i]);
+}
+
+Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
+    console.log(message.getContent())
+});
+
+Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, false), function(message) {
+    console.log(message.getContent());
+});
+
+Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_CPU_POWER, true), function(message) {
+    console.log(message.getContent());
+});
+</pre>
+
 <div class="footer">Written by Dalmir da Silva &lt;dalmirdasilva@gmail.com&gt;</div>
 </body>
 </html>

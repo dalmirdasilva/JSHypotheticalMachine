@@ -1,0 +1,46 @@
+<link href="view/oscillator/oscillator.css" rel="stylesheet" type="text/css">
+
+<div id="oscillator-holder" class="view-holder draggable-item">
+    <div id="oscillator-title" class="view-title draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-heart"></span>
+        </div> 
+        Oscillator
+    </div>
+    <div class="view-body">
+        Current frequency:<span id="oscillator-slider-label">0 Hz</span>
+    </div>
+    <div class="view-sub-title">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-bullet"></span>
+        </div> Choose the frequency
+    </div>
+    <div class="view-body">
+        <div id="oscillator-slider"></div>
+    </div>
+    <div class="view-sub-title">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-bullet"></span>
+        </div> Buttons
+    </div>
+    <div class="view-body">
+        <div>
+            <table>
+                <tbody> 
+                    <tr>
+                        <td><button id="oscillator-clock-out-button" class="oscillator-button">Tick</button></td>
+                        <td><input type="checkbox" id="oscillator-clocking-button" checked="checked" class="oscillator-button" /><label for="oscillator-clocking-button">Clocking</label></td>
+                    </tr>
+                </tbody> 
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="view/oscillator/oscillator.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var listener = new UIEventListener(function() {
+        OscillatorView.init();
+    });
+    UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
+</script>

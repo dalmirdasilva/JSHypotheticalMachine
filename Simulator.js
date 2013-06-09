@@ -16,127 +16,76 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-importScripts("Config.js");
-importScripts("OscillatorEventListener.js");
-importScripts("Oscillator.js");
-importScripts("Cpu.js");
-importScripts("Memory.js");
-importScripts("Stack.js");
-importScripts("Decoder.js");
-importScripts("Instructions.js");
-importScripts("MemoryEventListener.js");
-importScripts("Message.js");
 
-var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
-var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
-var stack = new Stack(Config.SIMULATOR_STACK_SIZE);
-var decoder = new Decoder();
-var cpu = new Cpu();
+/**
+ * Simulator class
+ */ 
+function Simulator(path) {
+    
+    this.messageHandlerQueue = [];
+    this.worker = null;
+    this.launched = false;
+    this.eventListeners = {};
+    
+    this.asyncMessageHandler = function(message) {
+        this.notifyEvent(Simulator.EVENT.ASYNC_MESSAGE_RECEIVED, message);
+    };
+    
+    this.simulate = function(path) {
+        if (!this.launched) {
+            var self = this;
+            this.worker = new SharedWorker(path);
+            this.worker.port.addEventListener("message", function(event) {
+                var message = Message.newFromHash(event.data);
+                if (message.isAsync()) {
+                    self.asyncMessageHandler(message);
+                } else {
+                    var handler = self.messageHandlerQueue.shift();
+                    if (handler && (typeof handler === "function")) {
+                        handler(message);
+                    } else {
+                        throw new Error("No available handler for message: " + message);
+                    }
+                }
+            }, false);
+            this.launched = true;
+            this.worker.port.start();
+        }
+    };
 
-cpu.setOscillator(oscillator);
-cpu.setMemory(memory);
-cpu.setStack(stack);
-cpu.setDecoder(decoder);
-
-function processRequest(request, port) {
-
-    var response = new Message(request.getType(), true);
-
-    switch(request.getType()) {
+    this.exchangeMessage = function(message, responseHandler) {
+        if (!this.launched) {
+            throw new Error("No launched worker to exchange message.");
+        }
+        this.messageHandlerQueue.push(responseHandler);
         
-        case Message.TYPE.GET_SERIALIZED_CPU:
-            response.setContent(JSON.stringify(cpu));
-        break;
-        
-        case Message.TYPE.RESET_CPU:
-            cpu.reset();
-        break;
-        
-        case Message.TYPE.GET_CPU_PC:
-            response.setContent(cpu.getPc());
-        break;
-        
-        case Message.TYPE.SET_CPU_POWER:
-            var power = request.getContent() === true;
-            power ? cpu.powerOn() : cpu.powerOff();
-            response.setContent(power);
-        break;
-        
-        case Message.TYPE.SET_OSC_FREQUENCY:
-            var frequency = parseInt(request.getContent());
-            oscillator.setFrequency(frequency);
-            response.setContent(frequency);
-        break;
-        
-        case Message.TYPE.SET_OSC_CLOCK:
-            var op = request.getContent();
-            switch(op) {
-                case Oscillator.ACTION.RESUME_CLOCKING:
-                    oscillator.startClocking();
-                break;
-                case Oscillator.ACTION.STOP_NEXT_CLOCK:
-                    oscillator.stopClocking();
-                break;
-                case Oscillator.ACTION.CLOCKOUT_NOW:
-                    oscillator.clockOut();
-                break;
-            }
-            response.setContent(op);
-        break;
-        
-        case Message.TYPE.GET_MEMORY_BUFFER:
-            response.setContent(memory.getBuffer());
-        break;
-        
-        case Message.TYPE.SET_MEMORY_BUFFER:
-            var buffer = request.getContent();
-            memory.setBuffer(buffer);
-        break;
-        
-        case Message.TYPE.SET_MEMORY_CELL:
-            var content = request.getContent();
-            var address = content["address"];
-            var value = content["value"];
-            var dataView = new DataView(memory.getBuffer());
-            dataView.setUint8(address, value);
-        break;
-        
-        case Message.TYPE.GET_STACK_BUFFER:
-            response.setContent(stack.getBuffer());
-        break;
-        
-        case Message.TYPE.SET_STACK_BUFFER:
-            var buffer = request.getContent();
-            stack.setBuffer(buffer);
-        break;
-        
-        case Message.TYPE.GET_TOP_OF_STACK:
-            response.setContent(stack.getTop());
-        break;
-        
-        case Message.TYPE.ADD_MEMORY_EVENT_LISTENER:
-            var channel = request.getChannel();
-            var content = request.getContent();
-            var listener = new MemoryEventListener(content["begin"], content["end"], function(slice) {
-                var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
-                port.postMessage(asyncResponse.toHash());
+        // What happens if at this moment a message comes from worker?
+        this.worker.port.postMessage(message.toHash());
+        return true;
+    };
+    
+    this.notifyEvent = function(event, message) {
+        var listeners = this.eventListeners[event];
+        if (listeners) {
+            listeners.map(function(listener) {
+                listener.notify(message);
             });
-            memory.addEventListener(content["event"], listener);
-        break;
+        }
+    };
+    
+    if (path != null) {
+        Simulator.getInstance().simulate(path);
     }
-    port.postMessage(response.toHash());
 }
 
-var connections = 0;
-self.addEventListener("connect", function (event) {
-	var port = event.ports[0];
-    connections++;
-	port.addEventListener("message", function (event) {
-        request = Message.newFromHash(event.data)
-        processRequest(request, port);
-	}, false);
-	port.start();
-}, false);
+Simulator.EVENT = {
+    ASYNC_MESSAGE_RECEIVED: 0x01
+};
 
-oscillator.startClocking();
+Simulator.instance = null;
+Simulator.getInstance = function() {
+    if (Simulator.instance == null) {
+        Simulator.instance = new Simulator();
+    }
+    return Simulator.instance;
+}

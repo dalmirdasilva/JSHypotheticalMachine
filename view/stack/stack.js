@@ -1,11 +1,10 @@
 var StackView = {
     
+    cache: new Uint8Array(Config.SIMULATOR_STACK_SIZE),
+    lastTos: -1,
+    
     init: function() {
         var self = this;
-        $("#stack-grid").draggable({
-            handle:"#stack-grid-title",
-            stack: ".draggable-item"
-        });
         self.createStackGrid();
         var listener = new UIEventListener(function() {
             self.repaint();
@@ -15,35 +14,42 @@ var StackView = {
     
     repaint: function() {
         var self = this;
-        launcher.exchangeMessage(new Message(Message.TYPE.GET_TOP_OF_STACK), function(message) {
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_TOP_OF_STACK), function(message) {
             var topOfStack = message.getContent();
             self.updateTopOfStack(topOfStack);
         });
-        launcher.exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER), function(message) {
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER), function(message) {
             var arrayBuffer = message.getContent();
             self.updateStackValues(arrayBuffer);
         });
     },
     
     updateTopOfStack: function(topOfStack) {
-        $(".stack-cell").removeClass("stack-cell-current");
-        $("#stack-reg-" + topOfStack).addClass("stack-cell-current");
+        if (topOfStack != this.lastTos) {
+            this.lastTos = topOfStack;
+            $(".stack-cell").removeClass("stack-cell-current");
+            $("#stack-reg-" + topOfStack).addClass("stack-cell-current");
+        }
     },
     
     updateStackValues: function(arrayBuffer) {
-        var dv = new DataView(arrayBuffer);
-        for (var i = 0; i < arrayBuffer.byteLength; i++) {
-            var byte = dv.getInt8(i);
-            var text = Converter.toString(byte);
-            $("#stack-reg-" + i).text(text);
+        var array = new Uint8Array(arrayBuffer);
+        for (var i = 0; i < array.length; i++) {
+            var byte = array[i];
+            if (byte != this.cache[i]) {
+                this.cache[i] = byte;
+                var text = Converter.toString(byte);
+                $("#stack-reg-" + i).text(text);
+            }
         }
     },
     
     createStackGrid: function() {
-        var table = $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>");
+        var table = $("<table border='0' cellspacing='0' cellpadding='1' width='100%'></table>");
         var stackSize = Config.SIMULATOR_STACK_SIZE;
         var tr = $("<tr></tr>");
         var positionTd = $("<td></td>");
+        positionTd.addClass("stack-cell-corner");
         var valueTd = $("<td>&nbsp;</td>");
             valueTd.addClass("stack-cell-side");
             tr.append(positionTd);
@@ -62,6 +68,6 @@ var StackView = {
             tr.append(valueTd);
             table.append(tr);
         }
-        table.appendTo("#stack-grid-body");
+        table.appendTo("#stack-body");
     }
 };

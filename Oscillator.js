@@ -94,6 +94,6 @@ Oscillator.EVENT = {
 
 Oscillator.ACTION = {
     RESUME_CLOCKING: 0x00,
-    STOP_NEXT_CLOCK: 0x01,
+    STOP_CLOCKING: 0x01,
     CLOCKOUT_NOW: 0x02
 };

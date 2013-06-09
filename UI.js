@@ -24,7 +24,6 @@ var UI = {
     
     _interval: null,
     eventListeners: {},
-    launcher: null,
     
     addEventListener: function(event, listener) {
         if (!this.eventListeners[event]) {
@@ -38,13 +37,12 @@ var UI = {
         var listeners = this.eventListeners[event];
         if (listeners) {
             listeners.map(function(listener) {
-                listener.notify(self.launcher);
+                listener.notify();
             });
         }
     },
     
-    init: function(launcher) {
-        this.launcher = launcher;
+    init: function() {
         var interval = 1000 / Config.UI_REFRESH_FREQUENCY;
         var self = this;
         this._interval = setInterval(function() {

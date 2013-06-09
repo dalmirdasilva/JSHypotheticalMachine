@@ -1,4 +1,4 @@
-<div class="header">JS Hypothetical Machine (Neander Simulator with Extended Instruction Set)</div>
+<div class="header">JS Hypothetical Machine (Neander Machine with Extended Instruction Set)</div>
 <table border='1'>
     <tr>
         <td class="title">
@@ -101,13 +101,13 @@ ret
                     <td valign="top">
                         <div>
                             <div class="sub-title">Stack</div>
-                            <div id="stack-grid-holder"></div>
+                            <div id="stack-holder-holder"></div>
                             <button id="erase-stack-button">Erase stack</button>
                         </div>
                     </td>
                     <td valign="top">
                         <div class="sub-title">Memory</div>
-                        <div id="memory-grid-holder"></div>
+                        <div id="memory-holder-holder"></div>
                         <button id="erase-memory-button">Erase memory</button>
                     </td>
                 </tr>
@@ -116,35 +116,35 @@ ret
     </tr>
 </table>
 
-<div id="memory-grid" class="draggable-item">
+<div id="memory-holder" class="draggable-item">
     <input type="text" id="memory-cell-edit-input" maxlength="8"/>
-    <div id="memory-grid-tooltip">
+    <div id="memory-holder-tooltip">
         <table>
             <tr>
                 <td>Mnemonic: </td>
-                <td><span id="memory-grid-tooltip-mnemonic"></span></td>
+                <td><span id="memory-holder-tooltip-mnemonic"></span></td>
             </tr>
             <tr>
                 <td>Bin: </td>
-                <td><span id="memory-grid-tooltip-bin"></span></td>
+                <td><span id="memory-holder-tooltip-bin"></span></td>
             </tr>
             <tr>
                 <td>Hex: </td>
-                <td><span id="memory-grid-tooltip-hex"></span></td>
+                <td><span id="memory-holder-tooltip-hex"></span></td>
             </tr>
             <tr>
                 <td>Dec: </td>
-                <td><span id="memory-grid-tooltip-dec"></span></td>
+                <td><span id="memory-holder-tooltip-dec"></span></td>
             </tr>
         </table>
     </div>
-    <div id="memory-grid-title" class="draggable-handler">
+    <div id="memory-title" class="draggable-handler">
         <div class="icon-holder">
             <span class="ui-icon ui-icon-tag"></span>
         </div> 
         Main memory
     </div>
-    <div id="memory-grid-body"></div>
+    <div id="memory-body"></div>
 </div>
               
 <div id="cpu-settings" class="draggable-item">
@@ -213,8 +213,8 @@ ret
     var assembler = new Assembler();
     Converter.setBase(DEFAULT_BASE);
     
-    launcher = new Launcher();
-    launcher.launch("simulator.js");
+    launcher = new Simulator();
+    launcher.simulate("simulator.js");
     
     var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,
     0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -268,12 +268,12 @@ ret
     
     
     
-    listener = new LauncherEventListener(function(message) {
+    listener = new SimulatorEventListener(function(message) {
         if (message.getChannel() == 3) {
             console.log("dne:" + message.getContent());
         }
     });
-    launcher3.addEventListener(Launcher.EVENT.ASYNC_MESSAGE_RECEIVED, listener);
+    launcher3.addEventListener(Simulator.EVENT.ASYNC_MESSAGE_RECEIVED, listener);
     
     launcher2.exchangeMessage(new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {"event": Memory.EVENT.AFTER_WRITE, "begin": 0, "end": 255}, 2), function(message) {
         console.log(message.getContent())

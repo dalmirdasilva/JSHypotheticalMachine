@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
- * Config class
- */
-var Config = {
+ * SimulatorEventListener class
+ */ 
+function SimulatorEventListener(handler) {
+
+    this.handler = handler;
     
-    SIMULATOR_OSC_MAX_FREQUENCY: 500,
-    SIMULATOR_OSC_INITIAL_FREQUENCY: 250,
-    SIMULATOR_CPU_PRESCALLER: 1,
-    SIMULATOR_MEMORY_SIZE: 256,
-    SIMULATOR_STACK_SIZE: 16,
-    UI_DEFAULT_BASE: 16,
-    UI_REFRESH_FREQUENCY: 20,
-};
+    /**
+     * @param nessage               The received message.
+     */
+    this.notify = function(message) {
+        this.handler(message);
+    };
+}

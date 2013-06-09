@@ -1,5 +1,5 @@
 /**
- * JS Hypothetical Machine
+ * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
  * 
  * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  * 
@@ -17,17 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * LauncherEventListener class
- */ 
-function LauncherEventListener(handler) {
+#oscillator-holder {
+    background-color: #fff;
+    border: 1px solid #999; 
+    position: absolute; 
+    left: 140px;
+    min-width: 200px;
+}
 
-    this.handler = handler;
-    
-    /**
-     * @param nessage               The received message.
-     */
-    this.notify = function(message) {
-        this.handler(message);
-    };
+#oscillator-title {
+    cursor: default;
+}
+
+#oscillator-body {
+    margin: 4px;
+}
+
+#oscillator-slider {
+    width: 200px; 
+    height: 11px; 
+    margin: 10px 8px 10px 6px;
+}
+
+#oscillator-slider-label {
+    background: #fefefe;
+    font-weight: normal;
+    padding-left: 6px;
 }
