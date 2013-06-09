@@ -18,11 +18,9 @@
  */
 
 #oscillator-holder {
-    background-color: #fff;
-    border: 1px solid #999; 
-    position: absolute; 
     left: 140px;
-    min-width: 200px;
+    top: 180px;
+    min-width: 250px;
 }
 
 #oscillator-title {

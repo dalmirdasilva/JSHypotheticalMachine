@@ -18,9 +18,6 @@
  */
 
 #memory-holder {
-    background-color: #fff;
-    border: 1px solid #999; 
-    position: absolute; 
     left: 541px; 
 }
 
@@ -35,7 +32,7 @@
 #memory-cell-edit-input {
     display: none;
     width: 35px;
-    height: 30px;
+    height: 25px;
     border: 2px solid orange;
     text-align: center;
     position: absolute;

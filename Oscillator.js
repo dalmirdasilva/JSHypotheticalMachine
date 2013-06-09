@@ -22,7 +22,7 @@
  */
 function Oscillator(frequency) {
     
-    this.frequency = frequency || 1000;
+    this.frequency = frequency || Config.SIMULATOR_OSC_INITIAL_FREQUENCY;
     this.eventListeners = {};
     this.tics = 0;
     this._interval;

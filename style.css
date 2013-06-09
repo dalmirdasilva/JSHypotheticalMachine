@@ -30,14 +30,22 @@ textarea {
     border: 1px solid #aaa;
 }
 
+.view-holder {
+    background-color: #fff;
+    border: 1px solid #aaa; 
+    position: absolute; 
+}
+
 .view-title, .view-sub-title {
     padding: 6px;
     background-color: #fdb;
     font-weight: bold;
     color: #444;
+    border-bottom: 1px solid #aaa;
 }
 
 .view-sub-title {
+    padding-left: 0px;
     border-bottom: 1px solid #bbb;
     font-weight: normal;
     background-color: #eee;

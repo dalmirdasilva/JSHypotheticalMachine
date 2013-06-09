@@ -23,8 +23,7 @@
 function Memory(size) {
     
     this.size = size || 256;
-    this.buffer = new ArrayBuffer(size);
-    this.dataView;
+    this.buffer = new Int8Array(size);
     this.eventListeners = {};
     
     this.access = {read: 0, write: 0};
@@ -32,20 +31,18 @@ function Memory(size) {
     this.read = function(address) {
         this.checkBoundaries(address);
         this.access.read++;
-        return this.dataView.getUint8(address);
+        return this.buffer[address];
     };
     
     this.write = function(address, value) {
         this.checkBoundaries(address);
+        this.buffer[address] = value;
         this.access.write++;
-        this.dataView.setUint8(address, value);
         this.notifyEvent(Memory.EVENT.AFTER_WRITE, address);
     };
     
     this.erase = function() {
-        for(var i = 0; i < this.size / 4; i += 4) {
-            this.dataView.setUint32(i, 0);
-        }
+        this.buffer.set(new Int8Array(size), 0);
         this.resetAccess();
     };
     
@@ -67,8 +64,7 @@ function Memory(size) {
     };
     
     this.setBuffer = function(buffer) {
-        this.buffer = buffer;
-        this.updateDataView();
+        this.buffer = new Int8Array(buffer);
     };
     
     this.checkBoundaries = function(address) {
@@ -83,7 +79,7 @@ function Memory(size) {
         if (listeners) {
             listeners.map(function(listener) {
                 if (address >= listener.begin  && address <= listener.end) {
-                    var slice = self.buffer.slice(listener.begin, listener.end);
+                    var slice = self.buffer.subarray(listener.begin, listener.end);
                     listener.notify(slice);
                 }
             });
@@ -96,12 +92,6 @@ function Memory(size) {
         }
         this.eventListeners[event].push(listener);
     };
-    
-    this.updateDataView = function() {
-        this.dataView = new DataView(this.buffer);
-    };
-    
-    this.updateDataView();
 }
 
 Memory.EVENT = {

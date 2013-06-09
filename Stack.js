@@ -32,7 +32,9 @@ function Stack(size) {
             throw "Stack underflow."
         }
         this.tos--;
-        return this.dataView.getInt8(this.tos);
+        var top = this.dataView.getInt8(this.tos);
+        this.dataView.setInt8(this.tos, 0x00);
+        return top;
     };
     
     this.push = function(b) {

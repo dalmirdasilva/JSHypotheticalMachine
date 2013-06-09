@@ -18,11 +18,8 @@
  */
 
 #cpu-holder {
-    background-color: #fff;
-    border: 1px solid #999; 
-    position: absolute; 
     left: 100px;
-    min-width: 200px;
+    min-width: 250px;
 }
 
 #cpu-title {
