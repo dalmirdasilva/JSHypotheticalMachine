@@ -57,7 +57,7 @@ var EditorView = {
         var mnemonics = this.assembler.getMnemonics();
         var opcodes = this.assembler.getOpcodes();
         for (var i = 0; i < data.length; i++) {
-            var value = data[i];
+            var value = data[i] & 0xff;
             var entry = this.ELEMENT.editorAssempledAreaEntry.clone(true, true);
             entry.addClass("editor-assempled-area-deletable-entry");
             var parts = entry.find("td");
