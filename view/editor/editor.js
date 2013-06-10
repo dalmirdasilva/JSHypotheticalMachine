@@ -21,8 +21,7 @@ var EditorView = {
         setTimeout(function() {
             self.codeMirror = CodeMirror.fromTextArea(document.getElementById("editor-code-area"), {
                 lineNumbers: true,
-                mode: {name: "jshm"},
-                value: "function myScript(){return 100;}\n",
+                mode: {name: "jshm"}
             });
         }, 1000);
     },

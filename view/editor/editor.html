@@ -19,7 +19,45 @@
                             </div> Assembly
                         </div>
                         <div id="editor-code-area-holder">
-                            <textarea id="editor-code-area"></textarea>
+                            <textarea id="editor-code-area">
+# Putting data into the memory
+.db 0x19 100
+.db 0x18 -1
+    
+jmp :begining
+
+# interrupts here
+.at 4
+
+
+# Begining of the program
+:begining
+    
+    # Load from the address 33
+	lda 0x19
+
+:add_point
+
+	call :sum_subroutine
+    
+    # Jump if zero
+    jz :sleep_point
+    
+    # Jump
+    jmp :add_point
+    
+# Sleep
+:sleep_point
+
+	hlt
+    
+# Sum subroutime
+:sum_subroutine
+
+	# Add from the address 32
+	add 0x18
+    ret
+                            </textarea>
                         </div>
                         <div class="view-sub-title"  id="editor-assemble-status"></div>
                     </td>
