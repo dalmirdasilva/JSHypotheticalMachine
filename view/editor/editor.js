@@ -17,11 +17,12 @@ var EditorView = {
     
     init: function() {
         var self = this;
+        this.initConponents();
         this.codeMirror = CodeMirror.fromTextArea(document.getElementById("editor-code-area"), {
             lineNumbers: true,
             mode: {name: "jshm"},
+            value: "function myScript(){return 100;}\n",
         });
-        this.initConponents();
     },
     
     initConponents: function() {
