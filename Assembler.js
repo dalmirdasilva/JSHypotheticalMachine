@@ -20,18 +20,20 @@
 /**
  * Assembler class
  */
- function Assembler() {
+function Assembler() {
   
     this.commentIndicator = '#';
     this.symbolIndicator = ':';
-    this.dataDefinitionIndicator = ".data";
-    this.positionDefinitionIndicator = "_at"
+    this.dataDefinitionIndicator = ".db";
+    this.positionDefinitionIndicator = ".at"
     this.opcodes = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0xff];
     this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "call", "ret", "push", "pop", "hlt"];
-    this.assembledCode;
+    this.instructionHasParam = {"nop": false, "sta": true, "lda": true, "add": true, "or": true, "and": true, "not": true, "jmp": true, "jn": true, "jz": true, "call": true, "ret": false, "push": true, "pop": true, "hlt": false};
+    this.assembledData;
     this.dataDefinition;
     this.symbolTable;
     this.currentLineNumber;
+    this.mnemonicPositions = [];
     
     this.assemble = function(assemblyCode) {
         assemblyCode = this.sanitizeAssembly(assemblyCode);
@@ -44,8 +46,8 @@
         this.addDataDefinition();
         this.addNopInstructionOnGaps();
         this.replaceSymbols();
-        return this.assembledCode.content();
-    }
+        return this.assembledData.content();
+    };
     
     this.assembleLine = function(line) {
         line = this.sanitizeAssembly(line);
@@ -68,7 +70,7 @@
         for(var i = 0; i < chunks.length; i++) {
             this.assembleChunk(chunks[i]);
         }
-    }
+    };
     
     this.assembleChunk = function(chunk) {
         chunk = this.sanitizeAssembly(chunk);
@@ -76,9 +78,8 @@
             return;
         }
         var code = null;
-        var mnemonicIndex = this.mnemonics.indexOf(chunk);
-        if(mnemonicIndex != -1) {
-            code = this.opcodes[mnemonicIndex];
+        if ((code = this.getOpcodeFromMnemonic(chunk)) > -1) {
+            this.mnemonicPositions.push(this.assembledData.getPosition());
         } else {
             if(isNaN(chunk)) {
                 if(this.isItASymbol(chunk)) {
@@ -90,8 +91,8 @@
                 code = parseInt(chunk);
             }
         }
-        this.assembledCode.push(code);
-    }
+        this.assembledData.push(code);
+    };
     
     this.assembleDataDefinition = function(line) {
         var parts = line.split(" ");
@@ -99,7 +100,7 @@
             throw "Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").";
         }
         this.dataDefinition.push({"address": parseInt(parts[1]), "data": parseInt(parts[2])});
-    }
+    };
     
     this.assemblePositionDefinition = function(line) {
         var parts = line.split(" ");
@@ -107,75 +108,111 @@
             throw "Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").";
         }
         var position = parseInt(parts[1]);
-        this.assembledCode.seek(position);
-    }
+        this.assembledData.seek(position);
+    };
     
     this.replaceSymbols = function() {
         var piece = null;
-        var assembledCodeContent = this.assembledCode.content();
-        for(var i = 0; i < assembledCodeContent.length; i++) {
-            piece = assembledCodeContent[i];
+        var assembledDataContent = this.assembledData.content();
+        for(var i = 0; i < assembledDataContent.length; i++) {
+            piece = assembledDataContent[i];
             if(this.isItASymbol(piece)) {
                 var symbolAddress = this.symbolTable[piece];
                 if(symbolAddress == undefined) {
                     throw "Reference to undifined symbol: " + piece + " (line: " + this.currentLineNumber + ").";
                     return;
                 }
-                assembledCodeContent[i] = symbolAddress;
+                assembledDataContent[i] = symbolAddress;
             }
         }
-    }
+    };
     
     this.addNopInstructionOnGaps = function() {
-        var assembledCodeContent = this.assembledCode.content();
-        for(var i = 0; i < assembledCodeContent.length; i++) {
-            if(assembledCodeContent[i] == undefined) {
-               assembledCodeContent[i] = 0; 
+        var assembledDataContent = this.assembledData.content();
+        for(var i = 0; i < assembledDataContent.length; i++) {
+            if(assembledDataContent[i] == undefined) {
+               assembledDataContent[i] = 0; 
             }
         }
-    }
+    };
     
     this.addSysmbolToTable = function(symbol) {
         var symbol = symbol.split(" ")[0];
-        var currentAddress = this.assembledCode.content().length;
+        var currentAddress = this.assembledData.content().length;
         this.symbolTable[symbol] = currentAddress;
-    }
+    };
     
     this.addDataDefinition = function() {
         for(var i = 0; i < this.dataDefinition.length; i++) {
-            this.assembledCode.content()[this.dataDefinition[i].address] = this.dataDefinition[i].data;
+            this.assembledData.content()[this.dataDefinition[i].address] = this.dataDefinition[i].data;
         }
-    }
+    };
     
     this.sanitizeAssembly = function(assembly) {
         var sanitized = assembly.replace(/ +/g, ' ');
         sanitized = jQuery.trim(sanitized);
         return sanitized;
-    }
+    };
     
     this.isItADataDefinition = function(line) {
         return (line.slice(0, this.dataDefinitionIndicator.length) == this.dataDefinitionIndicator);
-    }
+    };
     
     this.isItAPositionDefinition = function(line) {
         return (line.slice(0, this.positionDefinitionIndicator.length) == this.positionDefinitionIndicator);
-    }
+    };
     
     this.isItAComment = function(line) {
         return (line[0] == this.commentIndicator);
-    }
+    };
     
     this.isItASymbol = function(line) {
         return (line[0] == this.symbolIndicator);
-    }
+    };
     
     this.isTheLineEmpty = function(line) {
         return (line.length == 0);
-    }
+    };
     
     this.init = function() {
-        this.assembledCode = new SeekableArray();
+        this.assembledData = new SeekableArray();
         this.symbolTable = {};
         this.dataDefinition = new Array();
-    }
+    };
+    
+    this.getAssembledData = function() {
+        return this.assembledData.content();
+    };
+    
+    this.getMnemonicPositions = function() {
+        return this.mnemonicPositions;
+    };
+    
+    this.getMnemonics = function() {
+        return this.mnemonics;
+    };
+    
+    this.getOpcodes = function() {
+        return this.opcodes;
+    };
+    
+    this.getMnemonicFromOpcode = function(opcode) {
+        var opcodeIndex = this.opcodes.indexOf(opcode);
+        if(opcodeIndex > -1) {
+            return this.mnemonics[opcodeIndex];
+        }
+        return -1;
+    };
+    
+    this.getOpcodeFromMnemonic = function(mnemonic) {
+        var mnemonicIndex = this.mnemonics.indexOf(mnemonic);
+        if(mnemonicIndex > -1) {
+            return this.opcodes[mnemonicIndex];
+        }
+        return -1;
+    };
+    
+    this.getInstructionHasParam = function(mnemonic) {
+        return this.instructionHasParam[mnemonic];
+    };
 }

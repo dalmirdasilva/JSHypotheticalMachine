@@ -1,23 +1,129 @@
 <link href="view/editor/editor.css" rel="stylesheet" type="text/css">
 
 <div id="editor-holder" class="view-holder draggable-item">
-    <input type="text" id="editor-cell-edit-input" maxlength="8"/>
     <div id="editor-title" class="view-title draggable-handler">
         <div class="icon-holder">
-            <span class="ui-icon ui-icon-tag"></span>
+            <span class="ui-icon ui-icon-note"></span>
         </div> 
-        Memory
+        Assembly editor
     </div>
-    <div id="editor-body" class="view-body"></div>
-    <div id="editor-access">
-        Memory access: R: <span id="editor-access-read">0</span> W: <span id="editor-access-write">0</span>
+    <div id="editor-body" class="view-body">
+        <table>
+            <tbody> 
+                <tr>
+                    <td valign="top">
+                        <div class="view-sub-title">
+                            <div class="icon-holder">
+                                <span class="ui-icon ui-icon-pencil"></span>
+                            </div> Assembly
+                        </div>
+                        <div>
+                            <textarea id="editor-code-area">
+# Putting data into the memory
+.db 0x19 100
+.db 0x18 -1
+    
+jmp :begining
+
+# Begining of the program
+.at 4
+	
+    # interrupts here
+
+
+:begining
+	
+    # Load from the address 33
+	lda 0x19
+
+:add_point
+
+	call :sum_subroutine
+    
+    # Jump if zero
+    jz :sleep_point
+    
+    # Jump
+    jmp :add_point
+    
+# Sleep
+:sleep_point
+
+	hlt
+    
+# Sum subroutime
+:sum_subroutine
+
+	# Add from the address 32
+	add 0x18
+    ret
+                            </textarea>
+                        </div>
+                        <div class="view-sub-title"  id="editor-assemble-status">
+                        </div>
+                    </td>
+                    <td valign="top">
+                        <div class="view-sub-title">
+                            <div class="icon-holder">
+                                <span class="ui-icon ui-icon-document"></span>
+                            </div> Assembled
+                        </div>
+                        <div id="editor-assempled-area">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <thead>
+                                    <tr>
+                                        <td id="editor-assempled-area-head-first">At</td>
+                                        <td>Value</td>
+                                        <td>Mnemonic</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="editor-assempled-area-entries">
+                                    <tr id="editor-assempled-area-entry">
+                                        <td class="editor-assembled-line"></td>
+                                        <td></td>
+                                        <td class="editor-assembled-mnemonic"></td>
+                                    </tr>
+                                    <tr class="editor-assempled-area-deletable-entry">
+                                        <td class="editor-assembled-line">-</td>
+                                        <td>-</td>
+                                        <td class="editor-assembled-mnemonic">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody> 
+        </table>
+            
+            
+    </div>
+    <div class="view-sub-title">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-triangle-1-e"></span>
+        </div> Actions
+    </div>
+    <div class="view-body">
+        <div>
+            <table>
+                <tbody> 
+                    <tr>
+                        <td><button id="editor-assemble-button">Assemble</button></td>
+                        <td><button id="editor-load-button">Load to memory</button></td>
+                    </tr>
+                </tbody> 
+            </table>
+        </div>
     </div>
 </div>
 
+<script src="lib/codemirror/lib/codemirror.js"></script>
+<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+<script src="lib/codemirror/mode/jshm/jshm.js"></script>
 <script src="view/editor/editor.js" type="text/javascript"></script>
 <script type="text/javascript">
     var listener = new UIEventListener(function() {
-        MemoryView.init();
+        EditorView.init();
     });
     UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
 </script>

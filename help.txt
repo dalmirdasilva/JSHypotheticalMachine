@@ -44,15 +44,15 @@ Compilador:
 Syntax:
 
 ------
-.data
+.db
 Specify a value to a given memory address.
 
-Ex: .data 10 11
+Ex: .db 10 11
 Stores the value 11 at the memory address 10
 
-NOTE: You can use .data at any point in your program. However, .data
+NOTE: You can use .db at any point in your program. However, .db
 has precedence, so if you put some instruction on the same place, the
-.data will override the instruction. 
+.db will override the instruction. 
 
 
 ------

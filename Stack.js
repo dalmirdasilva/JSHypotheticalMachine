@@ -22,37 +22,41 @@
  */
 function Stack(size) {
     
-    this.size = size;
+    this.size = size || Config.SIMULATOR_STACK_SIZE;
+    this.buffer = new Uint8Array(size);
     this.tos = 0;
-    this.buffer = new ArrayBuffer(size);
-    this.dataView = null;
     
     this.pop = function() {
-        if(this.tos == 0) {
-            throw "Stack underflow."
+        if (this.tos <= 0) {
+            throw new Error("Stack underflow.");
         }
         this.tos--;
-        var top = this.dataView.getInt8(this.tos);
-        this.dataView.setInt8(this.tos, 0x00);
+        var top = this.buffer[this.tos];
+        this.buffer[this.tos] = 0x00;
         return top;
     };
     
     this.push = function(b) {
         if(this.tos >= this.size) {
-            throw "Stack overflow."
+            throw new Error("Stack overflow.");
         }
-        this.dataView.setUint8(this.tos++, b);
+        this.buffer[this.tos++] = b;
     };
     
     this.erase = function() {
-        for(var i = 0; i < this.size / 4; i += 4) {
-            this.dataView.setUint8(i, 0);
-        }
+        this.buffer.set(new Uint8Array(this.size), 0);
         this.tos = 0;
     };
     
     this.read = function(address) {
-        return this.dataView.getUint8(address);
+        return this.buffer[address];
+    };
+    
+    this.peek = function() {
+        if (this.tos > 0) {
+            return this.buffer[this.tos - 1];
+        }
+        return 0;
     };
     
     this.getSize = function() {
@@ -68,13 +72,6 @@ function Stack(size) {
     };
     
     this.setBuffer = function(buffer) {
-        this.buffer = buffer;
-        this.updateDataView();
+        this.buffer.set(new Uint8Array(buffer), 0);
     };
-    
-    this.updateDataView = function() {
-        this.dataView = new DataView(this.buffer);
-    };
-    
-    this.updateDataView();
 } 

@@ -22,14 +22,14 @@
  */
 function Memory(size) {
     
-    this.size = size || 256;
+    this.size = size || Config.SIMULATOR_MEMORY_SIZE;
     this.buffer = new Int8Array(size);
     this.eventListeners = {};
     
     this.access = {read: 0, write: 0};
     
     this.read = function(address) {
-        this.checkBoundaries(address);
+        this.checkBoundaries(address);  
         this.access.read++;
         return this.buffer[address];
     };

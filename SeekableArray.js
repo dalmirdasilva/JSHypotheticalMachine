@@ -32,14 +32,14 @@ function SeekableArray() {
             this.buf[this.pos] = b;
         }
         this.pos++;
-    }
+    };
     
     this.pop = function() {
         if (this.pos <= 0) {
             throw "SeekableStack underflow.";
         }
         return this.buf[--this.pos];
-    }
+    };
     
     this.seek = function(position) {
         if (position > this.buf.length) {
@@ -49,9 +49,13 @@ function SeekableArray() {
             }
         }
         this.pos = position;
-    }
+    };
 
     this.content = function() {
         return this.buf;
-    }
+    };
+    
+    this.getPosition = function() {
+        return this.pos;
+    };
  }
