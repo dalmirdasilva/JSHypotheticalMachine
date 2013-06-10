@@ -23,7 +23,7 @@ var EditorView = {
                 lineNumbers: true,
                 mode: {name: "jshm"}
             });
-        }, 1000);
+        }, 100);
     },
     
     initConponents: function() {
