@@ -19,6 +19,7 @@
  
 #stack-holder {
     left: 10px; 
+    top: 20px; 
     min-width: 70px;
 }
 

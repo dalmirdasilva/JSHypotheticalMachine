@@ -58,7 +58,7 @@ function processRequest(request, port) {
         break;
         
         case Message.TYPE.GET_CPU_INFORMATION:
-            var information = {"pc": cpu.getPc(), "ac": cpu.getAc(), "flags": cpu.getFlags()};
+            var information = {"pc": cpu.getPc(), "ac": cpu.getAc(), "flags": cpu.getFlags(), "sleeping": cpu.isSleeping(), "powered": cpu.isPowered()};
             response.setContent(information);
         break;
         

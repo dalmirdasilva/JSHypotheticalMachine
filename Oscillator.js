@@ -26,6 +26,7 @@ function Oscillator(frequency) {
     this.eventListeners = {};
     this.tics = 0;
     this._interval;
+    this.isClocking = false;
     
     this.getFrequency = function() {
         return this.frequency;
@@ -36,7 +37,9 @@ function Oscillator(frequency) {
             throw "Oscillation frequency " + frequency + " out or range of 1.." + Config.SIMULATOR_OSC_MAX_FREQUENCY + "";
         }
         this.frequency = frequency;
-        this.restartClocking();
+        if (this.isClocking) {
+            this.restartClocking();
+        }
     };
     
     this.restartClocking = function() {
@@ -45,6 +48,7 @@ function Oscillator(frequency) {
     };
 
     this.stopClocking = function() {
+        this.isClocking = false;
         clearInterval(this._interval);
     };
     
@@ -55,6 +59,7 @@ function Oscillator(frequency) {
         this._interval = setInterval(function() {
             self.clockOut();
         }, interval);
+        this.isClocking = true;
         return interval;
     };
     

@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CodeMirror: JSHM mode</title>
+        <link rel="stylesheet" href="../../lib/codemirror.css">
+        <script src="../../lib/codemirror.js"></script>
+        <script src="jshm.js"></script>
+        <link rel="stylesheet" href="../../doc/docs.css">
+        <style>.CodeMirror {border: 2px inset #dee;}</style>
+    </head>
+    <body>
+        <h1>CodeMirror: JSHM mode</h1>
+
+        <form>
+<textarea id="code" name="code">
+# Putting data into the memory
+.db 55 100
+.db 54 -1
+
+# Begining of the program
+
+# Load the value from the address 55
+lda 55
+
+# Add the value from the address 54
+:add_point
+call :sum_subroutine
+
+# Jump if zero
+jz :sleep_point
+
+# Jump
+jmp :add_point
+
+# Sleep
+:sleep_point
+hlt
+
+# Sum subroutime
+:sum_subroutine
+add 54
+ret
+</textarea>
+        </form>
+        <script>
+            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                mode: {name: "jshm", architecture: "NeanderExtended"},
+            });
+        </script>
+    </body>
+</html>

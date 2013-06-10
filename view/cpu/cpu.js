@@ -5,8 +5,8 @@ var CpuView = {
         pc: null, 
         z: null, 
         n: null, 
-        sleeping: false, 
-        powered: false
+        sleeping: null, 
+        powered: null
     },
     
     init: function() {
@@ -25,6 +25,7 @@ var CpuView = {
             self.updateCpuFlags(information["flags"]);
             self.updateCpuPc(information["pc"]);
             self.updateCpuAc(information["ac"]);
+            self.updateButtons(information["sleeping"], information["powered"]);
         });
     },
     
@@ -47,10 +48,7 @@ var CpuView = {
         this.ELEMENT.acBox.text(ac);
     },
     
-    updateButtons: function() {
-        this.ELEMENT.cpuResetButton;
-        this.ELEMENT.cpuSleepButton;
-        this.ELEMENT.cpuPowerButton;
+    updateButtons: function(sleeping, powered) {
     },
     
     initConponents: function() {
