@@ -46,7 +46,7 @@ function Decoder() {
      * 0xff hlt
      */
     this.decode = function(opcode) {
-        switch(opcode) {
+        switch(opcode & 0xff) {
             case 0x00:
                 return new Nop();
                 break;
