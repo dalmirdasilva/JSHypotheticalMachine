@@ -33,6 +33,10 @@
     border: 1px solid #aaa;
 }
 
+#editor-code-area-holder {
+    width: 200px;
+}
+
 #editor-code-area, #editor-assempled-area {
     margin-top: 6px;
     width: 200px;
