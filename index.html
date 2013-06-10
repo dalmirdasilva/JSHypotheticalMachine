@@ -21,13 +21,23 @@
 <script type="text/javascript">
     
     var availableViews = ["memory", "cpu", "stack", "oscillator", "editor"];
+    var availableExtentions = [];//"glcd"];
     var loadedViews = 0;
+    var loadedExtentions = 0;
     
     function loadView(view) {
         var holder = $("<div></div>");
         $("#views-container").append(holder);
         holder.load("view/" + view + "/" + view + ".html", function() {
             loadedViews++;
+        });
+    }
+
+    function loadExtention(extention) {
+        var holder = $("<div></div>");
+        $("#extentions-container").append(holder);
+        holder.load("ext/" + extention + "/" + extention + ".html", function() {
+            loadedExtentions++;
         });
     }
     
@@ -37,9 +47,13 @@
         loadView(view);
     });
     
+    availableExtentions.map(function(extention) {
+        loadExtention(view);
+    });
+    
     var interval;
     interval = setInterval(function() {
-        if (loadedViews == availableViews.length) {
+        if (loadedViews == availableViews.length && loadedExtentions == availableExtentions.length) {
             UI.init();
             $("#glass-layer").remove();
             $(".draggable-item").draggable({

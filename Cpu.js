@@ -64,7 +64,6 @@ function Cpu() {
                 this.executeInstruction(instruction);
             } catch(e) {
                 this.sleep();
-                throw e;
             }
         }
     };

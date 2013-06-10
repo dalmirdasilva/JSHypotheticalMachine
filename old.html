@@ -14,8 +14,8 @@
                         <div>
                             <textarea id="assembly-code-box">
 # Putting data into the memory
-.data 55 100
-.data 54 -1
+.db 55 100
+.db 54 -1
 
 # Begining of the program
 
@@ -36,7 +36,7 @@ jmp :add_point
 :sleep_point
 hlt
 
-# Sum subroutime
+# Sum subroutine
 :sum_subroutine
 add 54
 sta 101

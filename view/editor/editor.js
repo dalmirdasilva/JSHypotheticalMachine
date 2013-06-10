@@ -61,7 +61,7 @@ var EditorView = {
             var entry = this.ELEMENT.editorAssempledAreaEntry.clone(true, true);
             entry.addClass("editor-assempled-area-deletable-entry");
             var parts = entry.find("td");
-            parts.eq(0).html(i + ": ");
+            parts.eq(0).html(Converter.toString(i) + ": ");
             parts.eq(1).html(Converter.toString(value));
             if (mnemonicPositions.indexOf(i) >= 0) {
                 var mnemonic = this.assembler.getMnemonicFromOpcode(value);

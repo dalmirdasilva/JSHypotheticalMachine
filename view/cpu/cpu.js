@@ -41,11 +41,11 @@ var CpuView = {
     },
     
     updateCpuPc: function(pc) {
-        this.ELEMENT.pcBox.text(pc);
+        this.ELEMENT.pcBox.text(Converter.toString(pc));
     },
     
     updateCpuAc: function(ac) {
-        this.ELEMENT.acBox.text(ac);
+        this.ELEMENT.acBox.text(Converter.toString(ac));
     },
     
     updateButtons: function(sleeping, powered) {

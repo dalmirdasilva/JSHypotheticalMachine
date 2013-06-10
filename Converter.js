@@ -40,10 +40,11 @@ var Converter = {
         return parseInt(string, this.base);
     },
     
-    toString: function(number) {
+    toString: function(number, len) {
         var s = number.toString(this.base);
         var v = s;
-        for (var i = 0; i < (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length); i++) {
+        var length = (len) ? len - s.length : (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length);
+        for (var i = 0; i < length; i++) {
             v = "0" + v;
         }
         return v;

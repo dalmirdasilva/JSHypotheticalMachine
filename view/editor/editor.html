@@ -20,6 +20,10 @@
                         </div>
                         <div id="editor-code-area-holder">
                             <textarea id="editor-code-area">
+# This is a example of how
+# to count down from 100 to
+# 0 using rhe simulator
+
 # Putting data into the memory
 .db 0x19 100
 .db 0x18 -1
@@ -29,11 +33,10 @@ jmp :begining
 # interrupts here
 .at 4
 
-
 # Begining of the program
 :begining
     
-    # Load from the address 33
+    # Load from the address 0x19
 	lda 0x19
 
 :add_point
@@ -51,11 +54,16 @@ jmp :begining
 
 	hlt
     
-# Sum subroutime
+# Sum subroutine
 :sum_subroutine
 
-	# Add from the address 32
+	# Add from address 0x18
 	add 0x18
+    
+	# Store the AC on address 0x18
+    sta 0x20
+    
+    # Return of the subroutine
     ret
                             </textarea>
                         </div>
@@ -72,7 +80,7 @@ jmp :begining
                                 <thead>
                                     <tr>
                                         <td id="editor-assempled-area-head-first">At</td>
-                                        <td>Value</td>
+                                        <td>Opcode</td>
                                         <td>Mnemonic</td>
                                     </tr>
                                 </thead>
