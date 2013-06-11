@@ -2,17 +2,6 @@ var EditorView = {
     
     codeMirror: null,
     assembler: null,
-    
-    ELEMENT: {
-        editorAssembleButton: $("#editor-assemble-button"),
-        editorLoadButton: $("#editor-load-button"),
-        editorCodeArea: $("#editor-code-area"),
-        editorAssembledArea: $("#editor-assempled-area"),
-        editorAssembleStatus: $("#editor-assemble-status"),
-        editorAssempledAreaEntries: $("#editor-assempled-area-entries"),
-        editorAssempledAreaEntry: $("#editor-assempled-area-entry")
-    },
-    
     cache: {},
     
     init: function() {
@@ -51,7 +40,7 @@ var EditorView = {
     },
     
     showAssembledData: function(data) {
-        $(".editor-assempled-area-deletable-entry").remove();
+        this.ELEMENT.editorAssempledAreaDeletableEntry.remove();
         this.ELEMENT.editorAssempledAreaEntry.hide();
         var mnemonicPositions = this.assembler.getMnemonicPositions();
         var mnemonics = this.assembler.getMnemonics();
@@ -61,7 +50,7 @@ var EditorView = {
             var entry = this.ELEMENT.editorAssempledAreaEntry.clone(true, true);
             entry.addClass("editor-assempled-area-deletable-entry");
             var parts = entry.find("td");
-            parts.eq(0).html(Converter.toString(i) + ": ");
+            parts.eq(0).html(Converter.toString(i));
             parts.eq(1).html(Converter.toString(value));
             if (mnemonicPositions.indexOf(i) >= 0) {
                 var mnemonic = this.assembler.getMnemonicFromOpcode(value);
@@ -73,5 +62,16 @@ var EditorView = {
             this.ELEMENT.editorAssempledAreaEntries.append(entry);
             entry.show();
         }
+    },
+    
+    ELEMENT: {
+        editorAssembleButton: $("#editor-assemble-button"),
+        editorLoadButton: $("#editor-load-button"),
+        editorCodeArea: $("#editor-code-area"),
+        editorAssembledArea: $("#editor-assempled-area"),
+        editorAssembleStatus: $("#editor-assemble-status"),
+        editorAssempledAreaEntries: $("#editor-assempled-area-entries"),
+        editorAssempledAreaEntry: $("#editor-assempled-area-entry"),
+        editorAssempledAreaDeletableEntry: $(".editor-assempled-area-deletable-entry")
     }
 };

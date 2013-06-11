@@ -57,15 +57,16 @@ var MemoryView = {
     },
     
     createMemoryGrid: function() {
-        var table = $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>");        
+        var self = this;
+        var table = this.ELEMENT.memoryGridTable;
         var rows = Config.SIMULATOR_MEMORY_SIZE / 16;
         for (var y = -1; y < rows; y++) {
-            var tr = $("<tr></tr>");
+            var tr = this.ELEMENT.memoryGridTr.clone();
             for (var x = -1; x < 16; x++) {
-                var td = $("<td></td>");
+                var td = this.ELEMENT.memoryGridTd.clone();
                 if (y < 0) {
                     if (x < 0) {
-                        td.html("").addClass("memory-cell-corner");
+                        td.addClass("memory-cell-corner");
                     } else {
                         td.html("_" + x.toString(16).toUpperCase()).addClass("memory-cell-top");
                     }
@@ -83,7 +84,7 @@ var MemoryView = {
                             .click({id: "#" + cellId + ""}, function(event) {
                                 var self = $(this);
                                 var target = $(event.data.id);
-                                $("#memory-cell-edit-input")
+                                self.ELEMENT.memoryCellEditInput
                                     .show()
                                     .val(self.text())
                                     .attr("editing", "true")
@@ -99,7 +100,14 @@ var MemoryView = {
             }
             table.append(tr);
         }
-        table.appendTo("#memory-body");
-    }
+        table.appendTo(this.ELEMENT.memoryBody);
+    },
     
+    ELEMENT: {
+        memoryGridTable: $("<table border='0' cellspacing='0' cellpadding='2' width='100%'></table>"),
+        memoryGridTr: $("<tr></tr>"),
+        memoryGridTd: $("<td></td>"),
+        memoryCellEditInput: $("#memory-cell-edit-input"),
+        memoryBody: $("#memory-body")
+    }
 };

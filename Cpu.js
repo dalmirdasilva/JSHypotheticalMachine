@@ -28,6 +28,10 @@ function Cpu() {
     this.n = false;
     this.sleeping = false;
     this.powered = false;
+    this.interruptVector = Config.INTERRUPT_VECTOR;
+    this.interruptEnable = true;
+    this.interruptStatus = false;
+    this.contextStack = [];
     
     this.stack;
     this.memory;
@@ -48,6 +52,7 @@ function Cpu() {
     
     this.executeInstruction = function(instruction) {
         instruction.exec(this);
+        this.checkInterrupt();
     };
     
     this.nextPc = function() {
@@ -66,6 +71,54 @@ function Cpu() {
                 this.sleep();
             }
         }
+    };
+    
+    this.checkInterrupt = function() {
+        with (this) {
+            if (wasInterrupted()) {
+                saveContext();
+                disableInterrupt();
+                clearInterruptStatus();
+                setPc(interruptVector);
+            }
+        }
+    };
+    
+    this.saveContext = function() {
+        var context = {pc: this.pc, ac: this.ac, z: this.z, n: this.n};
+        this.contextStack.push(context);
+    };
+    
+    this.restoreContext = function() {
+        var context = this.contextStack.pop();
+        if (context) {
+            this.pc = context.pc;
+            this.ac = context.ac;
+            this.z = context.z;
+            this.n = context.n;
+        }
+    };
+    
+    this.wasInterrupted = function() {
+        return this.interruptEnable && this.interruptStatus;
+    };
+    
+    this.interrupt = function() {
+        if (this.interruptEnable) {
+            this.interruptStatus = true;
+        }
+    };
+    
+    this.clearInterruptStatus = function() {
+        this.interruptStatus = false;
+    };
+    
+    this.enableInterrupt = function() {
+        this.interruptEnable = true;
+    };
+    
+    this.disableInterrupt = function() {
+        this.interruptEnable = false;
     };
     
     this.powerOn = function() {

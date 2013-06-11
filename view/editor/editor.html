@@ -35,9 +35,12 @@ jmp :begining
 # Interrupts here, soon
 .at 4
 
+    lda 0x00
+    sta 0x80
+    reti
 
 # Begining of the program
-.at 8
+.at 10
 :begining
     
     # Load from the address 0x19
@@ -64,7 +67,7 @@ jmp :begining
 	# Add from address 0x18
 	add 0x18
     
-	# Store the AC on address 0x18
+	# Store the AC on address 0x20
     sta 0x20
     
     # Return of the subroutine

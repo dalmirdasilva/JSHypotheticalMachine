@@ -137,6 +137,10 @@ function processRequest(request, port) {
             var sleep = request.getContent() === true;
             sleep ? cpu.sleep() : cpu.awake();
         break;
+        
+        case Message.TYPE.INTERRUPT_CPU:
+            cpu.interrupt();
+        break;
     }
     port.postMessage(response.toHash());
 }

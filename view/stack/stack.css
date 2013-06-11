@@ -19,7 +19,7 @@
  
 #stack-holder {
     left: 1120px; 
-    min-width: 70px;
+    min-width: 75px;
 }
 
 #stack-title {
@@ -41,6 +41,8 @@
 
 .stack-cell-corner {
     background-color: #eee;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
 }
 
 .stack-cell-side {

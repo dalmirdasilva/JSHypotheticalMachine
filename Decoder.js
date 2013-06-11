@@ -89,6 +89,9 @@ function Decoder() {
             case 0x0d:
                 return new Pop();
                 break;
+            case 0x0e:
+                return new Reti();
+                break;
             case 0xff:
                 return new Hlt();
                 break;

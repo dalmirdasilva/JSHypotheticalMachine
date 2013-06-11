@@ -148,3 +148,9 @@ function Pop() {
     }
 }
 
+function Reti() {
+    this.exec = function(cpu) {
+        cpu.restoreContext();
+    }
+}
+

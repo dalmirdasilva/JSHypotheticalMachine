@@ -43,15 +43,18 @@
     text-align: right;
     padding: 2px 6px;
     background-color: #fff;
+    border-radius: 0px 0px 3px 3px;
 }
 
 .memory-cell-corner {
     background-color: #eee;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
 }
 
 .memory-cell-side, .memory-cell-top {
     color: #646464;
-    background-color: #ddd;
+    background-color: #ececec;
     padding: 4px 6px;
     text-align: center;
 }
@@ -76,4 +79,3 @@
 .memory-cell-current {
     background-color: #f90;
 }
-
