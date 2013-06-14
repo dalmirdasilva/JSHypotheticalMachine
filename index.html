@@ -1,7 +1,10 @@
 <div class="header">JS Hypothetical Machine (Neander Machine with Extended Instruction Set)</div>
+<button id="toggle">toggle</button>
+<button id="interrupt">interrupt</button>
 
 <div id="glass-layer">Loading...</div>
 <div id="views-container"></div>
+<div id="devices-container"></div>
 
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" type="text/css" href="lib/jquery-ui/css/custom/jquery-ui-1.10.3.custom.css">
@@ -17,13 +20,12 @@
 <script src="SeekableArray.js" type="text/javascript"></script>
 <script src="UIEventListener.js" type="text/javascript"></script>
 <script src="UI.js" type="text/javascript"></script>
-
 <script type="text/javascript">
     
     var availableViews = ["memory", "cpu", "stack", "oscillator", "editor"];
-    var availableExtentions = [];//"glcd"];
+    var availableDevices = ["display"];
     var loadedViews = 0;
-    var loadedExtentions = 0;
+    var loadedDevices = 0;
     
     function loadView(view) {
         var holder = $("<div></div>");
@@ -33,11 +35,11 @@
         });
     }
 
-    function loadExtention(extention) {
+    function loadExtention(device) {
         var holder = $("<div></div>");
-        $("#extentions-container").append(holder);
-        holder.load("ext/" + extention + "/" + extention + ".html", function() {
-            loadedExtentions++;
+        $("#devices-container").append(holder);
+        holder.load("device/" + device + "/" + device + ".html", function() {
+            loadedDevices++;
         });
     }
     
@@ -47,27 +49,43 @@
         loadView(view);
     });
     
-    availableExtentions.map(function(extention) {
-        loadExtention(view);
+    availableDevices.map(function(device) {
+        loadExtention(device);
     });
     
     var interval;
     interval = setInterval(function() {
-        if (loadedViews == availableViews.length && loadedExtentions == availableExtentions.length) {
+        if (loadedViews == availableViews.length && loadedDevices == availableDevices.length) {
             UI.init();
             $("#glass-layer").remove();
             $(".draggable-item").draggable({
                 handle: ".draggable-handler",
-                stack: ".draggable-item"
+                stack: ".draggable-item",
+                
             });
             clearInterval(interval);
         }
     }, 500);
+
+    var i = 0;
+    $('#toggle').click(function() {
+        if (i==0) {
+            i=1;
+            $(".view-holder").fadeOut(500);
+        } else {
+            i = 0;
+            $(".view-holder").fadeIn(500);
+        }
+    });
     
+    $("#interrupt").click(function() {
     
-    var s = "var prog = [0x02,0x37,0x0a,0x09,0x09,0x08,0x07,0x02,0xff,0x03,0x36,0x01,0x65,0x0b,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,-0x1,0x64];var mem = new ArrayBuffer(256);var memDv = new DataView(mem);for (var i = 0; i < prog.length; i++) {memDv.setInt8(i, prog[i]);}Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {console.log(message.getContent())});";
-    
-    
+        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU), function(message) {
+            console.log(message.getContent());
+        });
+            
+    });
+
 </script>
 <div class="footer">Written by Dalmir da Silva &lt;dalmirdasilva@gmail.com&gt;</div>
 </body>

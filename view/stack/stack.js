@@ -45,21 +45,25 @@ var StackView = {
     },
     
     createStackGrid: function() {
-        var table = $("<table border='0' cellspacing='0' cellpadding='1' width='100%'></table>");
+        var self = this;
+        var table = this.ELEMENT.stackGridTable;
         var stackSize = Config.SIMULATOR_STACK_SIZE;
-        var tr = $("<tr></tr>");
-        var positionTd = $("<td></td>");
+        var tr = this.ELEMENT.stackGridTr.clone();
+        var positionTd = this.ELEMENT.stackGridTd.clone();
+        positionTd.html("&nbsp;");
         positionTd.addClass("stack-cell-corner");
-        var valueTd = $("<td>&nbsp;</td>");
-            valueTd.addClass("stack-cell-side");
+        var valueTd = this.ELEMENT.stackGridTd.clone();
+            valueTd.addClass("stack-cell-top");
             tr.append(positionTd);
             tr.append(valueTd);
             table.append(tr);
         for (var i = stackSize - 1; i >= 0; i--) {
-            tr = $("<tr></tr>");
-            positionTd = $("<td>" + i.toString(16).toUpperCase() + "</td>");
+            tr = this.ELEMENT.stackGridTr.clone();
+            positionTd = this.ELEMENT.stackGridTd.clone();
+            positionTd.html(i.toString(16).toUpperCase());
             positionTd.addClass("stack-cell-side");
-            valueTd = $("<td>00</td>");
+            valueTd = this.ELEMENT.stackGridTd.clone();
+            valueTd.html(Converter.toString(0));
             var stackCellId = "stack-reg-" + i;
             valueTd.attr("id", stackCellId)
                 .attr("position", i)
@@ -68,6 +72,13 @@ var StackView = {
             tr.append(valueTd);
             table.append(tr);
         }
-        table.appendTo("#stack-body");
+        table.appendTo(this.ELEMENT.stackBody);
+    },
+    
+    ELEMENT: {
+        stackGridTable: $("<table border='0' cellspacing='0' cellpadding='1' width='100%'></table>"),
+        stackGridTr: $("<tr></tr>"),
+        stackGridTd: $("<td></td>"),
+        stackBody: $("#stack-body")
     }
 };

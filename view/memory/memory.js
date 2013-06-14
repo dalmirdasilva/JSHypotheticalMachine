@@ -68,11 +68,11 @@ var MemoryView = {
                     if (x < 0) {
                         td.addClass("memory-cell-corner");
                     } else {
-                        td.html("_" + x.toString(16).toUpperCase()).addClass("memory-cell-top");
+                        td.html(x.toString(16).toUpperCase()).addClass("memory-cell-top");
                     }
                 } else {
                     if (x < 0) {
-                        td.html(y.toString(16).toUpperCase() + "_").addClass("memory-cell-side");
+                        td.html(y.toString(16).toUpperCase()).addClass("memory-cell-side");
                     } else {
                         var address = y * 16 + x;
                         var cellId = "memory-reg-" + address;

@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Cpu class
  */
-function Cpu() {
-  
+function Cpu(memory, stack, decoder, oscillator) {
+
     this.pc = 0;
     this.ac = 0;
     this.z = false;
@@ -33,9 +33,10 @@ function Cpu() {
     this.interruptStatus = false;
     this.contextStack = [];
     
-    this.stack;
-    this.memory;
-    this.decoder;
+    this.oscillator = oscillator;
+    this.stack = stack;
+    this.memory = memory;
+    this.decoder = decoder;
     
     this.masks = {
         pc: 0xff,
@@ -62,14 +63,24 @@ function Cpu() {
     };
     
     this.clockTick = function() {
-        if(!this.isSleeping() && this.isPowered()) {
-            var opcode = this.fetchNextInstruction();
-            var instruction = this.decodeInstruction(opcode);
-            try {
-                this.executeInstruction(instruction);
-            } catch(e) {
-                this.sleep();
+        with (this) {
+            if(!isSleeping() && isPowered()) {
+                try {
+                    var opcode = fetchNextInstruction();
+                    var instruction = decodeInstruction(opcode);
+                    executeInstruction(instruction);
+                } catch(e) {
+                    sleep();
+                    Logger.error(e);
+                }
             }
+        }
+    };
+    
+    this.returnFromInterrupt = function() {
+        with (this) {
+            restoreContext();
+            enableInterrupt();
         }
     };
     
@@ -164,11 +175,11 @@ function Cpu() {
         }
     };
     
-    this.popStack = function() {
+    this.stackPop = function() {
         return this.stack.pop();
     };
     
-    this.pushStack = function(value) {
+    this.stackPush = function(value) {
         return this.stack.push(value);
     };
     
@@ -240,4 +251,8 @@ function Cpu() {
     this.getFlags = function() {
         return {"z": this.z, "n": this.n};
     };
+    
+    if (oscillator instanceof Oscillator) {
+        this.setOscillator(oscillator);
+    }
 }

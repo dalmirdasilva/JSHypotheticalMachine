@@ -25,6 +25,7 @@ function Assembler() {
     this.commentIndicator = '#';
     this.symbolIndicator = ':';
     this.dataDefinitionIndicator = ".db";
+    this.defineIndicator = ".def";
     this.positionDefinitionIndicator = ".at"
     this.opcodes = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0xff];
     this.mnemonics = ["nop", "sta", "lda", "add", "or", "and", "not", "jmp", "jn", "jz", "call", "ret", "push", "pop", "reti", "hlt"];
@@ -32,8 +33,9 @@ function Assembler() {
     this.assembledData;
     this.dataDefinition;
     this.symbolTable;
+    this.defineTable;
     this.currentLineNumber;
-    this.mnemonicPositions = [];
+    this.mnemonicPositions;
     
     this.assemble = function(assemblyCode) {
         assemblyCode = this.sanitizeAssembly(assemblyCode);
@@ -66,6 +68,10 @@ function Assembler() {
             this.assemblePositionDefinition(line);
             return;
         }
+        if(this.isItADefine(line)) {
+            this.assembleDefine(line);
+            return;
+        }
         var chunks = line.split(" ");
         for(var i = 0; i < chunks.length; i++) {
             this.assembleChunk(chunks[i]);
@@ -84,7 +90,7 @@ function Assembler() {
             if(isNaN(chunk)) {
                 if(this.isItASymbol(chunk)) {
                     code = chunk;
-                } else {
+                } else if((code = this.tryGetFromDefine(chunk)) == undefined) {
                     throw "Undefined element: " + chunk + " (line: " + this.currentLineNumber + ").";
                 }
             } else {
@@ -96,8 +102,16 @@ function Assembler() {
     
     this.assembleDataDefinition = function(line) {
         var parts = line.split(" ");
-        if(parts.length != 3 || isNaN(parts[1]) || isNaN(parts[2]) || parseInt(parts[1]) < 0) {
-            throw "Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").";
+        if(parts.length != 3) {
+            throw new Error("Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").");
+        }
+        for (var i = 1; i <= 2; i++) {
+            if (isNaN(parts[i])) {
+                parts[i] = this.tryGetFromDefine(parts[i]);
+                if (parts[i] == undefined) {
+                    throw new Error("Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").");
+                }
+            }
         }
         this.dataDefinition.push({"address": parseInt(parts[1]), "data": parseInt(parts[2])});
     };
@@ -109,6 +123,14 @@ function Assembler() {
         }
         var position = parseInt(parts[1]);
         this.assembledData.seek(position);
+    };
+    
+    this.assembleDefine = function(line) {
+        var parts = line.split(" ");
+        if(parts.length != 3 || !(isNaN(parts[1])) || isNaN(parts[2])) {
+            throw "Wrong define usage: " + line + " (line: " + this.currentLineNumber + ").";
+        }
+        this.defineTable[parts[1]] = parseInt(parts[2]);
     };
     
     this.replaceSymbols = function() {
@@ -158,6 +180,10 @@ function Assembler() {
         return (line.slice(0, this.dataDefinitionIndicator.length) == this.dataDefinitionIndicator);
     };
     
+    this.isItADefine = function(line) {
+        return (line.slice(0, this.defineIndicator.length) == this.defineIndicator);
+    };
+    
     this.isItAPositionDefinition = function(line) {
         return (line.slice(0, this.positionDefinitionIndicator.length) == this.positionDefinitionIndicator);
     };
@@ -178,6 +204,8 @@ function Assembler() {
         this.assembledData = new SeekableArray();
         this.symbolTable = {};
         this.dataDefinition = new Array();
+        this.defineTable = new Array();
+        this.mnemonicPositions = [];
     };
     
     this.getAssembledData = function() {
@@ -202,6 +230,10 @@ function Assembler() {
             return this.mnemonics[opcodeIndex];
         }
         return -1;
+    };
+    
+    this.tryGetFromDefine = function(def) {
+        return this.defineTable[def];
     };
     
     this.getOpcodeFromMnemonic = function(mnemonic) {

@@ -34,13 +34,19 @@ var EditorView = {
             var mem = new Uint8Array(Config.SIMULATOR_MEMORY_SIZE);
             mem.set(assembledData, 0);
             Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
-                console.log(message.getContent())
+                var status = "";
+                if (message.getContent()) {
+                    status = "Successfully loaded";
+                } else {
+                    status = "Faild to load";
+                }
+                self.ELEMENT.editorAssembleStatus.text(status);
             });
         });
     },
     
     showAssembledData: function(data) {
-        this.ELEMENT.editorAssempledAreaDeletableEntry.remove();
+        $(".editor-assempled-area-deletable-entry").remove();
         this.ELEMENT.editorAssempledAreaEntry.hide();
         var mnemonicPositions = this.assembler.getMnemonicPositions();
         var mnemonics = this.assembler.getMnemonics();
@@ -50,12 +56,12 @@ var EditorView = {
             var entry = this.ELEMENT.editorAssempledAreaEntry.clone(true, true);
             entry.addClass("editor-assempled-area-deletable-entry");
             var parts = entry.find("td");
-            parts.eq(0).html(Converter.toString(i));
+            parts.eq(0).html(i.toString(16));
             parts.eq(1).html(Converter.toString(value));
             if (mnemonicPositions.indexOf(i) >= 0) {
                 var mnemonic = this.assembler.getMnemonicFromOpcode(value);
                 if (this.assembler.getInstructionHasParam(mnemonic)) {
-                     mnemonic += " (" + Converter.toString(data[i + 1]) + ")";
+                     mnemonic += " (" + (data[i + 1]).toString(16) + ")";
                 }
                 parts.eq(2).html(mnemonic)
             }
@@ -71,7 +77,6 @@ var EditorView = {
         editorAssembledArea: $("#editor-assempled-area"),
         editorAssembleStatus: $("#editor-assemble-status"),
         editorAssempledAreaEntries: $("#editor-assempled-area-entries"),
-        editorAssempledAreaEntry: $("#editor-assempled-area-entry"),
-        editorAssempledAreaDeletableEntry: $(".editor-assempled-area-deletable-entry")
+        editorAssempledAreaEntry: $("#editor-assempled-area-entry")
     }
 };

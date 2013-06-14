@@ -1,0 +1,41 @@
+.def OP_ADDR  0xfd
+.def ARG0_ADDR  0xfe
+.def ARG1_ADDR  0xff
+
+.def X_INC_ADDR 0xfb
+.def Y_INC_ADDR 0xfc
+
+.def MOVETO_OP 0xfa
+.def LINETO_OP 0xf9
+
+.db ARG0_ADDR 0x00
+.db ARG1_ADDR 0x00
+
+.db X_INC_ADDR 5
+.db Y_INC_ADDR 5
+
+.db MOVETO_OP 0x00
+.db LINETO_OP 0x01
+    
+jmp :begining
+
+.at 4
+    reti
+
+:begining
+    
+    lda LINETO_OP
+    sta OP_ADDR
+
+:loop
+
+    lda ARG0_ADDR
+    add X_INC_ADDR
+    sta ARG0_ADDR
+    
+    lda ARG1_ADDR
+    add Y_INC_ADDR
+    sta ARG1_ADDR
+    jmp :loop
+
+                            

@@ -30,6 +30,7 @@ textarea {
     border: 0px solid #aaa;
 }
 
+.device-holder,
 .view-holder {
     background-color: #fff;
     border: 1px solid #aaa; 
@@ -38,24 +39,31 @@ textarea {
     border-radius: 3px;
 }
 
+.device-title, .device-sub-title,
 .view-title, .view-sub-title {
     padding: 6px;
-    background-color: #ccc;
+    background-color: #ddd;
     font-weight: bold;
     color: #444;
     border-bottom: 1px solid #aaa;
     border-radius: 2px 2px 0px 0px;
 }
 
+.device-title {
+    background-color: #eeeedd;
+}
+
+.device-sub-title,
 .view-sub-title {
     border-radius: 0px;
     padding-left: 0px;
     border-bottom: 1px solid #bbb;
     font-weight: normal;
-    background-color: #eee;
+    background-color: #f3f0f2;
 }
 
-.view-body {
+.view-body,
+.device-body {
     margin: 4px;
 }
 

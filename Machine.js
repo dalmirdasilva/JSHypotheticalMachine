@@ -18,6 +18,7 @@
  */
  
 importScripts("Config.js");
+importScripts("Logger.js");
 importScripts("OscillatorEventListener.js");
 importScripts("Oscillator.js");
 importScripts("Cpu.js");
@@ -125,7 +126,7 @@ function processRequest(request, port) {
                 var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
                 port.postMessage(asyncResponse.toHash());
             });
-            memory.addEventListener(content["event"], listener);
+            memory.addEventListener((content["event"] || Memory.EVENT.AFTER_WRITE), listener);
         break;
         
         case Message.TYPE.GET_MEMORY_ACCESS:

@@ -16,19 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
- * Config class
+ * Logger class
  */
-var Config = {
+var Logger = {
     
-    SIMULATOR_OSC_MAX_FREQUENCY: 150,
-    SIMULATOR_OSC_INITIAL_FREQUENCY: 50,
-    SIMULATOR_CPU_PRESCALLER: 1,
-    SIMULATOR_MEMORY_SIZE: 256,
-    SIMULATOR_MEMORY_ADDRESS_MASK: 0xff,
-    SIMULATOR_STACK_SIZE: 16,
-    UI_DEFAULT_BASE: 16,
-    UI_REFRESH_FREQUENCY: 20,
-    INTERRUPT_VECTOR: 4
+    resource: "http://localhost/restricted/sandbox/tcc/JSHypotheticalMachine/log.php",
+    
+    debug: function(message) {
+        this.log("debug", message);
+    },
+    
+    error: function(message) {
+        this.log("error", message);
+    },
+    
+    info: function(message) {
+        this.log("info", message);
+    },
+    
+    log: function(level, message) {
+        var xhr = new XMLHttpRequest(); 
+        xhr.open("POST", this.resource, false);
+        xhr.send(level + ": " + message);
+    }
 };
+ 

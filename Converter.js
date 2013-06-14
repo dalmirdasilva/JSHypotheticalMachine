@@ -44,7 +44,7 @@ var Converter = {
         var s = number.toString(this.base);
         var v = s;
         var length = (len) ? len - s.length : (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length);
-        for (var i = 0; i < length; i++) {
+        for (var i = 0; i < length && this.base != 10; i++) {
             v = "0" + v;
         }
         return v;

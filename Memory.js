@@ -25,16 +25,18 @@ function Memory(size) {
     this.size = size || Config.SIMULATOR_MEMORY_SIZE;
     this.buffer = new Int8Array(size);
     this.eventListeners = {};
-    
+    this.addressMask = Config.SIMULATOR_MEMORY_ADDRESS_MASK;
     this.access = {read: 0, write: 0};
     
     this.read = function(address) {
+        address &= this.addressMask;
         this.checkBoundaries(address);  
         this.access.read++;
         return this.buffer[address];
     };
     
     this.write = function(address, value) {
+        address &= this.addressMask;
         this.checkBoundaries(address);
         this.buffer[address] = value;
         this.access.write++;
@@ -68,7 +70,7 @@ function Memory(size) {
     };
     
     this.checkBoundaries = function(address) {
-        if (address < 0 || address >= this.size) {
+        if (address >= this.size) {
             throw new Error("Memory access violation at " + address + ".");
         }
     };
@@ -79,7 +81,7 @@ function Memory(size) {
         if (listeners) {
             listeners.map(function(listener) {
                 if (address >= listener.begin  && address <= listener.end) {
-                    var slice = self.buffer.subarray(listener.begin, listener.end);
+                    var slice = self.buffer.subarray(listener.begin, listener.end + 1);
                     listener.notify(slice);
                 }
             });

@@ -39,21 +39,19 @@
 
 #editor-code-area, #editor-assempled-area {
     margin-top: 6px;
-    width: 200px;
-    height: 500px;
+    width: 180px;
 }
 
 #editor-code-area {
     width: 300px;
-    height: 500px;
 }
 
 #editor-assempled-area {
     overflow: auto;
+    height: 395px;
 }
 
 #editor-assemble-status {
-    border-top: 1px solid #ddd;
     border-bottom: 0px;
     padding: 2px 6px;
     background-color: #fff;

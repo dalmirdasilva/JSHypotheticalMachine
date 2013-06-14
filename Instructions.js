@@ -49,7 +49,7 @@ function Lda() {
 }
 
 /**
- * Performs a logic ADD between a memory address value with the ACC.
+ * Adds to the ACC the memory address value.
  */
 function Add() {
     this.exec = function(cpu) {
@@ -61,6 +61,9 @@ function Add() {
     }
 }
 
+/**
+ * Performs a logic AR between a memory address value with the ACC.
+ */
 function Or() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());
@@ -71,6 +74,9 @@ function Or() {
     }
 }
 
+/**
+ * Performs a logic AND between a memory address value with the ACC.
+ */
 function And() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());
@@ -81,6 +87,9 @@ function And() {
     }
 }
 
+/**
+ * Performs a logic NOT with the ACC.
+ */
 function Not() {
     this.exec = function(cpu) {
         var ac = cpu.getAc();
@@ -123,34 +132,34 @@ function Hlt() {
 function Call() {
     this.exec = function(cpu) {
         var address = cpu.readMemory(cpu.nextPc());
-        cpu.pushStack(cpu.getPc());
+        cpu.stackPush(cpu.getPc());
         cpu.setPc(address);
     }
 }
 
 function Ret() {
     this.exec = function(cpu) {
-        cpu.setPc(cpu.popStack());
+        cpu.setPc(cpu.stackPop());
     }
 }
 
 function Push() {
     this.exec = function(cpu) {
         var value = cpu.getAc();
-        cpu.pushStack(value);
+        cpu.stackPush(value);
     }
 }
 
 function Pop() {
     this.exec = function(cpu) {
-        var value = cpu.popStack();
+        var value = cpu.stackPop();
         cpu.setAc(value);
     }
 }
 
 function Reti() {
     this.exec = function(cpu) {
-        cpu.restoreContext();
+        cpu.returnFromInterrupt();
     }
 }
 

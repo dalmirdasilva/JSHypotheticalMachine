@@ -20,61 +20,114 @@
                         </div>
                         <div id="editor-code-area-holder">
                             <textarea id="editor-code-area">
-# This is a example of how
-# to count down from 127 to 0
+.def OP_ADDR  0xfd
+.def ARG0_ADDR  0xfe
+.def ARG1_ADDR  0xff
 
-# Putting data into the memory
-# 127
-.db 0x19 0x7f
+.def X_INC_ADDR 0xfb
+.def Y_INC_ADDR 0xfc
 
-# -1
-.db 0x18 0xff
+.def MOVETO_OP 0xfa
+.def LINETO_OP 0xf9
+
+.db ARG0_ADDR 0x00
+.db ARG1_ADDR 0x00
+
+.db X_INC_ADDR 5
+.db Y_INC_ADDR 200
+
+.db MOVETO_OP 0x00
+.db LINETO_OP 0x01
     
 jmp :begining
 
-# Interrupts here, soon
 .at 4
-
-    lda 0x00
-    sta 0x80
     reti
 
-# Begining of the program
-.at 10
 :begining
     
-    # Load from the address 0x19
-	lda 0x19
+    lda LINETO_OP
+    sta OP_ADDR
 
-:add_point
+:loop
 
-	call :sum_subroutine
+    lda ARG0_ADDR
+    add X_INC_ADDR
+    sta ARG0_ADDR
+    
+    lda ARG1_ADDR
+    add Y_INC_ADDR
+    sta ARG1_ADDR
+    jmp :loop
+
+                            
+
+# This is a example of how
+# to count down from 127 to 0
+
+# Defining address
+#.def NUMBER_ADDR 0xf0
+#.def INC_ADDR 0xf1
+#.def STORE_ADDR 0x0f2
+
+#.def INT_COUNT_ADDR 0xf3
+#.def INT_COUNT_INC_ADDR 0xf4
+
+# Putting data into the memory
+# 127
+#.db NUMBER_ADDR 0x7f
+
+# -1
+#.db INC_ADDR 0xff
+    
+# 1
+#.db INT_COUNT_INC_ADDR 0x01
+    
+#jmp :begining
+
+# Interrupts here
+#.at 4
+
+#	lda INT_COUNT_ADDR
+#   add INT_COUNT_INC_ADDR
+#	sta INT_COUNT_ADDR
+    
+#    reti
+
+# Begining of the program
+#:begining
+    
+    # Load
+#	lda NUMBER_ADDR
+
+#:add_point
+
+#	call :sum_subroutine
     
     # Jump if zero
-    jz :sleep_point
+#    jz :sleep_point
     
     # Jump
-    jmp :add_point
+#    jmp :add_point
     
 # Sleep
-:sleep_point
+#:sleep_point
 
-	hlt
+#	hlt
     
 # Sum subroutine
-:sum_subroutine
+#:sum_subroutine
 
-	# Add from address 0x18
-	add 0x18
+	# Add from
+#	add INC_ADDR
     
-	# Store the AC on address 0x20
-    sta 0x20
+	# Store the AC
+#    sta STORE_ADDR
     
     # Return of the subroutine
-    ret
+#    ret
                             </textarea>
                         </div>
-                        <div class="view-sub-title"  id="editor-assemble-status"></div>
                     </td>
                     <td valign="top">
                         <div class="view-sub-title">
@@ -124,6 +177,7 @@ jmp :begining
                     <tr>
                         <td><button id="editor-assemble-button">Assemble</button></td>
                         <td><button id="editor-load-button">Load to memory</button></td>
+                        <td><div class="view-sub-title"  id="editor-assemble-status"></div></td>
                     </tr>
                 </tbody> 
             </table>

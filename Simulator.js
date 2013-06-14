@@ -73,6 +73,13 @@ function Simulator(path) {
         }
     };
     
+    this.addEventListener = function(event, listener) {
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
+        }
+        this.eventListeners[event].push(listener);
+    };
+    
     if (path != null) {
         Simulator.getInstance().simulate(path);
     }

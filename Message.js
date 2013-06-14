@@ -60,13 +60,14 @@ function Message(type, content, channel, async) {
     };
     
     this.toHash = function() {
-        return {"type": this.type, "content": this.content, "channel": this.channel};
+        return {"type": this.type, "content": this.content, "channel": this.channel, "async": this.async};
     };
     
     this.fromHash = function(hash) {
         this.setType(hash["type"]);
         this.setContent(hash["content"]);
         this.setChannel(hash["channel"]);
+        this.setAsync(hash["async"]);
     };
 }
 
