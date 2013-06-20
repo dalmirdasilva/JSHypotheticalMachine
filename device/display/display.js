@@ -50,7 +50,7 @@ var DisplayView = {
     executeOperation: function(mappedMemory) {
         var operation = mappedMemory[0];
         this.ctx.fillStyle = "#000";
-        switch(operation) {
+        switch (operation) {
             case 0x00:
                 this.ctx.moveTo(mappedMemory[1] & 0xff, mappedMemory[2] & 0x7f);
             break;

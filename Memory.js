@@ -25,7 +25,7 @@ function Memory(size) {
     this.size = size || Config.SIMULATOR_MEMORY_SIZE;
     this.buffer = new Int8Array(size);
     this.eventListeners = {};
-    this.addressMask = Config.SIMULATOR_MEMORY_ADDRESS_MASK;
+    this.addressMask = Config.SIMULATOR_MEMORY_ADDRESS_MASK || 0xff;
     this.access = {read: 0, write: 0};
     
     this.read = function(address) {
@@ -77,7 +77,7 @@ function Memory(size) {
     
     this.notifyEvent = function(event, address) {
         var self = this;
-        var listeners = this.eventListeners[event];
+        var listeners = self.eventListeners[event];
         if (listeners) {
             listeners.map(function(listener) {
                 if (address >= listener.begin  && address <= listener.end) {
