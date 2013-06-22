@@ -241,19 +241,19 @@ button.ui-button-icons-only {
 }
 .ui-button-text-icon-primary .ui-button-text,
 .ui-button-text-icons .ui-button-text {
-	padding: .4em 1em .4em 2.1em;
+	padding: .2em .9em .4em 2.0em;
 }
 .ui-button-text-icon-secondary .ui-button-text,
 .ui-button-text-icons .ui-button-text {
-	padding: .4em 2.1em .4em 1em;
+	padding: .2em 2.0em .4m .9em;
 }
 .ui-button-text-icons .ui-button-text {
-	padding-left: 2.1em;
-	padding-right: 2.1em;
+	padding-left: 2.0em;
+	padding-right: 2.0em;
 }
 /* no icon support for input elements, provide padding by default */
 input.ui-button {
-	padding: .4em 1em;
+	padding: .4em .5em;
 }
 
 /* button icon element(s) */
@@ -1174,4 +1174,12 @@ body .ui-tooltip {
 	opacity: .3;
 	filter: Alpha(Opacity=30);
 	border-radius: 8px;
+}
+
+.ui-button {
+	border-radius: 3px;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: .2em .9em .4em .9em;
 }

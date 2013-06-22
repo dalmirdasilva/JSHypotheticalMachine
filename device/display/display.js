@@ -1,15 +1,13 @@
 var DisplayView = {
     
     ctx: null,
-
     intrinsicDimention: {w: 400, h: 200},
-
     extrinsicDimention: {w: 256, h: 128},
-
     mapAddress: {
         first: 0xff - 0x05,
         last: 0xff
     },
+    powered: true,
 
     OP: {
         NOP: 0x00,
@@ -20,9 +18,15 @@ var DisplayView = {
     
     init: function() {
         var self = this;
+        self.updateMappingLabels();
         self.createCanvas();
         self.attachListener();
         self.initButtons();
+    },
+    
+    updateMappingLabels: function() {
+        this.ELEMENT.displayMapFirst.text(this.mapAddress.first.toString(16));
+        this.ELEMENT.displayMapLast.text(this.mapAddress.last.toString(16));
     },
     
     createCanvas: function() {
@@ -30,7 +34,6 @@ var DisplayView = {
         canvas.width = this.extrinsicDimention.w;
         canvas.height = this.extrinsicDimention.h;
         this.ctx = canvas.getContext("2d");
-        this.ctx.fillStyle = "#000";
         this.clearDisplay();
     },
     
@@ -50,12 +53,23 @@ var DisplayView = {
     
     initButtons: function() {
         var self = this;
-        this.ELEMENT.displayClearButton.button().click(function() {
+        this.ELEMENT.displayPowerButton.button().click(function() {
             self.clearDisplay();
+            if (self.powered) {
+                self.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+                self.ctx.fillRect(0, 0, self.extrinsicDimention.w, self.extrinsicDimention.h);
+            }
+            self.powered = !self.powered;
+        });
+        this.ELEMENT.displayClearButton.button().click(function() {
+            if (self.powered) {
+                self.clearDisplay();
+            }
         });
     },
     
     clearDisplay: function() {
+        this.ctx.fillStyle = "rgb(0, 0, 0)";
         this.ctx.clearRect(0, 0, this.extrinsicDimention.w, this.extrinsicDimention.h);
         this.ctx.beginPath();
     },
@@ -63,7 +77,7 @@ var DisplayView = {
     executeOperation: function(mappedMemory) {
         with (this) {
             var operation = mappedMemory[0];
-            if (operation == OP.NOP) {
+            if (!powered || operation == OP.NOP) {
                 return;
             }
             var x = mappedMemory[1] & 0xff;
@@ -88,6 +102,9 @@ var DisplayView = {
     
     ELEMENT: {
         displayCanvas: $("display-canvas"),
-        displayClearButton: $("#display-clear-button")
+        displayPowerButton: $("#display-power-button"),
+        displayClearButton: $("#display-clear-button"),
+        displayMapFirst: $("#display-map-first"),
+        displayMapLast: $("#display-map-last")
     }
 };

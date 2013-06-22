@@ -23,7 +23,6 @@
 }
 
 button {
-    margin: 4px 0px;
 }
 
 textarea {
@@ -64,7 +63,7 @@ textarea {
 
 .view-body,
 .device-body {
-    margin: 4px;
+    margin: 2px;
 }
 
 #assembly-code-box, #assembled-code-box {
@@ -138,7 +137,11 @@ textarea {
     z-index: 9998;
     top: 0px;
     left: 0px;
-    background-color: #eee;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.opaque {
+    color: #646464;
 }
 
 .ui-progressbar {

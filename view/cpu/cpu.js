@@ -85,7 +85,6 @@ var CpuView = {
                     }
                 }
             );
-            
         });
         this.ELEMENT.cpuSleepButton.button().click(function() {
             Simulator.getInstance().exchangeMessage(
@@ -96,9 +95,12 @@ var CpuView = {
                     }
                 }
             );
-            
         });
-        this.ELEMENT.cpuPowerButton.button().click(function() {
+        this.ELEMENT.cpuPowerButton.button({
+              icons: {
+                primary: "ui-icon-power"
+              }
+            }).click(function() {
             Simulator.getInstance().exchangeMessage(
                 new Message(Message.TYPE.SET_CPU_POWER, !self.cache.powered),
                 function(message) {
