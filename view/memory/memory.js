@@ -1,3 +1,25 @@
+/**
+ * JS Hypothetical Machine
+ * 
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * MemoryView object
+ */
 var MemoryView = {
     
     cache: new Uint8Array(Config.SIMULATOR_MEMORY_SIZE),
@@ -29,8 +51,8 @@ var MemoryView = {
     },
     
     updateCurrentPosition: function(current) {
-        $(".memory-cell").removeClass("memory-cell-current");
-        $("#memory-reg-" + current).addClass("memory-cell-current");
+        $(".memory-cell-current", this.ELEMENT.memoryHolder).removeClass("memory-cell-current");
+        $("#memory-reg-" + current, this.ELEMENT.memoryHolder).addClass("memory-cell-current");
     },
     
     updateMemoryValues: function(arrayBuffer) {
@@ -40,7 +62,7 @@ var MemoryView = {
             if (byte != this.cache[i]) {
                 this.cache[i] = byte;
                 var text = Converter.toString(byte);
-                $("#memory-reg-" + i).text(text);
+                $("#memory-reg-" + i, this.ELEMENT.memoryHolder).text(text);
             }
         }
     },
@@ -48,11 +70,11 @@ var MemoryView = {
     updateMemoryAccess: function(memoryAccess) {
         if (memoryAccess["write"] != this.access["write"]) {
             this.access["write"] = memoryAccess["write"];
-            $("#memory-access-write").text(this.access["write"]);
+            $("#memory-access-write", this.ELEMENT.memoryHolder).text(this.access["write"]);
         }
         if (memoryAccess["read"] != this.access["read"]) {
             this.access["read"] = memoryAccess["read"];
-            $("#memory-access-read").text(this.access["read"]);
+            $("#memory-access-read", this.ELEMENT.memoryHolder).text(this.access["read"]);
         }
     },
     
@@ -108,6 +130,7 @@ var MemoryView = {
         memoryGridTr: $("<tr></tr>"),
         memoryGridTd: $("<td></td>"),
         memoryCellEditInput: $("#memory-cell-edit-input"),
-        memoryBody: $("#memory-body")
+        memoryBody: $("#memory-body"),
+        memoryHolder: $("#memory-holder")
     }
 };
