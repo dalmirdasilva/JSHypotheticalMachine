@@ -79,7 +79,6 @@ var DisplayView = {
                     var x2 = mappedMemory[3] & 0xff;
                     var y2 = mappedMemory[4] & 0x7f;
                     var r = mappedMemory[5] & 0x7f;
-                    alert(x+","+y+","+x2+","+y2+","+r);
                     this.ctx.arcTo(x, y, x2, y2, r);
                 break;
             }

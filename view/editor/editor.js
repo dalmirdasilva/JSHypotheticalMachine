@@ -56,7 +56,7 @@ var EditorView = {
     
     restoreProgram: function() {
         var programText = Storage.getItem("program");
-        if (programText != null) {
+        if (programText != null && programText != "") {
             this.ELEMENT.editorCodeArea.val(programText);
         }
     },

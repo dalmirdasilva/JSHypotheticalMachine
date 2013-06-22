@@ -54,7 +54,7 @@ jmp :begining
     sta LCD_ARG0
     
     lda LCD_ARG1
-    add X_INC
+    add Y_INC
     sta LCD_ARG1
 	call :line_to_op
     jmp :loop
