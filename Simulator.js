@@ -26,6 +26,7 @@ function Simulator(path) {
     this.worker = null;
     this.launched = false;
     this.eventListeners = {};
+    this.nextFreeChannel = 0;
     
     this.asyncMessageHandler = function(message) {
         this.notifyEvent(Simulator.EVENT.ASYNC_MESSAGE_RECEIVED, message);
@@ -78,6 +79,10 @@ function Simulator(path) {
             this.eventListeners[event] = [];
         }
         this.eventListeners[event].push(listener);
+    };
+    
+    this.getNextFreeChannel = function() {
+        return this.nextFreeChannel++;
     };
     
     if (path != null) {

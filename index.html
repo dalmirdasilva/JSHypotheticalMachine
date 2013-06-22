@@ -11,6 +11,7 @@
 <script src="lib/jquery.js" type="text/javascript"></script>
 <script src="lib/jquery-ui/js/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
 <script src="Config.js" type="text/javascript"></script>
+<script src="Storage.js" type="text/javascript"></script>
 <script src="Converter.js" type="text/javascript"></script>
 <script src="Assembler.js" type="text/javascript"></script>
 <script src="Oscillator.js" type="text/javascript"></script>
@@ -21,70 +22,75 @@
 <script src="UIEventListener.js" type="text/javascript"></script>
 <script src="UI.js" type="text/javascript"></script>
 <script type="text/javascript">
-    
-    var availableViews = ["memory", "cpu", "stack", "oscillator", "editor"];
-    var availableDevices = ["display"];
-    var loadedViews = 0;
-    var loadedDevices = 0;
-    
-    function loadView(view) {
-        var holder = $("<div></div>");
-        $("#views-container").append(holder);
-        holder.load("view/" + view + "/" + view + ".html", function() {
-            loadedViews++;
-        });
-    }
 
-    function loadExtention(device) {
-        var holder = $("<div></div>");
-        $("#devices-container").append(holder);
-        holder.load("device/" + device + "/" + device + ".html", function() {
-            loadedDevices++;
-        });
-    }
-    
-    Simulator.getInstance().simulate("Machine.js");
-    
-    availableViews.map(function(view) {
-        loadView(view);
-    });
-    
-    availableDevices.map(function(device) {
-        loadExtention(device);
-    });
-    
-    var interval;
-    interval = setInterval(function() {
-        if (loadedViews == availableViews.length && loadedDevices == availableDevices.length) {
-            UI.init();
-            $("#glass-layer").remove();
-            $(".draggable-item").draggable({
-                handle: ".draggable-handler",
-                stack: ".draggable-item",
-                
+(function($){
+    $(document).ready(function(){   
+
+        var availableViews = ["memory", "cpu", "stack", "oscillator", "editor"];
+        var availableDevices = ["display"];
+        var loadedViews = 0;
+        var loadedDevices = 0;
+        
+        function loadView(view) {
+            var holder = $("<div></div>");
+            $("#views-container").append(holder);
+            holder.load("view/" + view + "/" + view + ".html", function() {
+                loadedViews++;
             });
-            clearInterval(interval);
         }
-    }, 500);
 
-    var i = 0;
-    $('#toggle').click(function() {
-        if (i==0) {
-            i=1;
-            $(".view-holder").fadeOut(500);
-        } else {
-            i = 0;
-            $(".view-holder").fadeIn(500);
+        function loadExtention(device) {
+            var holder = $("<div></div>");
+            $("#devices-container").append(holder);
+            holder.load("device/" + device + "/" + device + ".html", function() {
+                loadedDevices++;
+            });
         }
-    });
-    
-    $("#interrupt").click(function() {
-    
-        Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU), function(message) {
-            console.log(message.getContent());
+        
+        Simulator.getInstance().simulate("Machine.js");
+        
+        availableViews.map(function(view) {
+            loadView(view);
         });
-            
+        
+        availableDevices.map(function(device) {
+            loadExtention(device);
+        });
+        
+        var interval;
+        interval = setInterval(function() {
+            if (loadedViews == availableViews.length && loadedDevices == availableDevices.length) {
+                UI.init();
+                $("#glass-layer").remove();
+                $(".draggable-item").draggable({
+                    handle: ".draggable-handler",
+                    stack: ".draggable-item",
+                    
+                });
+                clearInterval(interval);
+            }
+        }, 500);
+
+        var i = 0;
+        $('#toggle').click(function() {
+            if (i==0) {
+                i=1;
+                $(".view-holder").fadeOut(500);
+            } else {
+                i = 0;
+                $(".view-holder").fadeIn(500);
+            }
+        });
+        
+        $("#interrupt").click(function() {
+        
+            Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU), function(message) {
+                console.log(message.getContent());
+            });
+                
+        });
     });
+})(jQuery);
 
 </script>
 <div class="footer">Written by Dalmir da Silva &lt;dalmirdasilva@gmail.com&gt;</div>

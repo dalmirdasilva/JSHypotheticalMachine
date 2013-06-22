@@ -7,6 +7,7 @@ var EditorView = {
     init: function() {
         var self = this;
         this.initConponents();
+        this.restoreProgram();
         setTimeout(function() {
             self.codeMirror = CodeMirror.fromTextArea(document.getElementById("editor-code-area"), {
                 lineNumbers: true,
@@ -24,7 +25,7 @@ var EditorView = {
             try {
                 var data = self.assembler.assemble(code);
                 self.showAssembledData(data);
-                self.ELEMENT.editorAssembleStatus.text("Successfully assembled");
+                self.ELEMENT.editorAssembleStatus.text("Successfully assembled.");
             } catch(e) {
                 self.ELEMENT.editorAssembleStatus.text(e);
             }
@@ -36,13 +37,35 @@ var EditorView = {
             Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
                 var status = "";
                 if (message.getContent()) {
-                    status = "Successfully loaded";
+                    status = "Successfully loaded.";
                 } else {
-                    status = "Faild to load";
+                    status = "Faild to load.";
                 }
                 self.ELEMENT.editorAssembleStatus.text(status);
             });
         });
+        $(document).keydown(function(event) {
+            if (!(String.fromCharCode(event.which).toLowerCase() == 's' && event.ctrlKey) && !(event.which == 19)) {
+                return true;
+            }
+            self.saveProgram();
+            event.preventDefault();
+            return false;
+        });
+    },
+    
+    restoreProgram: function() {
+        var programText = Storage.getItem("program");
+        if (programText != null) {
+            this.ELEMENT.editorCodeArea.val(programText);
+        }
+    },
+    
+    saveProgram: function() {
+        this.codeMirror.save();
+        var programText = this.ELEMENT.editorCodeArea.val();
+        Storage.setItem("program", programText);
+        this.ELEMENT.editorAssembleStatus.text("Program successfully saved.");
     },
     
     showAssembledData: function(data) {
@@ -63,7 +86,7 @@ var EditorView = {
                 if (this.assembler.getInstructionHasParam(mnemonic)) {
                      mnemonic += " (" + (data[i + 1]).toString(16) + ")";
                 }
-                parts.eq(2).html(mnemonic)
+                parts.eq(2).html(mnemonic);
             }
             this.ELEMENT.editorAssempledAreaEntries.append(entry);
             entry.show();

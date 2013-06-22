@@ -20,112 +20,54 @@
                         </div>
                         <div id="editor-code-area-holder">
                             <textarea id="editor-code-area">
-.def OP_ADDR  0xfd
-.def ARG0_ADDR  0xfe
-.def ARG1_ADDR  0xff
+.def LCD_OP  0xfa
+.def LCD_ARG0  0xfb
+.def LCD_ARG1  0xfc
 
-.def X_INC_ADDR 0xfb
-.def Y_INC_ADDR 0xfc
+.db LCD_OP 0x00
+.db LCD_ARG0 0x00
+.db LCD_ARG1 0x00
 
-.def MOVETO_OP 0xfa
-.def LINETO_OP 0xf9
+.def X_INC 0xf9
+.def Y_INC 0xf8
 
-.db ARG0_ADDR 0x00
-.db ARG1_ADDR 0x00
+.db X_INC 60
+.db Y_INC 50
 
-.db X_INC_ADDR 5
-.db Y_INC_ADDR 200
+.def NO_OP 0xf7
+.def LINETO_OP 0xf6
 
-.db MOVETO_OP 0x00
-.db LINETO_OP 0x01
-    
+.db NO_OP 0x00
+.db LINETO_OP 0x02
+
 jmp :begining
 
 .at 4
     reti
 
 :begining
-    
-    lda LINETO_OP
-    sta OP_ADDR
 
 :loop
-
-    lda ARG0_ADDR
-    add X_INC_ADDR
-    sta ARG0_ADDR
+	call :no_op
+    lda LCD_ARG0
+    add X_INC
+    sta LCD_ARG0
     
-    lda ARG1_ADDR
-    add Y_INC_ADDR
-    sta ARG1_ADDR
+    lda LCD_ARG1
+    add X_INC
+    sta LCD_ARG1
+	call :line_to_op
     jmp :loop
 
-                            
+:no_op
+	lda NO_OP
+    sta LCD_OP
+	ret
 
-# This is a example of how
-# to count down from 127 to 0
-
-# Defining address
-#.def NUMBER_ADDR 0xf0
-#.def INC_ADDR 0xf1
-#.def STORE_ADDR 0x0f2
-
-#.def INT_COUNT_ADDR 0xf3
-#.def INT_COUNT_INC_ADDR 0xf4
-
-# Putting data into the memory
-# 127
-#.db NUMBER_ADDR 0x7f
-
-# -1
-#.db INC_ADDR 0xff
-    
-# 1
-#.db INT_COUNT_INC_ADDR 0x01
-    
-#jmp :begining
-
-# Interrupts here
-#.at 4
-
-#	lda INT_COUNT_ADDR
-#   add INT_COUNT_INC_ADDR
-#	sta INT_COUNT_ADDR
-    
-#    reti
-
-# Begining of the program
-#:begining
-    
-    # Load
-#	lda NUMBER_ADDR
-
-#:add_point
-
-#	call :sum_subroutine
-    
-    # Jump if zero
-#    jz :sleep_point
-    
-    # Jump
-#    jmp :add_point
-    
-# Sleep
-#:sleep_point
-
-#	hlt
-    
-# Sum subroutine
-#:sum_subroutine
-
-	# Add from
-#	add INC_ADDR
-    
-	# Store the AC
-#    sta STORE_ADDR
-    
-    # Return of the subroutine
-#    ret
+:line_to_op
+	lda LINETO_OP
+    sta LCD_OP
+	ret
                             </textarea>
                         </div>
                     </td>
