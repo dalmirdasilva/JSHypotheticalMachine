@@ -8,6 +8,10 @@ var DisplayView = {
         last: 0xff
     },
     powered: true,
+    lastCursorPosition: {
+        x: 0,
+        y: 0
+    },
 
     OP: {
         NOP: 0x00,
@@ -19,9 +23,19 @@ var DisplayView = {
     init: function() {
         var self = this;
         self.updateMappingLabels();
-        self.createCanvas();
+        self.createCanvasContext();
+        self.initComponents();
         self.attachListener();
-        self.initButtons();
+    },
+    
+    repaint: function() {
+        with (this) {
+            if (!powered) {
+                return;
+            }
+            clearDisplay();
+            ctx.stroke();
+        }
     },
     
     updateMappingLabels: function() {
@@ -29,8 +43,8 @@ var DisplayView = {
         this.ELEMENT.displayMapLast.text(this.mapAddress.last.toString(16));
     },
     
-    createCanvas: function() {
-        var canvas = document.getElementById("display-canvas");
+    createCanvasContext: function() {
+        var canvas = this.ELEMENT.displayCanvas[0];
         canvas.width = this.extrinsicDimention.w;
         canvas.height = this.extrinsicDimention.h;
         this.ctx = canvas.getContext("2d");
@@ -51,10 +65,10 @@ var DisplayView = {
         simulator.exchangeMessage(requestMessage, function(message) {});
     },
     
-    initButtons: function() {
+    initComponents: function() {
         var self = this;
         this.ELEMENT.displayPowerButton.button().click(function() {
-            self.clearDisplay();
+            self.clearDisplay(true);
             if (self.powered) {
                 self.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
                 self.ctx.fillRect(0, 0, self.extrinsicDimention.w, self.extrinsicDimention.h);
@@ -63,15 +77,18 @@ var DisplayView = {
         });
         this.ELEMENT.displayClearButton.button().click(function() {
             if (self.powered) {
-                self.clearDisplay();
+                self.clearDisplay(true);
             }
         });
     },
     
-    clearDisplay: function() {
-        this.ctx.fillStyle = "rgb(0, 0, 0)";
-        this.ctx.clearRect(0, 0, this.extrinsicDimention.w, this.extrinsicDimention.h);
-        this.ctx.beginPath();
+    clearDisplay: function(resetPath) {
+        with (this) {
+            ctx.clearRect(0, 0, extrinsicDimention.w, extrinsicDimention.h);
+            if (resetPath) {
+                ctx.beginPath();
+            }
+        }
     },
     
     executeOperation: function(mappedMemory) {
@@ -87,21 +104,23 @@ var DisplayView = {
                     this.ctx.moveTo(x, y);
                 break;
                 case OP.LINE_TO:
-                    this.ctx.lineTo(x, y);
+                    ctx.lineTo(x, y);
                 break;
                 case OP.ARC_TO:
                     var x2 = mappedMemory[3] & 0xff;
                     var y2 = mappedMemory[4] & 0x7f;
                     var r = mappedMemory[5] & 0x7f;
-                    this.ctx.arcTo(x, y, x2, y2, r);
+                    ctx.arcTo(x, y, x2, y2, r);
+                break;
+                case OP.STROKE:
                 break;
             }
-            this.ctx.stroke();
+            repaint();
         }
     },
     
     ELEMENT: {
-        displayCanvas: $("display-canvas"),
+        displayCanvas: $("#display-canvas"),
         displayPowerButton: $("#display-power-button"),
         displayClearButton: $("#display-clear-button"),
         displayMapFirst: $("#display-map-first"),

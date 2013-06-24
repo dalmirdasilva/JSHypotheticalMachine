@@ -28,10 +28,20 @@ var MemoryView = {
     init: function() {
         var self = this;
         self.createMemoryGrid();
+        self.initComponents();
         var listener = new UIEventListener(function() {
             self.repaint();
         });
         UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
+    },
+    
+    initComponents: function() {
+        this.ELEMENT.memoryEraseButton.button().click(function() {
+            Simulator.getInstance().exchangeMessage(
+                new Message(Message.TYPE.ERASE_MEMORY),
+                function(message) {}
+            );
+        });
     },
     
     repaint: function() {
@@ -131,6 +141,7 @@ var MemoryView = {
         memoryGridTd: $("<td></td>"),
         memoryCellEditInput: $("#memory-cell-edit-input"),
         memoryBody: $("#memory-body"),
-        memoryHolder: $("#memory-holder")
+        memoryHolder: $("#memory-holder"),
+        memoryEraseButton: $("#memory-erase-button")
     }
 };

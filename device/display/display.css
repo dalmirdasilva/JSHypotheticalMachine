@@ -18,8 +18,8 @@
  */
 
 #display-holder {
-    left: 600px; 
-    top: 210px; 
+    left: 600px;
+    top: 210px;
 }
 
 #display-title {
@@ -35,8 +35,4 @@
 #display-canvas {
     width: 400px;
     height: 200px;
-}
-
-#display-sub-title {
-    padding: 4px 6px;
 }

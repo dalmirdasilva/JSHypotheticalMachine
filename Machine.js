@@ -142,6 +142,10 @@ function processRequest(request, port) {
         case Message.TYPE.INTERRUPT_CPU:
             cpu.interrupt();
         break;
+        
+        case Message.TYPE.ERASE_MEMORY:
+            memory.erase();
+        break;
     }
     port.postMessage(response.toHash());
 }
