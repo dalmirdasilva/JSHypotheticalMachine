@@ -39,4 +39,9 @@
     background: #fefefe;
     font-weight: normal;
     padding-left: 6px;
+    font-weight: bold;
+}
+
+#oscillator-current-frequency {
+	padding: 8px 4px;
 }

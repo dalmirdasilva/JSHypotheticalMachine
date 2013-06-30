@@ -36,12 +36,27 @@ var MemoryView = {
     },
     
     initComponents: function() {
+		var self = this;
         this.ELEMENT.memoryEraseButton.button().click(function() {
             Simulator.getInstance().exchangeMessage(
                 new Message(Message.TYPE.ERASE_MEMORY),
                 function(message) {}
             );
         });
+        this.ELEMENT.memoryCellEditInput.keypress(function(e) {
+			if (e.which == 13) {
+				var position = self.ELEMENT.memoryCellEditInput.attr("position");
+				var value = Converter.toNumber(self.ELEMENT.memoryCellEditInput.val());
+				Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_CELL, {address: position, value: value}), function(message) {
+					if (message.getContent()) {
+						self.repaint();
+					}
+				});
+				self.ELEMENT.memoryCellEditInput.hide();
+			}
+		}).blur(function() {
+			self.ELEMENT.memoryCellEditInput.hide();
+		});
     },
     
     repaint: function() {
@@ -114,13 +129,13 @@ var MemoryView = {
                             .attr("position", address)
                             .addClass("memory-cell")
                             .click({id: "#" + cellId + ""}, function(event) {
-                                var self = $(this);
+                                var cell = $(this);
                                 var target = $(event.data.id);
                                 self.ELEMENT.memoryCellEditInput
                                     .show()
-                                    .val(self.text())
+                                    .val(cell.text())
                                     .attr("editing", "true")
-                                    .attr("position", self.attr("position"))
+                                    .attr("position", cell.attr("position"))
                                     .offset(target.offset())
                                     .width(target.innerWidth()-4)
                                     .focus()

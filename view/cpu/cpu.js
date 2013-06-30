@@ -76,9 +76,17 @@ var CpuView = {
     initConponents: function() {
         var self = this;
         $(".cpu-button").buttonset();
+        this.ELEMENT.cpuInterruptButton.button().click(function() {
+            Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU),
+				function(message) {
+                    if (!message.getContent()) {
+                        console.log("Could not interrupt the CPU.");
+                    }
+				}
+			);
+		});
         this.ELEMENT.cpuResetButton.button().click(function() {
-            Simulator.getInstance().exchangeMessage(
-                new Message(Message.TYPE.RESET_CPU, null),
+            Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.RESET_CPU),
                 function(message) {
                     if (!message.getContent()) {
                         console.log("Could not reset the CPU.");
@@ -87,8 +95,7 @@ var CpuView = {
             );
         });
         this.ELEMENT.cpuSleepButton.button().click(function() {
-            Simulator.getInstance().exchangeMessage(
-                new Message(Message.TYPE.SET_CPU_SLEEP, !self.cache.sleeping),
+            Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_CPU_SLEEP, !self.cache.sleeping),
                 function(message) {
                     if (message.getContent()) {
                         self.cache.sleeping = !self.cache.sleeping;
@@ -117,6 +124,7 @@ var CpuView = {
         nBox: $("#n-box"),
         pcBox: $("#pc-box"),
         acBox: $("#ac-box"),
+        cpuInterruptButton: $("#cpu-interrupt-button"),
         cpuResetButton: $("#cpu-reset-button"),
         cpuSleepButton: $("#cpu-sleep-button"),
         cpuPowerButton: $("#cpu-power-button")

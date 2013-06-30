@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "JS Hypothetical Machine",
+  "description": "Neander Machine with Extended Instruction Set.",
+  "version": "1.0",
+
+  "permissions": [
+    "http://www.dalmirdasilva.com/jshm/"
+  ],
+  "browser_action": {
+  },
+  "background": {
+    "scripts": ["extension.js"]
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

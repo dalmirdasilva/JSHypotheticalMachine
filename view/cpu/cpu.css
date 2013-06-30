@@ -37,4 +37,9 @@
 
 #cpu-body > div > table > thead > tr > td {
     border-bottom: 1px solid #eee;
+    color: #646464;
+}
+
+#cpu-body > div > table > tbody > tr > td {
+    font-weight: bold;
 }

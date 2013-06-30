@@ -42,112 +42,120 @@ cpu.setDecoder(decoder);
 
 function processRequest(request, port) {
 
-    var response = new Message(request.getType(), true);
+	var response = new Message(request.getType(), true);
+	
+	try {
 
-    switch(request.getType()) {
-        
-        case Message.TYPE.GET_SERIALIZED_CPU:
-            response.setContent(JSON.stringify(cpu));
-        break;
-        
-        case Message.TYPE.RESET_CPU:
-            cpu.reset();
-        break;
-        
-        case Message.TYPE.GET_CPU_PC:
-            response.setContent(cpu.getPc());
-        break;
-        
-        case Message.TYPE.GET_CPU_INFORMATION:
-            var information = {"pc": cpu.getPc(), "ac": cpu.getAc(), "flags": cpu.getFlags(), "sleeping": cpu.isSleeping(), "powered": cpu.isPowered()};
-            response.setContent(information);
-        break;
-        
-        case Message.TYPE.SET_CPU_POWER:
-            var power = request.getContent() === true;
-            power ? cpu.powerOn() : cpu.powerOff();
-        break;
-        
-        case Message.TYPE.SET_OSC_FREQUENCY:
-            var frequency = parseInt(request.getContent());
-            oscillator.setFrequency(frequency);
-            response.setContent(frequency);
-        break;
-        
-        case Message.TYPE.SET_OSC_CLOCK:
-            var op = request.getContent();
-            switch(op) {
-                case Oscillator.ACTION.RESUME_CLOCKING:
-                    oscillator.startClocking();
-                break;
-                case Oscillator.ACTION.STOP_CLOCKING:
-                    oscillator.stopClocking();
-                break;
-                case Oscillator.ACTION.CLOCKOUT_NOW:
-                    oscillator.clockOut();
-                break;
-            }
-        break;
-        
-        case Message.TYPE.GET_MEMORY_BUFFER:
-            response.setContent(memory.getBuffer());
-        break;
-        
-        case Message.TYPE.SET_MEMORY_BUFFER:
-            var buffer = request.getContent();
-            memory.setBuffer(buffer);
-        break;
-        
-        case Message.TYPE.SET_MEMORY_CELL:
-            var content = request.getContent();
-            var address = content["address"];
-            var value = content["value"];
-            var dataView = new DataView(memory.getBuffer());
-            dataView.setUint8(address, value);
-        break;
-        
-        case Message.TYPE.GET_STACK_BUFFER:
-            response.setContent(stack.getBuffer());
-        break;
-        
-        case Message.TYPE.SET_STACK_BUFFER:
-            var buffer = request.getContent();
-            stack.setBuffer(buffer);
-        break;
-        
-        case Message.TYPE.GET_TOP_OF_STACK:
-            response.setContent(stack.getTop());
-        break;
-        
-        case Message.TYPE.ADD_MEMORY_EVENT_LISTENER:
-            var channel = request.getChannel();
-            var content = request.getContent();
-            var listener = new MemoryEventListener(content["begin"], content["end"], function(slice) {
-                var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
-                port.postMessage(asyncResponse.toHash());
-            });
-            memory.addEventListener((content["event"] || Memory.EVENT.AFTER_WRITE), listener);
-        break;
-        
-        case Message.TYPE.GET_MEMORY_ACCESS:
-            var access = memory.getAccess();
-            response.setContent(access);
-        break;
-        
-        case Message.TYPE.SET_CPU_SLEEP:
-            var sleep = request.getContent() === true;
-            sleep ? cpu.sleep() : cpu.awake();
-        break;
-        
-        case Message.TYPE.INTERRUPT_CPU:
-            cpu.interrupt();
-        break;
-        
-        case Message.TYPE.ERASE_MEMORY:
-            memory.erase();
-        break;
-    }
-    port.postMessage(response.toHash());
+		switch(request.getType()) {
+			
+			case Message.TYPE.GET_SERIALIZED_CPU:
+				response.setContent(JSON.stringify(cpu));
+			break;
+			
+			case Message.TYPE.RESET_CPU:
+				cpu.reset();
+			break;
+			
+			case Message.TYPE.GET_CPU_PC:
+				response.setContent(cpu.getPc());
+			break;
+			
+			case Message.TYPE.GET_CPU_INFORMATION:
+				var information = Cpu.packState(cpu);
+				response.setContent(information);
+			break;
+			
+			case Message.TYPE.SET_CPU_POWER:
+				var power = request.getContent() === true;
+				power ? cpu.powerOn() : cpu.powerOff();
+			break;
+			
+			case Message.TYPE.SET_OSC_FREQUENCY:
+				var frequency = parseInt(request.getContent());
+				oscillator.setFrequency(frequency);
+				response.setContent(frequency);
+			break;
+			
+			case Message.TYPE.SET_OSC_CLOCK:
+				var op = request.getContent();
+				switch(op) {
+					case Oscillator.ACTION.RESUME_CLOCKING:
+						oscillator.startClocking();
+					break;
+					case Oscillator.ACTION.STOP_CLOCKING:
+						oscillator.stopClocking();
+					break;
+					case Oscillator.ACTION.CLOCKOUT_NOW:
+						oscillator.clockOut();
+					break;
+				}
+			break;
+			
+			case Message.TYPE.GET_MEMORY_BUFFER:
+				response.setContent(memory.getBuffer());
+			break;
+			
+			case Message.TYPE.SET_MEMORY_BUFFER:
+				var buffer = request.getContent();
+				memory.setBuffer(buffer);
+			break;
+			
+			case Message.TYPE.SET_MEMORY_CELL:
+				var content = request.getContent();
+				var address = content["address"];
+				var value = content["value"];
+				var memoryBuffer = memory.getBuffer();
+				memoryBuffer[address] = value;
+			break;
+			
+			case Message.TYPE.GET_STACK_BUFFER:
+				response.setContent(stack.getBuffer());
+			break;
+			
+			case Message.TYPE.SET_STACK_BUFFER:
+				var buffer = request.getContent();
+				stack.setBuffer(buffer);
+			break;
+			
+			case Message.TYPE.GET_TOP_OF_STACK:
+				response.setContent(stack.getTop());
+			break;
+			
+			case Message.TYPE.ADD_MEMORY_EVENT_LISTENER:
+				var channel = request.getChannel();
+				var content = request.getContent();
+				var listener = new MemoryEventListener(content["begin"], content["end"], function(slice) {
+					var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
+					port.postMessage(asyncResponse.toHash());
+				});
+				memory.addEventListener((content["event"] || Memory.EVENT.AFTER_WRITE), listener);
+			break;
+			
+			case Message.TYPE.GET_MEMORY_ACCESS:
+				var access = memory.getAccess();
+				response.setContent(access);
+			break;
+			
+			case Message.TYPE.SET_CPU_SLEEP:
+				var sleep = request.getContent() === true;
+				sleep ? cpu.sleep() : cpu.awake();
+			break;
+			
+			case Message.TYPE.INTERRUPT_CPU:
+				cpu.interrupt();
+			break;
+			
+			case Message.TYPE.ERASE_MEMORY:
+				memory.erase();
+			break;
+		}
+		port.postMessage(response.toHash());
+	} catch (e) {
+		response.setType(Message.TYPE.EXCEPTION_REPORT);
+		response.setContent(e);
+		response.setAsync(true);
+		port.postMessage(response.toHash());
+	}
 }
 
 var connections = 0;

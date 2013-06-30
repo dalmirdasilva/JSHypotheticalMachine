@@ -24,6 +24,16 @@ var UI = {
     
     _interval: null,
     eventListeners: {},
+    availableFragments: [
+		"view/memory/memory.html",
+		"view/cpu/cpu.html",
+		"view/stack/stack.html",
+		"view/oscillator/oscillator.html",
+		"view/editor/editor.html",
+		"device/display/display.html"
+    ],
+    launchedFragments: 0,
+    glassLayerStack: 0,
     
     addEventListener: function(event, listener) {
         if (!this.eventListeners[event]) {
@@ -45,14 +55,90 @@ var UI = {
     init: function() {
         var interval = 1000 / Config.UI_REFRESH_FREQUENCY;
         var self = this;
-        this._interval = setInterval(function() {
+        self._interval = setInterval(function() {
             self.notifyEvent(UI.EVENT.ON_REPAINT);
         }, interval);
-        this.notifyEvent(UI.EVENT.ON_INITIALIZE);
-    }
-} 
-
-UI.EVENT = {
-    ON_INITIALIZE: 0x00,
-    ON_REPAINT: 0x01
+        self.notifyEvent(UI.EVENT.ON_INITIALIZE);
+    },
+    
+    setup: function() {
+		var self = this;
+        Simulator.getInstance().simulate(Config.MACHINE_FILE);
+        self.addGlassLayer();
+		self.launchFragments();
+		self.waitLoad(function() {
+			self.init();
+			self.removeGlassLayer();
+		});
+	},
+    
+    launchFragments: function() {
+		with (this) {
+			availableFragments.map(function(fragment) {
+				var url = makeUrl(fragment);
+				var holder = ELEMENT.holder.clone();
+				ELEMENT.fragmentsContainer.append(holder);
+				holder.load(url, function() {
+					launchedFragments++;
+				});
+			});
+		}
+	},
+	
+	waitLoad: function(onLoaded) {
+		with (this) {
+			var interval;
+			interval = setInterval(function() {
+				if (launchedFragments == availableFragments.length) {
+					clearInterval(interval);
+					if (typeof onLoaded == "function") {
+						onLoaded();
+					}
+				}
+			}, 1000);
+		}
+	},
+	
+	makeUrl: function(fragment) {
+		return fragment;
+	},
+	
+	addGlassLayer: function() {
+		if (this.glassLayerStack == 0) {
+			this.ELEMENT.glassLayer.show();
+		}
+		this.glassLayerStack++;
+	},
+	
+	removeGlassLayer: function() {
+		this.glassLayerStack--;
+		if (this.glassLayerStack <= 0) {
+			this.ELEMENT.glassLayer.hide();
+			this.glassLayerStack = 0;
+		}
+	},
+    
+	EVENT: {
+		ON_INITIALIZE: 0x00,
+		ON_REPAINT: 0x01
+	},
+	
+	ELEMENT: {
+		fragmentsContainer: $("#fragments-container"),
+		holder: $("<div></div>"),
+		glassLayer: $("#glass-layer")
+	}
 };
+
+(function($){
+    $(document).ready(function(){
+		UI.setup();
+		var listener = new UIEventListener(function() {
+			$(".draggable-item").draggable({
+				handle: ".draggable-handler",
+				stack: ".draggable-item"
+			});
+		});
+		UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
+    });
+})(jQuery);

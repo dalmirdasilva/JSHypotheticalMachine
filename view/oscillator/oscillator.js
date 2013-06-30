@@ -52,7 +52,7 @@ var OscillatorView = {
     },
     
     updateOscillatorLabel: function(frequency) {
-        this.ELEMENT.oscillatorSliderLabel.text(frequency + " Hz");
+        this.ELEMENT.oscillatorSliderLabel.text(frequency);
     },
     
     initConponents: function() {

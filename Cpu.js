@@ -256,3 +256,7 @@ function Cpu(memory, stack, decoder, oscillator) {
         this.setOscillator(oscillator);
     }
 }
+
+Cpu.packState = function(cpu) {
+	return {"pc": cpu.getPc(), "ac": cpu.getAc(), "flags": cpu.getFlags(), "sleeping": cpu.isSleeping(), "powered": cpu.isPowered()};
+}

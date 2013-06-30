@@ -8,13 +8,9 @@ var DisplayView = {
         last: 0xff
     },
     powered: true,
-    lastCursorPosition: {
-        x: 0,
-        y: 0
-    },
 
-    OP: {
-        NOP: 0x00,
+    OPERATION: {
+        NOPERATIONS: 0x00,
         MOVE_TO: 0x01,
         LINE_TO: 0x02,
         ARC_TO: 0x03
@@ -94,25 +90,25 @@ var DisplayView = {
     executeOperation: function(mappedMemory) {
         with (this) {
             var operation = mappedMemory[0];
-            if (!powered || operation == OP.NOP) {
+            if (!powered || operation == OPERATION.NOPERATIONS) {
                 return;
             }
             var x = mappedMemory[1] & 0xff;
             var y = mappedMemory[2] & 0x7f;
             switch (operation) {
-                case OP.MOVE_TO:
+                case OPERATION.MOVE_TO:
                     this.ctx.moveTo(x, y);
                 break;
-                case OP.LINE_TO:
+                case OPERATION.LINE_TO:
                     ctx.lineTo(x, y);
                 break;
-                case OP.ARC_TO:
+                case OPERATION.ARC_TO:
                     var x2 = mappedMemory[3] & 0xff;
                     var y2 = mappedMemory[4] & 0x7f;
                     var r = mappedMemory[5] & 0x7f;
                     ctx.arcTo(x, y, x2, y2, r);
                 break;
-                case OP.STROKE:
+                case OPERATION.STROKE:
                 break;
             }
             repaint();
