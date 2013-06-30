@@ -1,0 +1,39 @@
+<link href="device/sevensegments/sevensegments.css" rel="stylesheet" type="text/css">
+
+<div id="sevensegments-holder" class="device-holder draggable-item">
+    <div id="sevensegments-title" class="device-title draggable-handler">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-image"></span>
+        </div> 
+        SevenSegments
+    </div>
+    <div id="sevensegments-body" class="device-body">
+        <canvas id="sevensegments-canvas"></canvas>
+    </div>
+    <div id="sevensegments-sub-title" class="view-sub-title">
+        <div class="icon-holder">
+            <span class="ui-icon ui-icon-carat-1-e"></span>
+        </div> Actions
+    </div>
+    <div class="view-body">
+        <div>
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tbody> 
+                    <tr>
+                        <td><input type="checkbox" checked="checked" id="sevensegments-power-button" ><label for="sevensegments-power-button">Power</label></td>
+                        <td><button id="sevensegments-clear-button">Clear</button></td>
+                        <td><div class="opaque">Mapping from address <b><span id="sevensegments-map-first">ff</span></b> to <b><span id="sevensegments-map-last">ff</span></b></div></td>
+                    </tr>
+                </tbody> 
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="device/sevensegments/sevensegments.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var listener = new UIEventListener(function() {
+        SevenSegmentsView.init();
+    });
+    UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
+</script>

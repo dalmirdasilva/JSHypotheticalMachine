@@ -31,5 +31,5 @@ var Config = {
     UI_DEFAULT_BASE: 16,
     UI_REFRESH_FREQUENCY: 15,
     INTERRUPT_VECTOR: 4,
-    MACHINE_FILE: "Machine.js"
+    MACHINE_FILE: "jshm/Machine.js"
 };

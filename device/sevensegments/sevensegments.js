@@ -1,4 +1,4 @@
-var DisplayView = {
+var SevenSegmentsView = {
     
     ctx: null,
     intrinsicDimention: {w: 400, h: 200},
@@ -22,7 +22,6 @@ var DisplayView = {
         self.createCanvasContext();
         self.initComponents();
         self.attachListener();
-        UI.updateDraggableItems();
     },
     
     repaint: function() {
@@ -30,22 +29,22 @@ var DisplayView = {
             if (!powered) {
                 return;
             }
-            clearDisplay();
+            clearSevenSegments();
             ctx.stroke();
         }
     },
     
     updateMappingLabels: function() {
-        this.ELEMENT.displayMapFirst.text(this.mapAddress.first.toString(16));
-        this.ELEMENT.displayMapLast.text(this.mapAddress.last.toString(16));
+        this.ELEMENT.sevensegmentsMapFirst.text(this.mapAddress.first.toString(16));
+        this.ELEMENT.sevensegmentsMapLast.text(this.mapAddress.last.toString(16));
     },
     
     createCanvasContext: function() {
-        var canvas = this.ELEMENT.displayCanvas[0];
+        var canvas = this.ELEMENT.sevensegmentsCanvas[0];
         canvas.width = this.extrinsicDimention.w;
         canvas.height = this.extrinsicDimention.h;
         this.ctx = canvas.getContext("2d");
-        this.clearDisplay();
+        this.clearSevenSegments();
     },
     
     attachListener: function() {
@@ -64,22 +63,22 @@ var DisplayView = {
     
     initComponents: function() {
         var self = this;
-        this.ELEMENT.displayPowerButton.button().click(function() {
-            self.clearDisplay(true);
+        this.ELEMENT.sevensegmentsPowerButton.button().click(function() {
+            self.clearSevenSegments(true);
             if (self.powered) {
                 self.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
                 self.ctx.fillRect(0, 0, self.extrinsicDimention.w, self.extrinsicDimention.h);
             }
             self.powered = !self.powered;
         });
-        this.ELEMENT.displayClearButton.button().click(function() {
+        this.ELEMENT.sevensegmentsClearButton.button().click(function() {
             if (self.powered) {
-                self.clearDisplay(true);
+                self.clearSevenSegments(true);
             }
         });
     },
     
-    clearDisplay: function(resetPath) {
+    clearSevenSegments: function(resetPath) {
         with (this) {
             ctx.clearRect(0, 0, extrinsicDimention.w, extrinsicDimention.h);
             if (resetPath) {
@@ -117,10 +116,10 @@ var DisplayView = {
     },
     
     ELEMENT: {
-        displayCanvas: $("#display-canvas"),
-        displayPowerButton: $("#display-power-button"),
-        displayClearButton: $("#display-clear-button"),
-        displayMapFirst: $("#display-map-first"),
-        displayMapLast: $("#display-map-last")
+        sevensegmentsCanvas: $("#sevensegments-canvas"),
+        sevensegmentsPowerButton: $("#sevensegments-power-button"),
+        sevensegmentsClearButton: $("#sevensegments-clear-button"),
+        sevensegmentsMapFirst: $("#sevensegments-map-first"),
+        sevensegmentsMapLast: $("#sevensegments-map-last")
     }
 };
