@@ -35,7 +35,7 @@ var EditorView = {
                 lineNumbers: true,
                 mode: {name: "jshm"}
             });
-        }, 100);
+        }, 500);
     },
     
     initConponents: function() {
