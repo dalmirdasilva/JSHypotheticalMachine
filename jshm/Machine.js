@@ -102,11 +102,14 @@ function processRequest(request, port) {
 			
 			case Message.TYPE.SET_MEMORY_CELL:
 				var content = request.getContent();
-				var address = content["address"];
-				var value = content["value"];
 				var memoryBuffer = memory.getBuffer();
-				memoryBuffer[address] = value;
+				memoryBuffer[parseInt(content.address)] = parseInt(content.value);
 			break;
+            
+            case Message.TYPE.WRITE_MEMORY_CELL:
+				var content = request.getContent();
+				memory.write(parseInt(content.address), parseInt(content.value));
+            break;
 			
 			case Message.TYPE.GET_STACK_BUFFER:
 				response.setContent(stack.getBuffer());

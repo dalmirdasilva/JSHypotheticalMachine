@@ -24,7 +24,6 @@ var UI = {
     
     _interval: null,
     eventListeners: {},
-    glassLayerStack: 0,
     
     addEventListener: function(event, listener) {
         if (!this.eventListeners[event]) {
@@ -54,27 +53,12 @@ var UI = {
     init: function() {
         var self = this;
         Simulator.getInstance().simulate(Config.MACHINE_FILE);
-        self.addGlassLayer();
+		GlassOverlay.add();
         FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function() {
             self.notifyEvent(UI.EVENT.ON_INITIALIZE);
             self.startRefreshing();
-            self.removeGlassLayer();
+            GlassOverlay.remove();
         });
-    },
-
-    addGlassLayer: function() {
-        if (this.glassLayerStack == 0) {
-            this.ELEMENT.glassLayer.show();
-        }
-        this.glassLayerStack++;
-    },
-
-    removeGlassLayer: function() {
-        this.glassLayerStack--;
-        if (this.glassLayerStack <= 0) {
-            this.ELEMENT.glassLayer.hide();
-            this.glassLayerStack = 0;
-        }
     },
     
     updateDraggableItems: function() {

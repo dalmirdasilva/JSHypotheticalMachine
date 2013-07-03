@@ -4,8 +4,6 @@ var DEFAULT_FRAGMENTS = [
 	{url: "view/stack/stack.html", callback: function() { StackView.init(); }},
 	{url: "view/oscillator/oscillator.html", callback: function() { OscillatorView.init(); }},
 	
-    {url: "view/editor/editor.html", callback: function() { EditorView.init(); }}
-    
-    /*,
-	{url: "device/display/display.html", callback: function() { DisplayView.init(); }}*/
+    {url: "view/editor/editor.html", callback: function() { EditorView.init(); }},
+	{url: "device/display/display.html", callback: function() { DisplayView.init(); }}
 ];

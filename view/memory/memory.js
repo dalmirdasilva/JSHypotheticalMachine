@@ -40,18 +40,22 @@ var MemoryView = {
         this.ELEMENT.memoryEraseButton.button().click(function() {
             Simulator.getInstance().exchangeMessage(
                 new Message(Message.TYPE.ERASE_MEMORY),
-                function(message) {}
+                function(message) {
+                }
             );
         });
         this.ELEMENT.memoryCellEditInput.keypress(function(e) {
 			if (e.which == 13) {
 				var position = self.ELEMENT.memoryCellEditInput.attr("position");
 				var value = Converter.toNumber(self.ELEMENT.memoryCellEditInput.val());
-				Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_CELL, {address: position, value: value}), function(message) {
-					if (message.getContent()) {
-						self.repaint();
-					}
-				});
+				Simulator.getInstance().exchangeMessage(
+                    new Message(Message.TYPE.WRITE_MEMORY_CELL, {address: position, value: value}), 
+                    function(message) {
+                        if (message.getContent()) {
+                            self.repaint();
+                        }
+                    }
+                );
 				self.ELEMENT.memoryCellEditInput.hide();
 			}
 		}).blur(function() {
