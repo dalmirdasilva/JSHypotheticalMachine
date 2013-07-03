@@ -53,6 +53,10 @@ var EditorView = {
             }
         });
         this.ELEMENT.editorLoadButton.button().click(function() {
+            if (!self.assembler) {
+                self.ELEMENT.editorAssembleStatus.text("No data to load.");
+                return;
+            }
             var assembledData = self.assembler.getAssembledData();
             var mem = new Uint8Array(Config.SIMULATOR_MEMORY_SIZE);
             mem.set(assembledData, 0);
