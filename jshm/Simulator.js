@@ -35,8 +35,8 @@ function Simulator(path) {
     this.simulate = function(path) {
         if (!this.launched) {
             var self = this;
-            this.worker = new SharedWorker(path);
-            this.worker.port.addEventListener("message", function(event) {
+            this.worker = new Worker(path);
+            this.worker.addEventListener("message", function(event) {
                 var message = Message.newFromHash(event.data);
                 if (message.isAsync()) {
                     self.asyncMessageHandler(message);
@@ -50,7 +50,6 @@ function Simulator(path) {
                 }
             }, false);
             this.launched = true;
-            this.worker.port.start();
         }
     };
 
@@ -61,7 +60,7 @@ function Simulator(path) {
         this.messageHandlerQueue.push(responseHandler);
         
         // What happens if at this moment a message comes from worker?
-        this.worker.port.postMessage(message.toHash());
+        this.worker.postMessage(message.toHash());
         return true;
     };
     

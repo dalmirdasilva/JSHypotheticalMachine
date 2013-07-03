@@ -40,7 +40,7 @@ cpu.setMemory(memory);
 cpu.setStack(stack);
 cpu.setDecoder(decoder);
 
-function processRequest(request, port) {
+function processRequest(request) {
 
 	var response = new Message(request.getType(), true);
 	
@@ -129,7 +129,7 @@ function processRequest(request, port) {
 				var content = request.getContent();
 				var listener = new MemoryEventListener(content["begin"], content["end"], function(slice) {
 					var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
-					port.postMessage(asyncResponse.toHash());
+					self.postMessage(asyncResponse.toHash());
 				});
 				memory.addEventListener((content["event"] || Memory.EVENT.AFTER_WRITE), listener);
 			break;
@@ -152,24 +152,19 @@ function processRequest(request, port) {
 				memory.erase();
 			break;
 		}
-		port.postMessage(response.toHash());
+		self.postMessage(response.toHash());
 	} catch (e) {
 		response.setType(Message.TYPE.EXCEPTION_REPORT);
 		response.setContent(e);
 		response.setAsync(true);
-		port.postMessage(response.toHash());
+		self.postMessage(response.toHash());
 	}
 }
 
 var connections = 0;
-self.addEventListener("connect", function (event) {
-	var port = event.ports[0];
-    connections++;
-	port.addEventListener("message", function (event) {
-        request = Message.newFromHash(event.data)
-        processRequest(request, port);
-	}, false);
-	port.start();
+self.addEventListener("message", function (event) {
+    request = Message.newFromHash(event.data)
+    processRequest(request);
 }, false);
 
 oscillator.startClocking();
