@@ -91,7 +91,7 @@ function Assembler() {
                 if(this.isItASymbol(chunk)) {
                     code = chunk;
                 } else if((code = this.tryGetFromDefine(chunk)) == undefined) {
-                    throw "Undefined element: " + chunk + " (line: " + this.currentLineNumber + ").";
+                    throw new Error("Undefined element: " + chunk + " (line: " + this.currentLineNumber + ").");
                 }
             } else {
                 code = parseInt(chunk);
@@ -119,7 +119,7 @@ function Assembler() {
     this.assemblePositionDefinition = function(line) {
         var parts = line.split(" ");
         if(parts.length != 2 || isNaN(parts[1])) {
-            throw "Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").";
+            throw new Error("Wrong data definition: " + line + " (line: " + this.currentLineNumber + ").");
         }
         var position = parseInt(parts[1]);
         this.assembledData.seek(position);
@@ -128,7 +128,7 @@ function Assembler() {
     this.assembleDefine = function(line) {
         var parts = line.split(" ");
         if(parts.length != 3 || !(isNaN(parts[1])) || isNaN(parts[2])) {
-            throw "Wrong define usage: " + line + " (line: " + this.currentLineNumber + ").";
+            throw new Error("Wrong define usage: " + line + " (line: " + this.currentLineNumber + ").");
         }
         this.defineTable[parts[1]] = parseInt(parts[2]);
     };
@@ -141,7 +141,7 @@ function Assembler() {
             if(this.isItASymbol(piece)) {
                 var symbolAddress = this.symbolTable[piece];
                 if(symbolAddress == undefined) {
-                    throw "Reference to undifined symbol: " + piece + " (line: " + this.currentLineNumber + ").";
+                    throw new Error("Reference to undifined symbol: " + piece + " (line: " + this.currentLineNumber + ").");
                     return;
                 }
                 assembledDataContent[i] = symbolAddress;

@@ -24,14 +24,14 @@ var FragmentLauncher = {
 	
     launchAll: function(fragments, callback) {
         var self = this;
-        var fragmentsToLauch = fragments.length;
+        var fragmentsCounter = fragments.length;
         fragments.map(function(fragment) {
             self.launch(fragment, function() {
-                fragmentsToLauch--;
+                fragmentsCounter--;
             });
         });
         self.waitFor(function() {
-            return (fragmentsToLauch <= 0);
+            return (fragmentsCounter <= 0);
         }, callback);
     },
 

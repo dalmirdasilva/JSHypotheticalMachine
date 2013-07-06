@@ -3,7 +3,7 @@
 
   "name": "JS Hypothetical Machine",
   "description": "Neander Machine with Extended Instruction Set.",
-  "version": "1.2",
+  "version": "1.2.1",
 
   "permissions": [
     "http://www.dalmirdasilva.com/jshm/"
@@ -14,9 +14,9 @@
     "scripts": ["extension.js"]
   },
   "icons": { 
-        "16": "icon.png",
-        "48": "icon.png",
-        "128": "icon.png"
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
