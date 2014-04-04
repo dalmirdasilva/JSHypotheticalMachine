@@ -28,11 +28,11 @@
 
 #sevensegments-body {
     margin: 4px;
-    width: 400px;
-    height: 200px;
+    width: 300px;
+    height: 100px;
 }
 
 #sevensegments-canvas {
-    width: 400px;
-    height: 200px;
+    width: 300px;
+    height: 100px;
 }

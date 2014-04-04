@@ -5,7 +5,7 @@
         <div class="icon-holder">
             <span class="ui-icon ui-icon-image"></span>
         </div> 
-        SevenSegments
+        Seven Segments
     </div>
     <div id="sevensegments-body" class="device-body">
         <canvas id="sevensegments-canvas"></canvas>
@@ -22,7 +22,7 @@
                     <tr>
                         <td><input type="checkbox" checked="checked" id="sevensegments-power-button" ><label for="sevensegments-power-button">Power</label></td>
                         <td><button id="sevensegments-clear-button">Clear</button></td>
-                        <td><div class="opaque">Mapping from address <b><span id="sevensegments-map-first">ff</span></b> to <b><span id="sevensegments-map-last">ff</span></b></div></td>
+                        <td><div class="opaque"> Mapping <b><span id="sevensegments-map-first">f0</span></b> address</div></td>
                     </tr>
                 </tbody> 
             </table>
@@ -31,9 +31,3 @@
 </div>
 
 <script src="device/sevensegments/sevensegments.js" type="text/javascript"></script>
-<script type="text/javascript">
-    var listener = new UIEventListener(function() {
-        SevenSegmentsView.init();
-    });
-    UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
-</script>

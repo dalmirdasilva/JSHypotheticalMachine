@@ -5,5 +5,6 @@ var DEFAULT_FRAGMENTS = [
 	{url: "view/oscillator/oscillator.html", callback: function() { OscillatorView.init(); }},
 	
     {url: "view/editor/editor.html", callback: function() { EditorView.init(); }},
-	{url: "device/display/display.html", callback: function() { DisplayView.init(); }}
+	{url: "device/display/display.html", callback: function() { DisplayView.init(); }},
+	{url: "device/sevensegments/sevensegments.html", callback: function() { SevenSegmentsView.init(); }}
 ];
