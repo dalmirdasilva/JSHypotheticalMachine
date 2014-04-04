@@ -3,7 +3,7 @@
 
   "name": "JS Hypothetical Machine",
   "description": "Neander Machine with Extended Instruction Set.",
-  "version": "1.2.2",
+  "version": "1.2.31",
 
   "permissions": [
     "http://www.dalmirdasilva.com/jshm/"

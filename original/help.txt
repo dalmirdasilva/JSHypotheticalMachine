@@ -1,0 +1,26 @@
+AJUDA
+===========================================================================
+
+Compilador:
+---------------------------------------------------------------------------
+Sintaxe:
+
+.data
+Especifica um valor para um determinado endereco de memoria
+Ex: .data 10 11
+Armazenara o numero 11 no endereco 10 da memoria.
+NOTA: Voce pode usar .data em qualquer ponto do seu programa, porem .data
+tera precedencia, isto e, se uma intrucao foi armazenada no endereco 
+ela sera sobrescrita por .data
+
+# Comment
+Comentario, toda linha iniciada por # sera interpretada como comentario.
+
+:label
+Labels sao definidas quando iniciam uma linha, caso comtrario serao 
+interpretadas como uso do mesmo. Pode-se usar um label mesmo antes de ser 
+definido, porem irá lançar erro caso não for definido ate o final do 
+programa.
+Ex: :meu_label
+Ex2: jmp :meu_label
+ 
