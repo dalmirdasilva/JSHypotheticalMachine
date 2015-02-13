@@ -6,6 +6,19 @@ The simulator (with Extended Instruction Set)
 
 ========================================================================
 
+Addressing mode:
+
+It cannot have PC-relative addressing mode because the operand should be
+1 byte long, and if we have PC-relative addressing mode there is no room
+to have negative and positive operands and at the same time access all
+memory space. If memory has 256 bytes, the operand should have 9 bits to
+address relatively all memory space, the 9th bit would be used to sign.
+
+Possible addressing modes:
+
+Absolute or direct
+
+
 Data/Address wide: 8 bits
 
 1 8 bits accumulator (AC)

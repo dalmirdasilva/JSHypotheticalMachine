@@ -27,7 +27,11 @@ function OscillatorEventListener(prescaller, handler) {
     this.handler = handler;
     
     this.notify = function() {
-        this.handler();
+        this.counter++;
+        if (this.counter >= this.prescaller) {
+            this.counter = 0;
+            this.handler();
+        }
     };
     
     this.getPrescaller = function() {

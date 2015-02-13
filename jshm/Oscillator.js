@@ -25,7 +25,7 @@ function Oscillator(frequency) {
     this.frequency = frequency || Config.SIMULATOR_OSC_INITIAL_FREQUENCY;
     this.eventListeners = {};
     this.tics = 0;
-    this._interval;
+    this.interval;
     this.isClocking = false;
     
     this.getFrequency = function() {
@@ -49,18 +49,18 @@ function Oscillator(frequency) {
 
     this.stopClocking = function() {
         this.isClocking = false;
-        clearInterval(this._interval);
+        clearInterval(this.interval);
     };
     
     this.startClocking = function() {
-        var interval = 1000 / this.frequency;
+        var millis = 1000 / this.frequency;
         var self = this;
         this.stopClocking();
-        this._interval = setInterval(function() {
+        this.interval = setInterval(function() {
             self.clockOut();
-        }, interval);
+        }, millis);
         this.isClocking = true;
-        return interval;
+        return millis;
     };
     
     this.clockOut = function() {
@@ -69,10 +69,6 @@ function Oscillator(frequency) {
     };
     
     this.addEventListener = function(event, listener) {
-        if ((typeof listener.getPrescaller()) !== "undefined" || listener.getPrescaller(0)) {
-            listener.setPrescaller(1);
-        }        
-        listener.setCounter(0);
         if (!this.eventListeners[event]) {
             this.eventListeners[event] = [];
         }
@@ -83,11 +79,7 @@ function Oscillator(frequency) {
         var listeners = this.eventListeners[event];
         if (listeners) {
             listeners.map(function(listener) {
-                listener.increaseCounterBy(1);
-                if (listener.getCounter() >= listener.getPrescaller()) {
-                    listener.setCounter(0);
-                    listener.notify();
-                }
+                listener.notify();
             });
         }
     };
