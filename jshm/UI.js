@@ -22,7 +22,7 @@
  */
 var UI = {
     
-    _interval: null,
+    interval: null,
     eventListeners: {},
     
     addEventListener: function(event, listener) {
@@ -45,7 +45,7 @@ var UI = {
     startRefreshing: function() {
         var period = 1000 / Config.UI_REFRESH_FREQUENCY;
         var self = this;
-        self._interval = setInterval(function() {
+        self.interval = setInterval(function() {
             self.notifyEvent(UI.EVENT.ON_REPAINT);
         }, period);
     },
@@ -53,7 +53,7 @@ var UI = {
     init: function() {
         var self = this;
         Simulator.getInstance().simulate(Config.MACHINE_FILE);
-		GlassOverlay.add();
+        GlassOverlay.add();
         FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function() {
             self.notifyEvent(UI.EVENT.ON_INITIALIZE);
             self.startRefreshing();

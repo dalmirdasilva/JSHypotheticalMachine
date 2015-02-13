@@ -19,10 +19,10 @@
 
 (function($){
     $(document).ready(function(){
-		var listener = new UIEventListener(function() {
+        var listener = new UIEventListener(function() {
             UI.updateDraggableItems();
-		});
-		UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
-		UI.init();
+        });
+        UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
+        UI.init();
     });
 })(jQuery);

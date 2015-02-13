@@ -56,9 +56,11 @@ input, button, label {
     border-radius: 2px 2px 0px 0px;
 }
 
+.device-sub-title .ui-icon,
+.view-sub-title .ui-icon,
 .device-title .ui-icon,
 .view-title .ui-icon {
-	/*background-image: url(lib/jquery-ui/css/custom/images/ui-icons_ffffff_256x240.png);*/
+	height: 14px;
 }
 
 .device-sub-title,
