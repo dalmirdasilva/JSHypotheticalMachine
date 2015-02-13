@@ -36,22 +36,22 @@ The CPU internally has 3 registers, as follows:
 Code | Instruction | Description
 -----|-------------|--------------
 0000 | NOP | No Operation
-0001 | STA | MEM(adr) << AC
-0010 | LDA | AC << MEM(adr)
-0011 | ADD | AC << MEM(adr) + AC
-0100 | OR  | AC << MEM(adr) OR AC
-0101 | AND | AC << MEM(adr) AND AC
+0001 | STA | MEM[PC+1] << AC
+0010 | LDA | AC << MEM[MEM[PC+1]]
+0011 | ADD | AC << MEM[MEM[PC+1]] + AC
+0100 | OR  | AC << MEM[MEM[PC+1]] OR AC
+0101 | AND | AC << MEM[MEM[PC+1]] AND AC
 0110 | NOT | AC << NOT AC
-1000 | JMP | PC << adr
-1001 | JN  | IF N=1 THEN PC << adr
-1010 | JZ  | IF Z=1 THEN PC << adr
+1000 | JMP | PC << MEM[PC+1]
+1001 | JN  | IF N=1 THEN PC << MEM[PC+1]
+1010 | JZ  | IF Z=1 THEN PC << MEM[PC+1]
 1111 | HLT | Execution stops (halt)
 
 ####Extended instructions
 
 Code | Instruction | Description
 -----|-------------|--------------
-1011 | CALL | Call a subroutine (TOS << PC, PC << adr)
+1011 | CALL | Call a subroutine (TOS << PC, PC << MEM[PC+1])
 1100 | RET  | Returns from a subroutine (PC << TOS)
 1011 | PUSH | Push the AC into TOS (TOS << AC)
 1011 | POP  | Pop the TOS into AC (AC << TOS)
