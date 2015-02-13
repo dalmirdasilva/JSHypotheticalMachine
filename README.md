@@ -16,7 +16,7 @@ This project is written in Javascript and is opensource. Feel free to use it. If
 It cannot have PC-relative addressing mode because the operand is 1 byte long, and if we have PC-relative addressing mode there is no room to have negative and positive operands and at the same time access all
 memory space. If memory has 256 bytes, the operand should have 9 bits to address relatively all memory space, the 9th bit would be used to sign.
 
-Due this limitations and because the goal of this project is to make something easy and simple, the effective address for an absolute instruction address is the address parameter itself with no modifications.
+Due this limitations and because the goal of this project is to make things easy and simple, the effective address for an absolute instruction address is the address parameter itself with no modifications.
 
 ####Data/Address wide: 
 
@@ -27,8 +27,8 @@ The CPU internally has 3 registers, as follows:
  - An Accumulator (AC)
  - A Program Counter (PC)
  - A State register, which has 2 flags:
-	 - Negative (N) 
-	 - Zero (Z)
+	 - Negative (N) - Meaning that the last operation resulted in a negative number.
+	 - Zero (Z) - Meaning that the last operation resulted in zero.
 
 
 ####Instruction set
