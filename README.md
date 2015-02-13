@@ -32,7 +32,7 @@ The CPU internally has 3 registers, as follows:
 
 
 ####Instruction set
-<pre>
+
 Code | Instruction | Description
 -----|-------------|--------------
 0000 | NOP | No Operation
@@ -46,16 +46,16 @@ Code | Instruction | Description
 1001 | JN  | IF N=1 THEN PC << MEM[PC+1]
 1010 | JZ  | IF Z=1 THEN PC << MEM[PC+1]
 1111 | HLT | Execution stops (halt)
-</pre>
+
 ####Extended instructions
-<pre>
+
 Code | Instruction | Description
 -----|-------------|--------------
 1011 | CALL | Call a subroutine (TOS << PC, PC << MEM[PC+1])
 1100 | RET  | Returns from a subroutine (PC << TOS)
 1011 | PUSH | Push the AC into TOS (TOS << AC)
 1011 | POP  | Pop the TOS into AC (AC << TOS)
-</pre>
+
 
 ###Compiler
 
