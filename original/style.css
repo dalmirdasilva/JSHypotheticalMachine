@@ -17,87 +17,87 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 * {
-    font-family: verdana;
-    font-size: 13px;
+  font-family: verdana;
+  font-size: 13px;
 }
 
 button {
-    margin: 4px 0px;
+  margin: 4px 0px;
 }
 
 textarea {
-    border: 1px solid #aaa;
+  border: 1px solid #aaa;
 }
 
 #memory-grid-holder {
-    border: 1px solid #ccc;
+  border: 1px solid #ccc;
 }
 
 #assembly-code-box, #compiled-code-box {
-    height: 400px;
-    overflow: auto;
+  height: 400px;
+  overflow: auto;
 }
 
 #assembly-code-box {
-    width: 250px;
+  width: 250px;
 }
 
 #compiled-code-box {
-    width: 150px;
+  width: 150px;
 }
 
 .footer {
-    color: #aaa;
+  color: #aaa;
 }
 
 .header {
-    font-size: 20px;
-    padding: 4px;
-    margin-bottom: 4px;
+  font-size: 20px;
+  padding: 4px;
+  margin-bottom: 4px;
 }
 
 .title {
-    background-color: #eee;
-    padding: 4px;
+  background-color: #eee;
+  padding: 4px;
 }
 
 .sub-title {
-    border-bottom: 1px solid #aaa;
-    margin-bottom: 2px;
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 2px;
 }
 
 #memory-grid-holder {
-    width: 250px;
-    height: 400px;
-    overflow: auto;
+  width: 250px;
+  height: 400px;
+  overflow: auto;
 }
 
 .short-input {
-    width: 60px;
+  width: 60px;
 }
 
 .medium-input {
-    width: 100px;
+  width: 100px;
 }
 
 .memory-reg-address {
-    text-align: right;
+  text-align: right;
 }
 
 .memory-reg-position {
-    text-align: right;
-    width: 12px;
+  text-align: right;
+  width: 12px;
 }
 
 #assembly-code-box-message, #compiled-code-box-message {
-    border: red;
-    background: #f90;
+  border: red;
+  background: #f90;
 }
 
 #assembly-code-box-message {
-    width: 250px;
+  width: 250px;
 }
 
 #compiled-code-box-message {
-    width: 150px;
+  width: 150px;
 }

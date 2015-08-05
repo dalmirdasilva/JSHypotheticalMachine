@@ -56,7 +56,7 @@ Assembler.prototype.assembleLine = function (line) {
     return;
   }
   if (this.isItASymbol(line)) {
-    this.addSysmbolToTable(line);
+    this.addSymbolToTable(line);
     return;
   }
   if (this.isItADataDefinition(line)) {
@@ -160,7 +160,7 @@ Assembler.prototype.addNopInstructionOnGaps = function () {
   }
 };
 
-Assembler.prototype.addSysmbolToTable = function (symbol) {
+Assembler.prototype.addSymbolToTable = function (symbol) {
   var symbol = symbol.split(' ')[0];
   var currentAddress = this.assembledData.content().length;
   this.symbolTable[symbol] = currentAddress;

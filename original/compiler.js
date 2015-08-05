@@ -50,7 +50,7 @@
             return;
         }
         if(this.isTheLineASymbol(line)) {
-            this.addSysmbolToTable(line);
+            this.addSymbolToTable(line);
             return;
         }
         if(this.isTheLineADataDefinition(line)) {
@@ -117,7 +117,7 @@
         }
     }
     
-    this.addSysmbolToTable = function(symbol) {
+    this.addSymbolToTable = function(symbol) {
         symbol = symbol.split(" ")[0];
         var currentAddress = this.compiledCode.length;
         this.symbolTable[symbol] = currentAddress;

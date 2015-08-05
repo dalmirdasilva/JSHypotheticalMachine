@@ -17,62 +17,62 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #editor-holder {
-    left: 9px; 
-    top: 65px;
+  left: 9px;
+  top: 65px;
 }
 
 #editor-title {
-    cursor: default;
+  cursor: default;
 }
 
 #editor-body {
-    margin: 4px;
+  margin: 4px;
 }
 
 #editor-body > table > tbody > tr > td {
-    border: 1px solid #aaa;
+  border: 1px solid #aaa;
 }
 
 #editor-code-area-holder {
-    width: 300px;
+  width: 300px;
 }
 
-#editor-code-area, #editor-assempled-area {
-    margin-top: 6px;
-    width: 180px;
+#editor-code-area, #editor-assembled-area {
+  margin-top: 6px;
+  width: 180px;
 }
 
 #editor-code-area {
-    width: 300px;
+  width: 300px;
 }
 
-#editor-assempled-area {
-    overflow: auto;
-    height: 395px;
+#editor-assembled-area {
+  overflow: auto;
+  height: 395px;
 }
 
 #editor-assemble-status {
-    border-bottom: 0px;
-    padding: 2px 6px;
-    background-color: #fff;
+  border-bottom: 0px;
+  padding: 2px 6px;
+  background-color: #fff;
 }
 
 .editor-assembled-line {
-    color: #aaa;
-    width: 30px;
-    text-align: right;
-    padding-right: 6px;
+  color: #aaa;
+  width: 30px;
+  text-align: right;
+  padding-right: 6px;
 }
 
 .editor-assembled-mnemonic {
-    color: #aaa;
+  color: #aaa;
 }
 
-#editor-assempled-area > table > thead > tr > td {
-    border-bottom: 1px solid #eee;
+#editor-assembled-area > table > thead > tr > td {
+  border-bottom: 1px solid #eee;
 }
 
-#editor-assempled-area-head-first {
-    text-align: right;
-    padding-right: 6px;
+#editor-assembled-area-head-first {
+  text-align: right;
+  padding-right: 6px;
 }
