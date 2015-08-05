@@ -1,7 +1,6 @@
 
 #JSHypotheticalMachine
 
-Git: https://github.com/dalmirdasilva/JSHypotheticalMachine
 Tracker: https://www.pivotaltracker.com/n/projects/1402012
 
 JSHypotheticalMachine is a hypothetical machine designed for those who want learn about how a computer works under the hood.

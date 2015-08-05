@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00899688-bd4d-4220-ae4b-fffc843fc521" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Assembler.js" afterPath="$PROJECT_DIR$/jshm/Assembler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/UI.js" afterPath="$PROJECT_DIR$/original/UI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/compiler.js" afterPath="$PROJECT_DIR$/original/compiler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/converter.js" afterPath="$PROJECT_DIR$/original/converter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/cpu.js" afterPath="$PROJECT_DIR$/original/cpu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/decoder.js" afterPath="$PROJECT_DIR$/original/decoder.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/editor/editor.css" afterPath="$PROJECT_DIR$/view/editor/editor.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/editor/editor.js" afterPath="$PROJECT_DIR$/view/editor/editor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/index.html" afterPath="$PROJECT_DIR$/original/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/instructions.js" afterPath="$PROJECT_DIR$/original/instructions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/memory.js" afterPath="$PROJECT_DIR$/original/memory.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/stack.js" afterPath="$PROJECT_DIR$/original/stack.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style.css" afterPath="$PROJECT_DIR$/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/style.css" afterPath="$PROJECT_DIR$/original/style.css" />
     </list>
     <ignored path="JSHypotheticalMachine.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -138,8 +124,8 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.06936416">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.10404624">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -840,12 +826,12 @@
       <created>1438729948041</created>
       <option name="number" value="Default" />
       <updated>1438729948041</updated>
-      <workItem from="1438729949579" duration="19862000" />
+      <workItem from="1438729949579" duration="19925000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19862000" />
+    <option name="totallyTimeSpent" value="19925000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="25" width="1928" height="1034" extended-state="6" />
@@ -1315,8 +1301,8 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.06936416">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.10404624">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
       </provider>
