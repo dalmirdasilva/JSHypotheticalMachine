@@ -16,48 +16,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #stack-holder {
-    left: 1011px;
-    top: 216px;
-    min-width: 70px;
+  left: 1011px;
+  top: 216px;
+  min-width: 70px;
 }
 
 #stack-title {
-    cursor: default;
+  cursor: default;
 }
 
 #stack-body {
-    margin: 4px;
+  margin: 4px;
 }
 
 .stack-cell-corner {
-    background-color: #eee;
-    border-right: 1px solid #fff;
-    border-bottom: 1px solid #fff;
+  background-color: #eee;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
 }
 
 .stack-cell-side, .stack-cell-top {
-    color: #646464;
-    background-color: #ececec;
-    padding: 4px 6px;
-    text-align: center;
-    border-bottom: 1px solid #fff;
+  color: #646464;
+  background-color: #ececec;
+  padding: 4px 6px;
+  text-align: center;
+  border-bottom: 1px solid #fff;
 }
 
 .stack-cell-top {
-    border-right: 1px solid #fff;
+  border-right: 1px solid #fff;
 }
 
 .stack-cell {
-    padding: 4px 6px;
-    color: #000;
-    text-align: center;
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
+  padding: 4px 6px;
+  color: #000;
+  text-align: center;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
 .stack-cell-current {
-    background-color: #eeb949;
+  background-color: #eeb949;
 }

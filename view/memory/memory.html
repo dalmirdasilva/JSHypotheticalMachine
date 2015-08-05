@@ -1,30 +1,33 @@
 <link href="view/memory/memory.css" rel="stylesheet" type="text/css">
 
 <div id="memory-holder" class="view-holder draggable-item">
-    <input type="text" id="memory-cell-edit-input" maxlength="8"/>
-    <div id="memory-title" class="view-title draggable-handler">
-        <div class="icon-holder">
-            <span class="ui-icon ui-icon-tag"></span>
-        </div> 
-        Memory
+  <input type="text" id="memory-cell-edit-input" maxlength="8"/>
+
+  <div id="memory-title" class="view-title draggable-handler">
+    <div class="icon-holder">
+      <span class="ui-icon ui-icon-tag"></span>
     </div>
-    <div id="memory-body" class="view-body"></div>
-    <div class="view-body">
-        <div>
-            <table border="0" cellspacing="0" cellpadding="0" width="100%">
-                <tbody> 
-                    <tr>
-                        <td><button id="memory-erase-button">Erase</button></td>
-                        <td>
-                            <div id="memory-access">
-                                Read: <span id="memory-access-read">0</span> Write: <span id="memory-access-write">0</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody> 
-            </table>
-        </div>
+    Memory
+  </div>
+  <div id="memory-body" class="view-body"></div>
+  <div class="view-body">
+    <div>
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tbody>
+        <tr>
+          <td>
+            <button id="memory-erase-button">Erase</button>
+          </td>
+          <td>
+            <div id="memory-access">
+              Read: <span id="memory-access-read">0</span> Write: <span id="memory-access-write">0</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 
 <script src="view/memory/memory.js" type="text/javascript"></script>

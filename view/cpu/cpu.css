@@ -18,29 +18,29 @@
  */
 
 #cpu-holder {
-    left: 767px;
-    top: 67px;
-    min-width: 250px;
+  left: 767px;
+  top: 67px;
+  min-width: 250px;
 }
 
 #cpu-title {
-    cursor: default;
+  cursor: default;
 }
 
 #cpu-body {
-    margin: 4px;
+  margin: 4px;
 }
 
 #cpu-body > div > table {
-    width: 100%;
-    border-spacing: 1px;
+  width: 100%;
+  border-spacing: 1px;
 }
 
 #cpu-body > div > table > thead > tr > td {
-    border-bottom: 1px solid #eee;
-    color: #646464;
+  border-bottom: 1px solid #eee;
+  color: #646464;
 }
 
 #cpu-body > div > table > tbody > tr > td {
-    font-weight: bold;
+  font-weight: bold;
 }

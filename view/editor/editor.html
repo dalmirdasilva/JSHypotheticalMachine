@@ -2,23 +2,24 @@
 <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 
 <div id="editor-holder" class="view-holder draggable-item">
-    <div id="editor-title" class="view-title draggable-handler">
-        <div class="icon-holder">
-            <span class="ui-icon ui-icon-note"></span>
-        </div> 
-        Assembly editor
+  <div id="editor-title" class="view-title draggable-handler">
+    <div class="icon-holder">
+      <span class="ui-icon ui-icon-note"></span>
     </div>
-    <div id="editor-body" class="view-body">
-        <table border="0" cellspacing="0" cellpadding="0">
-            <tbody> 
-                <tr>
-                    <td valign="top">
-                        <div class="view-sub-title">
-                            <div class="icon-holder">
-                                <span class="ui-icon ui-icon-pencil"></span>
-                            </div> Assembly
-                        </div>
-                        <div id="editor-code-area-holder">
+    Assembly editor
+  </div>
+  <div id="editor-body" class="view-body">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tbody>
+      <tr>
+        <td valign="top">
+          <div class="view-sub-title">
+            <div class="icon-holder">
+              <span class="ui-icon ui-icon-pencil"></span>
+            </div>
+            Assembly
+          </div>
+          <div id="editor-code-area-holder">
                             <textarea id="editor-code-area">
 .def LCD_OP  0xfa
 .def LCD_ARG0  0xfb
@@ -69,62 +70,70 @@ jmp :begining
     sta LCD_OP
 	ret
                             </textarea>
-                        </div>
-                    </td>
-                    <td valign="top">
-                        <div class="view-sub-title">
-                            <div class="icon-holder">
-                                <span class="ui-icon ui-icon-document"></span>
-                            </div> Assembled
-                        </div>
-                        <div id="editor-assempled-area">
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                <thead>
-                                    <tr>
-                                        <td id="editor-assempled-area-head-first">At</td>
-                                        <td>Opcode</td>
-                                        <td>Mnemonic</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="editor-assempled-area-entries">
-                                    <tr id="editor-assempled-area-entry">
-                                        <td class="editor-assembled-line"></td>
-                                        <td></td>
-                                        <td class="editor-assembled-mnemonic"></td>
-                                    </tr>
-                                    <tr class="editor-assempled-area-deletable-entry">
-                                        <td class="editor-assembled-line">-</td>
-                                        <td>-</td>
-                                        <td class="editor-assembled-mnemonic">-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </tbody> 
-        </table>
-            
-            
-    </div>
-    <div class="view-sub-title">
-        <div class="icon-holder">
-            <span class="ui-icon ui-icon-carat-1-e"></span>
-        </div> Actions
-    </div>
-    <div class="view-body">
-        <div>
-            <table border="0" cellspacing="0" cellpadding="0">
-                <tbody> 
-                    <tr>
-                        <td><button id="editor-assemble-button">Assemble</button></td>
-                        <td><button id="editor-load-button">Load to memory</button></td>
-                        <td><div id="editor-assemble-status"></div></td>
-                    </tr>
-                </tbody> 
+          </div>
+        </td>
+        <td valign="top">
+          <div class="view-sub-title">
+            <div class="icon-holder">
+              <span class="ui-icon ui-icon-document"></span>
+            </div>
+            Assembled
+          </div>
+          <div id="editor-assempled-area">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+              <thead>
+              <tr>
+                <td id="editor-assempled-area-head-first">At</td>
+                <td>Opcode</td>
+                <td>Mnemonic</td>
+              </tr>
+              </thead>
+              <tbody id="editor-assempled-area-entries">
+              <tr id="editor-assempled-area-entry">
+                <td class="editor-assembled-line"></td>
+                <td></td>
+                <td class="editor-assembled-mnemonic"></td>
+              </tr>
+              <tr class="editor-assempled-area-deletable-entry">
+                <td class="editor-assembled-line">-</td>
+                <td>-</td>
+                <td class="editor-assembled-mnemonic">-</td>
+              </tr>
+              </tbody>
             </table>
-        </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="view-sub-title">
+    <div class="icon-holder">
+      <span class="ui-icon ui-icon-carat-1-e"></span>
     </div>
+    Actions
+  </div>
+  <div class="view-body">
+    <div>
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+        <tr>
+          <td>
+            <button id="editor-assemble-button">Assemble</button>
+          </td>
+          <td>
+            <button id="editor-load-button">Load to memory</button>
+          </td>
+          <td>
+            <div id="editor-assemble-status"></div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script src="lib/codemirror/lib/codemirror.js"></script>

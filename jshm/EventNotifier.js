@@ -18,44 +18,26 @@
  */
 
 /**
- * SeekableArray class
+ * EventListener class
  */
-function SeekableArray() {
+var EventNotifier = function () {
+  this.listeners = {};
+};
 
-  this.pos = 0;
-  this.buf = new Array();
+EventNotifier.prototype.addEventListener = function (event, listener) {
+  if (!this.listeners[event]) {
+    this.listeners[event] = [];
+  }
+  this.listeners[event].push(listener);
+};
 
-  this.push = function (b) {
-    if (this.pos >= this.buf.length) {
-      this.buf.push(b);
-    } else {
-      this.buf[this.pos] = b;
-    }
-    this.pos++;
-  };
+EventNotifier.prototype.notifyEvent = function (event, notification) {
+  var listeners = this.listeners[event];
+  if (listeners != null) {
+    listeners.map(function (listener) {
+      listener.notify(notification);
+    });
+  }
+};
 
-  this.pop = function () {
-    if (this.pos <= 0) {
-      throw 'SeekableStack underflow.';
-    }
-    return this.buf[--this.pos];
-  };
 
-  this.seek = function (position) {
-    if (position > this.buf.length) {
-      var count = position - this.buf.length;
-      while (count-- != 0) {
-        this.buf.push(0);
-      }
-    }
-    this.pos = position;
-  };
-
-  this.content = function () {
-    return this.buf;
-  };
-
-  this.getPosition = function () {
-    return this.pos;
-  };
-}

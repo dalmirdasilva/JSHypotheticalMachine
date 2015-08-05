@@ -1,35 +1,34 @@
 /**
  * JS Hypothetical Machine
- * 
+ *
  * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * MemoryEventListener class
  */
-function MemoryEventListener(begin, end, handler) {
+var MemoryEventListener = function (begin, end, handler) {
+  this.begin = begin || 0;
+  this.end = end || 0;
+  this.handler = handler;
+};
 
-    this.begin = begin || 0;
-    this.end = end || 0;
-    this.handler = handler;
-    
-    /**
-     * @param slice             Array buffer from begin to end where the event occured.
-     */
-    this.notify = function(slice) {
-        this.handler(slice);
-    };
-}
+/**
+ * @param slice             Array buffer from begin to end where the event occured.
+ */
+MemoryEventListener.prototype.notify = function (slice) {
+  this.handler(slice);
+};

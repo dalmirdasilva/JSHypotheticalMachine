@@ -18,21 +18,21 @@
  */
 
 #display-holder {
-    left: 1088px; 
-    top: 66px;
+  left: 1088px;
+  top: 66px;
 }
 
 #display-title {
-    cursor: default;
+  cursor: default;
 }
 
 #display-body {
-    margin: 4px;
-    width: 400px;
-    height: 200px;
+  margin: 4px;
+  width: 400px;
+  height: 200px;
 }
 
 #display-canvas {
-    width: 400px;
-    height: 200px;
+  width: 400px;
+  height: 200px;
 }

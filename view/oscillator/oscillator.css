@@ -18,31 +18,31 @@
  */
 
 #oscillator-holder {
-    left: 509px;
-    top: 66px;
-    min-width: 250px;
+  left: 509px;
+  top: 66px;
+  min-width: 250px;
 }
 
 #oscillator-title {
-    cursor: default;
+  cursor: default;
 }
 
 #oscillator-body {
-    margin: 4px;
+  margin: 4px;
 }
 
 #oscillator-slider {
-    height: 11px; 
-    margin: 10px 8px 10px 6px;
+  height: 11px;
+  margin: 10px 8px 10px 6px;
 }
 
 #oscillator-slider-label {
-    background: #fefefe;
-    font-weight: normal;
-    padding-left: 6px;
-    font-weight: bold;
+  background: #fefefe;
+  font-weight: normal;
+  padding-left: 6px;
+  font-weight: bold;
 }
 
 #oscillator-current-frequency {
-	padding: 8px 4px;
+  padding: 8px 4px;
 }

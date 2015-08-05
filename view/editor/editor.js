@@ -28,7 +28,7 @@ var EditorView = {
     
     init: function() {
         var self = this;
-        this.initConponents();
+        this.initComponents();
         this.restoreProgram();
         setTimeout(function() {
             self.codeMirror = CodeMirror.fromTextArea(document.getElementById("editor-code-area"), {
@@ -38,7 +38,7 @@ var EditorView = {
         }, 500);
     },
     
-    initConponents: function() {
+    initComponents: function() {
         var self = this;
         this.ELEMENT.editorAssembleButton.button().click(function() {
             self.codeMirror.save();
@@ -62,7 +62,7 @@ var EditorView = {
             mem.set(assembledData, 0);
             Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_MEMORY_BUFFER, mem), function(message) {
                 var status = "";
-                if (message.getContent()) {
+                if (message.getPayload()) {
                     status = "Successfully loaded.";
                 } else {
                     status = "Faild to load.";
@@ -98,8 +98,6 @@ var EditorView = {
         $(".editor-assempled-area-deletable-entry").remove();
         this.ELEMENT.editorAssempledAreaEntry.hide();
         var mnemonicPositions = this.assembler.getMnemonicPositions();
-        var mnemonics = this.assembler.getMnemonics();
-        var opcodes = this.assembler.getOpcodes();
         for (var i = 0; i < data.length; i++) {
             var value = data[i] & 0xff;
             var entry = this.ELEMENT.editorAssempledAreaEntry.clone(true, true);
