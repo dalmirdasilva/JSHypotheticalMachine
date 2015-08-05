@@ -1,16 +1,21 @@
 var DisplayView = {
 
   ctx: null,
-  intrinsicDimention: {w: 400, h: 200},
-  extrinsicDimention: {w: 256, h: 128},
+  intrinsicDimension: {
+    w: 400,
+    h: 200
+  },
+  extrinsicDimension: {
+    w: 256,
+    h: 128
+  },
   mapAddress: {
     first: 0xff - 0x05,
     last: 0xff
   },
   powered: true,
-
   OPERATION: {
-    NOPERATIONS: 0x00,
+    NO_OPERATION: 0x00,
     MOVE_TO: 0x01,
     LINE_TO: 0x02,
     ARC_TO: 0x03
@@ -42,9 +47,9 @@ var DisplayView = {
 
   createCanvasContext: function () {
     var canvas = this.ELEMENT.displayCanvas[0];
-    canvas.width = this.extrinsicDimention.w;
-    canvas.height = this.extrinsicDimention.h;
-    this.ctx = canvas.getContext("2d");
+    canvas.width = this.extrinsicDimension.w;
+    canvas.height = this.extrinsicDimension.h;
+    this.ctx = canvas.getContext('2d');
     this.clearDisplay();
   },
 
@@ -72,7 +77,7 @@ var DisplayView = {
       self.clearDisplay(true);
       if (self.powered) {
         self.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-        self.ctx.fillRect(0, 0, self.extrinsicDimention.w, self.extrinsicDimention.h);
+        self.ctx.fillRect(0, 0, self.extrinsicDimension.w, self.extrinsicDimension.h);
       }
       self.powered = !self.powered;
     });
@@ -85,7 +90,7 @@ var DisplayView = {
 
   clearDisplay: function (resetPath) {
     with (this) {
-      ctx.clearRect(0, 0, extrinsicDimention.w, extrinsicDimention.h);
+      ctx.clearRect(0, 0, extrinsicDimension.w, extrinsicDimension.h);
       if (resetPath) {
         ctx.beginPath();
       }
@@ -95,7 +100,7 @@ var DisplayView = {
   executeOperation: function (mappedMemory) {
     with (this) {
       var operation = mappedMemory[0];
-      if (!powered || operation == OPERATION.NOPERATIONS) {
+      if (!powered || operation == OPERATION.NO_OPERATION) {
         return;
       }
       var x = mappedMemory[1] & 0xff;
