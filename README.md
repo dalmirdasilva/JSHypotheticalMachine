@@ -20,7 +20,7 @@ Due this limitations and because the goal of this project is to make things easy
 
 ####Data/Address wide: 
 
-Every instruction is 8bit long. Some instructions has operands, which are also 8bit long. 
+Every instruction is 8bit long. Some instructions have operands, which are also 8bit long.
 
 The CPU internally has 3 registers, as follows:
 
@@ -86,7 +86,7 @@ has precedence, so if you put some instruction on the same place, the
 
 ####<b>#</b>
 
-It is a indication of a commentary, the line that starts with # will be considered as a comment.
+It is an indication of a commentary, the line that starts with # will be considered as a comment.
 
 ####<b>:label</b>
 
