@@ -4,7 +4,7 @@ var SevenSegmentsView = {
   display: null,
   mapAddress: {
     first: 0xfb,
-    last: 0xfb
+    last: 0xfd
   },
 
   init: function () {
@@ -21,20 +21,6 @@ var SevenSegmentsView = {
   },
 
   initLibrary: function () {
-    with (this) {
-      display = new SegmentDisplay('sevensegments-canvas');
-      display.pattern = '########';
-      display.displayAngle = 3;
-      display.digitHeight = 50;
-      display.digitWidth = 12;
-      display.digitDistance = 2.5;
-      display.segmentWidth = 3.5;
-      display.segmentDistance = 0.5;
-      display.segmentCount = 7;
-      display.cornerType = 3;
-      display.colorOn = 'rgba(0, 0, 0, 0.9)';
-      display.colorOff = 'rgba(0, 0, 0, 0.1)';
-    }
   },
 
   initComponents: function () {
@@ -73,22 +59,30 @@ var SevenSegmentsView = {
   },
 
   clearSevenSegments: function () {
-    this.display.setValue('');
+    this.sevensegmentsBody.text('');
   },
 
   setSevenSegmentsValue: function (mappedMemory) {
-    var value = Converter.toString(mappedMemory[0] & 0xff).split('');
-    var length = value.length;
-    for (; length < 8; length++) {
-      value.unshift(' ');
+//    var value = Converter.toString(mappedMemory, this.mapAddress.last - this.mapAddress.first).split('');
+
+//    var length = value.length;
+ //   for (; length < 8; length++) {
+  //    value.unshift(' ');
+   // }
+    for (var i = 0; i < mappedMemory.length; i++) {
+      if (mappedMemory[i] < 0) {
+        mappedMemory[i] *= -1;
+        mappedMemory[i] = Converter.toString(mappedMemory[i], 2);
+      }
     }
-    this.display.setValue(value.join(''));
+    this.ELEMENT.sevensegmentsBody.text(mappedMemory.join(''));
   },
 
   ELEMENT: {
     sevensegmentsPowerButton: $('#sevensegments-power-button'),
     sevensegmentsClearButton: $('#sevensegments-clear-button'),
     sevensegmentsMapFirst: $('#sevensegments-map-first'),
-    sevensegmentsCanvas: $('#sevensegments-canvas')
+    sevensegmentsCanvas: $('#sevensegments-canvas'),
+    sevensegmentsBody: $('#sevensegments-body')
   }
 };
