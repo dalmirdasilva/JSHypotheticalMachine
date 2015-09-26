@@ -17,25 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-@font-face {
-  font-family: segments7;
-  src: url('chrome-extension://lolennlgkogllmfmomjdihpkpakeedfi/ext/fonts/segments7.ttf');
+#display-holder {
+  left: 1088px;
+  top: 66px;
 }
 
-#sevensegments-holder {
-  left: 1090px;
-  top: 369px;
-}
-
-#sevensegments-title {
+#display-title {
   cursor: default;
 }
 
-#sevensegments-body {
-  font-family: segments7;
-  font-size: 100px;
+#display-body {
   margin: 4px;
-  width: 300px;
-  height: 100px;
+  width: 400px;
+  height: 200px;
+}
+
+#display-canvas {
+  width: 400px;
+  height: 200px;
 }
