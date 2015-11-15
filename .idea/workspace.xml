@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="00899688-bd4d-4220-ae4b-fffc843fc521" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Assembler.js" afterPath="$PROJECT_DIR$/jshm/Assembler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Cpu.js" afterPath="$PROJECT_DIR$/jshm/Cpu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Machine.js" afterPath="$PROJECT_DIR$/jshm/Machine.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Memory.js" afterPath="$PROJECT_DIR$/jshm/Memory.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Message.js" afterPath="$PROJECT_DIR$/jshm/Message.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Simulator.js" afterPath="$PROJECT_DIR$/jshm/Simulator.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/cpu/cpu.js" afterPath="$PROJECT_DIR$/view/cpu/cpu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/device/display/display.js" afterPath="$PROJECT_DIR$/device/display/display.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/editor/editor.html" afterPath="$PROJECT_DIR$/view/editor/editor.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jquery-ui/js/jquery-1.9.1.js" afterPath="$PROJECT_DIR$/lib/jquery-ui/js/jquery-1.9.1.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/jquery.js" afterPath="$PROJECT_DIR$/original/jquery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/device/sevensegments/sevensegments.js" afterPath="$PROJECT_DIR$/device/sevensegments/sevensegments.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="00899688-bd4d-4220-ae4b-fffc843fc521" name="Default" comment="" />
     <ignored path="JSHypotheticalMachine.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -107,8 +91,8 @@
       <file leaf-file-name="editor.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/view/editor/editor.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.112474434">
-              <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.22290389">
+              <caret line="93" column="25" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -820,12 +804,12 @@
       <option name="number" value="Default" />
       <updated>1438729948041</updated>
       <workItem from="1438729949579" duration="19943000" />
-      <workItem from="1447608202280" duration="6585000" />
+      <workItem from="1447608202280" duration="6606000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26528000" />
+    <option name="totallyTimeSpent" value="26549000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="25" width="1928" height="1034" extended-state="6" />
@@ -1283,8 +1267,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/view/editor/editor.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.112474434">
-          <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.22290389">
+          <caret line="93" column="25" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
           <folding />
         </state>
       </provider>
