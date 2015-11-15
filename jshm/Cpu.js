@@ -67,35 +67,29 @@ Cpu.prototype.nextPc = function () {
 };
 
 Cpu.prototype.clockTick = function () {
-  with (this) {
-    if (!isSleeping() && isPowered()) {
-      try {
-        var opcode = fetchNextInstruction();
-        var instruction = decodeInstruction(opcode);
-        executeInstruction(instruction);
-      } catch (e) {
-        sleep();
-        Logger.error(e);
-      }
+  if (!this.isSleeping() && this.isPowered()) {
+    try {
+      var opcode = this.fetchNextInstruction();
+      var instruction = this.decodeInstruction(opcode);
+      this.executeInstruction(instruction);
+    } catch (e) {
+      this.sleep();
+      Logger.error(e);
     }
   }
 };
 
 Cpu.prototype.returnFromInterrupt = function () {
-  with (this) {
-    restoreContext();
-    enableInterrupt();
-  }
+  this.restoreContext();
+  this.enableInterrupt();
 };
 
 Cpu.prototype.checkInterrupt = function () {
-  with (this) {
-    if (wasInterrupted()) {
-      saveContext();
-      disableInterrupt();
-      clearInterruptStatus();
-      setPc(interruptVector);
-    }
+  if (this.wasInterrupted()) {
+    this.saveContext();
+    this.disableInterrupt();
+    this.clearInterruptStatus();
+    this.setPc(this.interruptVector);
   }
 };
 

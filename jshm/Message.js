@@ -20,11 +20,11 @@
 /**
  * Message class
  */
-var Message = function (type, payload, channel, async) {
+var Message = function (type, payload, channel, broadcast) {
   this.type = type || Message.TYPE.DEFAULT;
   this.payload = payload;
   this.channel = channel || 0;
-  this.async = async || false;
+  this.broadcast = broadcast || false;
 };
 
 Message.prototype.getType = function () {
@@ -51,12 +51,12 @@ Message.prototype.setChannel = function (channel) {
   this.channel = channel;
 };
 
-Message.prototype.setAsync = function (async) {
-  this.async = async;
+Message.prototype.setBroadcast = function (broadcast) {
+  this.broadcast = broadcast;
 };
 
-Message.prototype.isAsync = function () {
-  return this.async;
+Message.prototype.isBroadcast = function () {
+  return this.broadcast;
 };
 
 Message.prototype.toHash = function () {
@@ -64,7 +64,7 @@ Message.prototype.toHash = function () {
     type: this.type,
     payload: this.payload,
     channel: this.channel,
-    async: this.async
+    broadcast: this.broadcast
   };
 };
 
@@ -72,7 +72,7 @@ Message.prototype.fromHash = function (hash) {
   this.setType(hash.type);
   this.setPayload(hash.payload);
   this.setChannel(hash.channel);
-  this.setAsync(hash.async);
+  this.setBroadcast(hash.broadcast);
 };
 
 Message.newFromHash = function (hash) {

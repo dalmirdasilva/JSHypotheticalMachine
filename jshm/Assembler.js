@@ -247,6 +247,10 @@ Assembler.prototype.getOpcodeFromMnemonic = function (mnemonic) {
 };
 
 Assembler.prototype.getInstructionHasParam = function (mnemonic) {
-  var opcode = this.getOpcodeFromMnemonic(mnemonic);
-  return Instruction.hasParam[opcode];
+  for (var i in Instruction.nameMap) {
+    if (Instruction.nameMap[i] == mnemonic) {
+      return Instruction.hasParam[i];
+    }
+  }
+  return false;
 };

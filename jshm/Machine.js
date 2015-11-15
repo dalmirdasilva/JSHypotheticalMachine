@@ -29,6 +29,7 @@ importScripts('Decoder.js');
 importScripts('Instruction.js');
 importScripts('MemoryEventListener.js');
 importScripts('Message.js');
+importScripts('Simulator.js');
 
 var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
 var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
@@ -126,8 +127,8 @@ function processRequest(request) {
         var channel = request.getChannel();
         var payload = request.getPayload();
         var listener = new MemoryEventListener(payload.begin, payload.end, function (slice) {
-          var asyncResponse = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
-          self.postMessage(asyncResponse.toHash());
+          var response = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
+          self.postMessage(response.toHash());
         });
         memory.addEventListener((payload.event || Memory.EVENT.AFTER_WRITE), listener);
         break;
@@ -153,14 +154,13 @@ function processRequest(request) {
     self.postMessage(response.toHash());
   } catch (e) {
     response.setType(Message.TYPE.EXCEPTION_REPORT);
-    response.setPayload(e);
-    response.setAsync(true);
+    response.setPayload(e.message);
     self.postMessage(response.toHash());
   }
 }
 
-self.addEventListener('message', function (event) {
-  var request = Message.newFromHash(event.data)
+self.addEventListener(Simulator.EVENT.MESSAGE_RECEIVED, function (event) {
+  var request = Message.newFromHash(event.data);
   processRequest(request);
 }, false);
 

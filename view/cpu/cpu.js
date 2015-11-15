@@ -80,7 +80,7 @@ var CpuView = {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU),
         function (message) {
           if (!message.getPayload()) {
-            console.log("Could not interrupt the CPU.");
+            Logger.debug("Could not interrupt the CPU.");
           }
         }
       );
@@ -89,7 +89,7 @@ var CpuView = {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.RESET_CPU),
         function (message) {
           if (!message.getPayload()) {
-            console.log("Could not reset the CPU.");
+            Logger.debug("Could not reset the CPU.");
           }
         }
       );

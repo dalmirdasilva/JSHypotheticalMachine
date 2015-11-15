@@ -44,7 +44,7 @@ Memory.prototype.write = function (address, value) {
 };
 
 Memory.prototype.erase = function () {
-  this.buffer.set(new Int8Array(size), 0);
+  this.buffer.set(new Int8Array(this.size), 0);
   this.resetAccess();
 };
 

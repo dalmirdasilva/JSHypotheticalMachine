@@ -20,27 +20,29 @@
 /**
  * Simulator class
  */
-var Simulator = function (path) {
+var Simulator = function () {
   this.messageHandlerQueue = [];
   this.worker = null;
-  this.launched = false;
+  this.running = false;
   this.eventNotifier = new EventNotifier();
   this.nextFreeChannel = 0;
 };
 
-Simulator.prototype.asyncMessageHandler = function (message) {
-  this.notifyEvent(Simulator.EVENT.ASYNC_MESSAGE_RECEIVED, message);
+Simulator.prototype.broadcastMessageHandler = function (message) {
+  this.notifyEvent(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, message);
 };
 
 Simulator.prototype.simulate = function (path) {
-  if (!this.launched) {
+  if (!this.running) {
     var self = this;
     this.worker = new Worker(path);
-    this.worker.addEventListener('message', function (event) {
+    this.worker.addEventListener(Simulator.EVENT.MESSAGE_RECEIVED, function (event) {
       var message = Message.newFromHash(event.data);
-      // TODO: OPPOSITE?
-      if (message.isAsync()) {
-        self.asyncMessageHandler(message);
+      if (message.getType() == Message.TYPE.EXCEPTION_REPORT) {
+        self.processExceptionReport(message);
+      }
+      if (message.isBroadcast()) {
+        self.broadcastMessageHandler(message);
       } else {
         var handler = self.messageHandlerQueue.shift();
         if (handler && (typeof handler === 'function')) {
@@ -50,17 +52,28 @@ Simulator.prototype.simulate = function (path) {
         }
       }
     }, false);
-    this.launched = true;
+    this.running = true;
   }
 };
 
+/**
+ * Exchanges a message with the machine.
+ *
+ * TODO: It is necessary to make sure every exchanged is properly
+ * handled.
+ *
+ * @param message
+ * @param responseHandler
+ * @returns {boolean}
+ */
 Simulator.prototype.exchangeMessage = function (message, responseHandler) {
-  if (!this.launched) {
-    throw new Error('No launched worker to exchange message.');
+  if (!this.running) {
+    throw new Error('No running worker to exchange message.');
   }
   this.messageHandlerQueue.push(responseHandler);
 
   // What happens if at this moment a message comes from worker?
+  // What happens if this specific message never come back?
   this.worker.postMessage(message.toHash());
   return true;
 };
@@ -77,8 +90,13 @@ Simulator.prototype.getNextFreeChannel = function () {
   return this.nextFreeChannel++;
 };
 
+Simulator.prototype.processExceptionReport = function (message) {
+  Logger.error('Exception reported: ' + message.getPayload());
+};
+
 Simulator.EVENT = {
-  ASYNC_MESSAGE_RECEIVED: 0x01
+  MESSAGE_RECEIVED: 'message',
+  BROADCAST_MESSAGE_RECEIVED: 0x01
 };
 
 Simulator.instance = null;
@@ -87,4 +105,4 @@ Simulator.getInstance = function () {
     Simulator.instance = new Simulator();
   }
   return Simulator.instance;
-}
+};

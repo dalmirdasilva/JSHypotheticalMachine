@@ -62,7 +62,7 @@ var SevenSegmentsView = {
           }
         }
       });
-      simulator.addEventListener(Simulator.EVENT.ASYNC_MESSAGE_RECEIVED, listener);
+      simulator.addEventListener(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, listener);
       var requestMessage = new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {
         begin: this.mapAddress.first,
         end: this.mapAddress.last
