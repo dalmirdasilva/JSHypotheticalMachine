@@ -22,22 +22,19 @@ var DisplayView = {
   },
 
   init: function () {
-    var self = this;
-    self.updateMappingLabels();
-    self.createCanvasContext();
-    self.initComponents();
-    self.attachListener();
+    this.updateMappingLabels();
+    this.createCanvasContext();
+    this.initComponents();
+    this.attachListener();
     UI.updateDraggableItems();
   },
 
   repaint: function () {
-    with (this) {
-      if (!powered) {
-        return;
-      }
-      draw();
-      ctx.stroke();
+    if (!this.powered) {
+      return;
     }
+    this.clearDisplay();
+    this.ctx.stroke();
   },
 
   updateMappingLabels: function () {
@@ -89,40 +86,36 @@ var DisplayView = {
   },
 
   clearDisplay: function (resetPath) {
-    with (this) {
-      ctx.clearRect(0, 0, extrinsicDimension.w, extrinsicDimension.h);
-      if (resetPath) {
-        ctx.beginPath();
-      }
+    this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+    if (resetPath) {
+      this.ctx.beginPath();
     }
   },
 
   executeOperation: function (mappedMemory) {
-    with (this) {
-      var operation = mappedMemory[0];
-      if (!powered || operation == OPERATION.NO_OPERATION) {
-        return;
-      }
-      var x = mappedMemory[1] & 0xff;
-      var y = mappedMemory[2] & 0x7f;
-      switch (operation) {
-        case OPERATION.MOVE_TO:
-          this.ctx.moveTo(x, y);
-          break;
-        case OPERATION.LINE_TO:
-          ctx.lineTo(x, y);
-          break;
-        case OPERATION.ARC_TO:
-          var x2 = mappedMemory[3] & 0xff;
-          var y2 = mappedMemory[4] & 0x7f;
-          var r = mappedMemory[5] & 0x7f;
-          ctx.arcTo(x, y, x2, y2, r);
-          break;
-        case OPERATION.STROKE:
-          break;
-      }
-      repaint();
+    var operation = mappedMemory[0];
+    if (!this.powered || operation == this.OPERATION.NO_OPERATION) {
+      return;
     }
+    var x = mappedMemory[1] & 0xff;
+    var y = mappedMemory[2] & 0x7f;
+    switch (operation) {
+      case this.OPERATION.MOVE_TO:
+        this.ctx.moveTo(x, y);
+        break;
+      case this.OPERATION.LINE_TO:
+        this.ctx.lineTo(x, y);
+        break;
+      case this.OPERATION.ARC_TO:
+        var x2 = mappedMemory[3] & 0xff;
+        var y2 = mappedMemory[4] & 0x7f;
+        var r = mappedMemory[5] & 0x7f;
+        this.ctx.arcTo(x, y, x2, y2, r);
+        break;
+      case this.OPERATION.STROKE:
+        break;
+    }
+    this.repaint();
   },
 
   ELEMENT: {

@@ -32,11 +32,10 @@ var Nokia5110View = {
   },
 
   init: function () {
-    var self = this;
-    self.updateMappingLabels();
-    self.createCanvasContext();
-    self.initComponents();
-    self.attachListener();
+    this.updateMappingLabels();
+    this.createCanvasContext();
+    this.initComponents();
+    this.attachListener();
     UI.updateDraggableItems();
   },
 
@@ -44,7 +43,6 @@ var Nokia5110View = {
     if (!this.powered || !this.changed || this.blankMode) {
       return;
     }
-    this.draw();
   },
 
   updateMappingLabels: function () {
@@ -57,7 +55,7 @@ var Nokia5110View = {
     canvas.width = this.extrinsicDimension.w;
     canvas.height = this.extrinsicDimension.h;
     this.ctx = canvas.getContext('2d');
-    this.draw();
+    this.repaint();
   },
 
   attachListener: function () {
@@ -81,42 +79,47 @@ var Nokia5110View = {
   initComponents: function () {
     var self = this;
     this.ELEMENT.nokia5110PowerButton.button().click(function () {
-      self.draw(true);
+      self.fillDram(0x00);
       if (self.powered) {
-        self.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-        self.ctx.fillRect(0, 0, self.extrinsicDimension.w, self.extrinsicDimension.h);
+        self.screenOff();
+      } else {
+        self.screenOn();
+        self.repaint();
       }
       self.powered = !self.powered;
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
       if (self.powered) {
-        self.draw(true);
+        self.fillDram(0x00);
       }
     });
   },
 
-  draw: function () {
-    this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+  screenOff: function () {
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    this.ctx.fillRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+  },
+
+  screenOn: function () {
+   this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
   },
 
   executeFunctionSet: function (db) {
-    Logger.info("Nokia5110::executeFunctionSet(" + db + ")");
     this.powered = !(db & 0x04);
     this.horizontalAddressing = !(db & 0x02);
   },
 
   executeDisplayControl: function (db) {
-    Logger.info("Nokia5110::executeDisplayControl(" + db + ")");
     switch (((db >> 1) & 0x02) | (db & 0x01)) {
       case 0:
         this.fillDram(0x00);
         this.blankMode = true;
         break;
       case 1:
-        this.blankMode = false;
+        this.fillDram(0xff);
         break;
       case 2:
-        this.fillDram(0xff);
+        this.blankMode = false;
         break;
       case 3:
         this.inverseMode = !this.inverseMode;
@@ -125,12 +128,10 @@ var Nokia5110View = {
   },
 
   executeSetYAddress: function (db) {
-    Logger.info("Nokia5110::executeSetYAddress(" + db + ")");
     this.address.y = db & 0x07;
   },
 
   executeSetXAddress: function (db) {
-    Logger.info("Nokia5110::executeSetXAddress(" + db + ")");
     this.address.x = db & 0x7f;
   },
 
@@ -139,7 +140,6 @@ var Nokia5110View = {
   },
 
   processData: function (db) {
-    Logger.info("Nokia5110::processData(" + db + ")");
     if (this.horizontalAddressing) {
       if (++this.address.x >= this.dimension.w) {
         this.address.y++;
@@ -160,8 +160,6 @@ var Nokia5110View = {
     }
     var dc = mappedMemory[0];
     var db = mappedMemory[1];
-    alert(dc);
-    alert(db);
     if (dc == 0) {
       if (db == this.OPERATION.NOP) {
         return;
