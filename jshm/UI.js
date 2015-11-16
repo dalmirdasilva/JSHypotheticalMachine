@@ -53,10 +53,14 @@ var UI = {
   },
 
   updateDraggableItems: function () {
-    $('.draggable-item').draggable({
+    this.ELEMENT.draggableHandlers.draggable({
       handle: '.draggable-handler',
-      stack: '.draggable-item'
-    });
+      stack: '.draggable-item',
+      stop: function(ui) {
+        var position = {left: self.ELEMENT.displayHolder.offset().left, top: self.ELEMENT.displayHolder.offset().top, zIndex: self.ELEMENT.displayHolder.zIndex()};
+        Storage.setItem('display-custom-position', JSON.stringify(position));
+      }
+    }).disableSelection();
   },
 
   EVENT: {
@@ -65,6 +69,7 @@ var UI = {
   },
 
   ELEMENT: {
+    draggableHandlers: $('.draggable-handler'),
     glassLayer: $('#glass-layer')
   }
 };
