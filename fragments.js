@@ -34,5 +34,10 @@ var DEFAULT_FRAGMENTS = [
     callback: function () {
       SevenSegmentsView.init();
     }
+  }, {
+    url: "device/nokia5110/nokia5110.html",
+    callback: function () {
+      Nokia5110View.init();
+    }
   }
 ];
