@@ -8,80 +8,80 @@ var SevenSegmentsView = {
   },
 
   init: function () {
-    with (this) {
-      initLibrary();
-      initComponents();
-      attachListener();
-      updateMappingLabel();
-    }
+    this.initLibrary();
+    this.initComponents();
+    this.attachListener();
+    this.updateMappingLabel();
+    this.updateUI();
   },
 
   updateMappingLabel: function () {
-    this.ELEMENT.sevensegmentsMapFirst.text(this.mapAddress.first.toString(16));
+    this.ELEMENT.sevensegmentsMapFirst.text(Converter.toString(this.mapAddress.first, 2));
+    this.ELEMENT.sevensegmentsMapLast.text(Converter.toString(this.mapAddress.last, 2));
   },
 
   initLibrary: function () {
   },
 
   initComponents: function () {
-    with (this) {
-      ELEMENT.sevensegmentsPowerButton.button().click(function () {
-        clearSevenSegments();
-        powered = !powered;
-      });
-      ELEMENT.sevensegmentsClearButton.button().click(function () {
-        if (powered) {
-          clearSevenSegments();
-        }
-      });
-    }
+    var self = this;
+    this.ELEMENT.sevensegmentsPowerButton.button().click(function () {
+      self.powered = !self.powered;
+      self.clearSevenSegments();
+      self.updateUI();
+    });
+    this.ELEMENT.sevensegmentsClearButton.button().click(function () {
+      self.clearSevenSegments();
+    });
+    this.clearSevenSegments();
+    this.updateMappingLabel();
   },
 
   attachListener: function () {
-    with (this) {
-      var simulator = Simulator.getInstance();
-      var channel = simulator.getNextFreeChannel();
-      var listener = new SimulatorEventListener(function (message) {
-        if (message.getChannel() == channel) {
-          if (powered) {
-            setSevenSegmentsValue(message.getPayload());
-          }
+    var self = this;
+    var simulator = Simulator.getInstance();
+    var channel = simulator.getNextFreeChannel();
+    var listener = new SimulatorEventListener(function (message) {
+      if (message.getChannel() == channel) {
+        if (self.powered) {
+          self.setSevenSegmentsValue(message.getPayload());
         }
-      });
-      simulator.addEventListener(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, listener);
-      var requestMessage = new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {
-        begin: this.mapAddress.first,
-        end: this.mapAddress.last
-      }, channel);
-      simulator.exchangeMessage(requestMessage, function (message) {
-      });
-    }
+      }
+    });
+    simulator.addEventListener(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, listener);
+    var requestMessage = new Message(Message.TYPE.ADD_MEMORY_EVENT_LISTENER, {
+      begin: this.mapAddress.first,
+      end: this.mapAddress.last
+    }, channel);
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
   },
 
   clearSevenSegments: function () {
-    this.sevensegmentsBody.text('');
+    this.setSevenSegmentsValue(new Array(this.mapAddress.last - this.mapAddress.first + 1));
   },
 
   setSevenSegmentsValue: function (mappedMemory) {
-//    var value = Converter.toString(mappedMemory, this.mapAddress.last - this.mapAddress.first).split('');
-
-//    var length = value.length;
- //   for (; length < 8; length++) {
-  //    value.unshift(' ');
-   // }
+    var text = '';
     for (var i = 0; i < mappedMemory.length; i++) {
-      if (mappedMemory[i] < 0) {
-        mappedMemory[i] *= -1;
-        mappedMemory[i] = Converter.toString(mappedMemory[i], 2);
-      }
+      text += Converter.toString(mappedMemory[i] & 0xff, 2);
     }
-    this.ELEMENT.sevensegmentsBody.text(mappedMemory.join(''));
+    this.ELEMENT.sevensegmentsBody.text(text);
+  },
+
+  updateUI: function () {
+    if (this.powered) {
+      this.ELEMENT.sevensegmentsBody.removeClass('off');
+    } else {
+      this.ELEMENT.sevensegmentsBody.addClass('off');
+    }
   },
 
   ELEMENT: {
     sevensegmentsPowerButton: $('#sevensegments-power-button'),
     sevensegmentsClearButton: $('#sevensegments-clear-button'),
     sevensegmentsMapFirst: $('#sevensegments-map-first'),
+    sevensegmentsMapLast: $('#sevensegments-map-last'),
     sevensegmentsCanvas: $('#sevensegments-canvas'),
     sevensegmentsBody: $('#sevensegments-body')
   }

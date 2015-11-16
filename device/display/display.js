@@ -35,7 +35,7 @@ var DisplayView = {
       if (!powered) {
         return;
       }
-      clearDisplay();
+      draw();
       ctx.stroke();
     }
   },
