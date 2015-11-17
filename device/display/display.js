@@ -83,23 +83,6 @@ var DisplayView = {
         self.clearDisplay(true);
       }
     });
-    this.ELEMENT.displayHolder.draggable({
-      stop: function() {
-        var position = {left: self.ELEMENT.displayHolder.offset().left, top: self.ELEMENT.displayHolder.offset().top, zIndex: self.ELEMENT.displayHolder.zIndex()};
-        Storage.setItem('display-custom-position', JSON.stringify(position));
-      }
-    });
-    this.applyCustomPosition();
-  },
-
-  applyCustomPosition: function() {
-    var position = Storage.getItem('display-custom-position');
-    if (position != null) {
-      position = JSON.parse(position);
-      if (position.top && position.left && position.zIndex) {
-        this.ELEMENT.displayHolder.css({top: position.top, left: position.left, zIndex: position.zIndex});
-      }
-    }
   },
 
   clearDisplay: function (resetPath) {

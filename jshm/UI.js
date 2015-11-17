@@ -48,19 +48,41 @@ var UI = {
     FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function () {
       self.notifyEvent(UI.EVENT.ON_INITIALIZE);
       self.startRefreshing();
+      self.applyCustomPosition();
       GlassOverlay.remove();
     });
   },
 
   updateDraggableItems: function () {
+    var self = this;
     this.ELEMENT.draggableHandlers.draggable({
       handle: '.draggable-handler',
       stack: '.draggable-item',
-      stop: function(ui) {
-        var position = {left: self.ELEMENT.displayHolder.offset().left, top: self.ELEMENT.displayHolder.offset().top, zIndex: self.ELEMENT.displayHolder.zIndex()};
-        Storage.setItem('display-custom-position', JSON.stringify(position));
+      stop: function (ui) {
+        var target = $(ui.target);
+        var key = self.getElementId(ui.target);
+        var position = {left: target.offset().left, top: target.offset().top, zIndex: target.zIndex()};
+        Storage.setItem(key, JSON.stringify(position));
       }
-    }).disableSelection();
+    });
+  },
+
+  getElementId: function (element) {
+    var target = $(element);
+    return target.attr('id');
+  },
+
+  applyCustomPosition: function() {
+    var self = this;
+    this.ELEMENT.draggableHandlers.each(function (i, item) {
+      var key = self.getElementId(item);
+      var target = $(item);
+      var position = Storage.getItem(key);
+      if (position != null) {
+        position = JSON.parse(position);
+        target.css(position);
+      }
+    });
   },
 
   EVENT: {
