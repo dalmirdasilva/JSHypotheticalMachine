@@ -17,13 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
-  $(document).ready(function () {
-    var listener = new UIEventListener(function () {
-      UI.updateDraggableItems();
-      UI.applyCustomPosition();
+/**
+ * SettingsView object
+ */
+var SettingsView = {
+
+  init: function () {
+    this.initComponents();
+  },
+
+  initComponents: function () {
+    var self = this;
+    this.ELEMENT.resetPositionButton.button().click(function () {
+      self.resetPosition();
     });
-    UI.addEventListener(UI.EVENT.ON_INITIALIZE, listener);
-    UI.init();
-  });
-})(jQuery);
+    this.ELEMENT.decimalBaseSelect.selectmenu({
+      select: function (item) {
+        var base = $(item.target).val();
+        Converter.setBase(parseInt(base));
+      }
+    });
+  },
+
+  resetPosition: function () {
+    UI.applyCustomPosition(true);
+  },
+
+  ELEMENT: {
+    resetPositionButton: $('#settings-reset-position-button'),
+    decimalBaseSelect: $('#settings-decimal-base-select'),
+    settingsBody: $('#settings-body'),
+    settingsHolder: $('#settings-holder')
+  }
+};
