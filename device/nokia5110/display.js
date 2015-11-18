@@ -27,7 +27,6 @@ var Nokia5110View = {
     self.createCanvasContext();
     self.initComponents();
     self.attachListener();
-    UI.updateDraggableItems();
   },
 
   repaint: function () {

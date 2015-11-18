@@ -26,7 +26,6 @@ var DisplayView = {
     this.createCanvasContext();
     this.initComponents();
     this.attachListener();
-    UI.updateDraggableItems();
   },
 
   repaint: function () {

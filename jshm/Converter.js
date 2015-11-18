@@ -27,9 +27,13 @@ var Converter = {
   baseByteLength: new Array(8, 3, 3, 2),
 
   setBase: function (base) {
-    if (this.availableBases.indexOf(base) >= 0) {
+    if (this.isBaseAvailable(base)) {
       this.base = base;
     }
+  },
+
+  isBaseAvailable: function (base) {
+    return this.availableBases.indexOf(base) >= 0;
   },
 
   getBase: function () {
@@ -40,11 +44,14 @@ var Converter = {
     return parseInt(string, this.base);
   },
 
-  toString: function (number, len) {
-    var s = number.toString(this.base);
+  toString: function (number, len, base) {
+    if (!base || !this.isBaseAvailable(base)) {
+      base = this.base;
+    }
+    var s = number.toString(base);
     var v = s;
-    var length = (len) ? len - s.length : (this.baseByteLength[this.availableBases.indexOf(this.base)] - s.length);
-    for (var i = 0; i < length && this.base != 10; i++) {
+    var length = (len) ? len - s.length : (this.baseByteLength[this.availableBases.indexOf(base)] - s.length);
+    for (var i = 0; i < length && base != 10; i++) {
       v = '0' + v;
     }
     return v;

@@ -64,7 +64,7 @@ var SevenSegmentsView = {
   setSevenSegmentsValue: function (mappedMemory) {
     var text = '';
     for (var i = 0; i < mappedMemory.length; i++) {
-      text += Converter.toString(mappedMemory[i] & 0xff, 2);
+      text += Converter.toString(mappedMemory[i] & 0xff, 2, 16);
     }
     this.ELEMENT.sevensegmentsBody.text(text);
   },

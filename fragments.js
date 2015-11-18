@@ -25,6 +25,11 @@ var DEFAULT_FRAGMENTS = [
       EditorView.init();
     }
   }, {
+    url: "view/settings/settings.html",
+    callback: function () {
+      SettingsView.init();
+    }
+  }, {
     url: "device/display/display.html",
     callback: function () {
       DisplayView.init();
