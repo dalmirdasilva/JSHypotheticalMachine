@@ -69,12 +69,9 @@ var UI = {
     var listener = new SimulatorEventListener(function (message) {
       if (message.getChannel() == channel && message.getType() == Message.TYPE.CPU_EVENT_NOTIFICATION) {
         var cpuInfo = message.getPayload();
-        console.log(cpuInfo)
         if (!cpuInfo.sleeping && cpuInfo.powered) {
-          console.log('start')
           self.startRefreshing();
         } else {
-          console.log('stop')
           self.stopRefreshing();
         }
       }
@@ -125,10 +122,10 @@ var UI = {
       if (reset == true) {
         Storage.clear(key);
       } else {
-        var position = Storage.getItem(key);
-        if (position != null) {
-          position = JSON.parse(position);
-          target.animate(position, 200);
+        var item = Storage.getItem(key);
+        if (item != null) {
+          var position = JSON.parse(item);
+          target.animate(position, 2000);
         }
       }
     });

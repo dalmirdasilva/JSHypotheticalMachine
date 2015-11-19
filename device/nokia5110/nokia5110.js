@@ -20,8 +20,7 @@ var Nokia5110View = {
   horizontalAddressing: true,
   dram: new Uint8Array(84 * 6),
   powered: true,
-  changed: false,
-  blankMode: true,
+  blankMode: false,
   inverseMode: false,
   OPERATION: {
     NOP: 0x00,
@@ -39,11 +38,9 @@ var Nokia5110View = {
   },
 
   repaint: function () {
-    if (!this.powered || !this.changed || this.blankMode) {
-     // return;
+    if (!this.powered || this.blankMode) {
+      return;
     }
-    this.dram[0] = 0xff;
-    this.dram[2] = 0xaa;
     for (var x = 0; x < this.dimension.w; x++) {
       for (var y = 0; y < this.dimension.h; y++) {
         var pixel = this.getPixel(x, y);
@@ -98,9 +95,8 @@ var Nokia5110View = {
       self.powered = !self.powered;
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
-      if (self.powered) {
-        self.fillDram(0x00);
-      }
+      self.fillDram(0x00);
+      self.repaint();
     });
   },
 
