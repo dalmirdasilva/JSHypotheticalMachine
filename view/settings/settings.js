@@ -31,10 +31,10 @@ var SettingsView = {
     this.ELEMENT.resetPositionButton.button().click(function () {
       self.resetPosition();
     });
-    this.ELEMENT.decimalBaseSelect.selectmenu({
+    this.ELEMENT.decimalRadixSelect.selectmenu({
       select: function (item) {
-        var base = $(item.target).val();
-        Converter.setBase(parseInt(base));
+        var radix = $(item.target).val();
+        Converter.setRadix(parseInt(radix));
       }
     });
   },
@@ -45,7 +45,7 @@ var SettingsView = {
 
   ELEMENT: {
     resetPositionButton: $('#settings-reset-position-button'),
-    decimalBaseSelect: $('#settings-decimal-base-select'),
+    decimalRadixSelect: $('#settings-radix-select'),
     settingsBody: $('#settings-body'),
     settingsHolder: $('#settings-holder')
   }

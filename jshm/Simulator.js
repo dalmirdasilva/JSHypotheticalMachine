@@ -59,8 +59,7 @@ Simulator.prototype.simulate = function (path) {
 /**
  * Exchanges a message with the machine.
  *
- * TODO: It is necessary to make sure every exchanged is properly
- * handled.
+ * TODO: make sure every exchanged message is properly handled.
  *
  * @param message
  * @param responseHandler

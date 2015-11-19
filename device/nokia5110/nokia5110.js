@@ -6,8 +6,8 @@ var Nokia5110View = {
     h: 48
   },
   extrinsicDimension: {
-    w: 420,
-    h: 240
+    w: 420 + 1,
+    h: 240 + 1
   },
   mapAddress: {
     first: 0xf0,
@@ -40,7 +40,17 @@ var Nokia5110View = {
 
   repaint: function () {
     if (!this.powered || !this.changed || this.blankMode) {
-      return;
+     // return;
+    }
+    this.dram[0] = 0xff;
+    this.dram[2] = 0xaa;
+    for (var x = 0; x < this.dimension.w; x++) {
+      for (var y = 0; y < this.dimension.h; y++) {
+        var pixel = this.getPixel(x, y);
+        var style = (pixel != 0) ? '#022317' : '#dddddd';
+        this.ctx.fillStyle = style;
+        this.ctx.fillRect(1 + x * 5, 1 + y * 5, 4, 4);
+      }
     }
   },
 
@@ -100,7 +110,7 @@ var Nokia5110View = {
   },
 
   screenOn: function () {
-   this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+    this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
   },
 
   executeFunctionSet: function (db) {
@@ -150,7 +160,11 @@ var Nokia5110View = {
     }
     this.address.x %= this.dimension.w;
     this.address.y %= this.dimension.h / 8;
-    this.dram[this.address.y * 8 + this.address.x] = db & 0xff;
+    this.dram[this.address.y * this.dimension.w + this.address.x] = db & 0xff;
+  },
+
+  getPixel: function (x, y) {
+    return (this.dram[Math.floor(y / 8) * this.dimension.w + x] & (1 << (y % 8))) > 0;
   },
 
   executeOperation: function (mappedMemory) {

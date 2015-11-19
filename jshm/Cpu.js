@@ -42,6 +42,8 @@ var Cpu = function (memory, stack, decoder, oscillator) {
     ac: 0xff
   };
 
+  this.eventNotifier = new EventNotifier();
+
   if (oscillator instanceof Oscillator) {
     this.setOscillator(oscillator);
   }
@@ -120,6 +122,7 @@ Cpu.prototype.wasInterrupted = function () {
 Cpu.prototype.interrupt = function () {
   if (this.interruptEnable) {
     this.interruptStatus = true;
+    this.eventNotifier.notifyEvent(Cpu.EVENT.ON_INTERRUPT, this);
   }
 };
 
@@ -137,13 +140,14 @@ Cpu.prototype.disableInterrupt = function () {
 
 Cpu.prototype.powerOn = function () {
   this.powered = true;
+  this.eventNotifier.notifyEvent(Cpu.EVENT.ON_POWER_ON, this);
 };
 
 Cpu.prototype.powerOff = function () {
   this.powered = false;
   this.reset();
-  this.awake();
   this.memory.resetAccess();
+  this.eventNotifier.notifyEvent(Cpu.EVENT.ON_POWER_OFF, this);
 };
 
 Cpu.prototype.isPowered = function () {
@@ -152,10 +156,12 @@ Cpu.prototype.isPowered = function () {
 
 Cpu.prototype.sleep = function () {
   this.sleeping = true;
+  this.eventNotifier.notifyEvent(Cpu.EVENT.ON_SLEEP, this);
 };
 
 Cpu.prototype.awake = function () {
   this.sleeping = false;
+  this.eventNotifier.notifyEvent(Cpu.EVENT.ON_AWAKE, this);
 };
 
 Cpu.prototype.isSleeping = function () {
@@ -163,8 +169,8 @@ Cpu.prototype.isSleeping = function () {
 };
 
 Cpu.prototype.updateFlags = function () {
-  cpu.z = (this.ac == 0) ? true : false;
-  cpu.n = (this.ac < 0) ? true : false;
+  cpu.z = (this.ac == 0);
+  cpu.n = (this.ac < 0);
 };
 
 Cpu.prototype.reset = function (eraseMemory) {
@@ -258,6 +264,10 @@ Cpu.prototype.getFlags = function () {
   };
 };
 
+Cpu.prototype.addEventListener = function (event, listener) {
+  this.eventNotifier.addEventListener(event, listener);
+};
+
 Cpu.packState = function (cpu) {
   return {
     pc: cpu.getPc(),
@@ -266,4 +276,12 @@ Cpu.packState = function (cpu) {
     sleeping: cpu.isSleeping(),
     powered: cpu.isPowered()
   };
-}
+};
+
+Cpu.EVENT = {
+  ON_SLEEP: 0x00,
+  ON_AWAKE: 0x01,
+  ON_POWER_OFF: 0x02,
+  ON_POWER_ON: 0x03,
+  ON_INTERRUPT: 0x04
+};

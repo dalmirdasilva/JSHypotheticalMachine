@@ -23,10 +23,10 @@
 function Converter() {
 
   this.base = 10;
-  this.availableBases = new Array(2, 8, 10, 16);
+  this.availableRadixes = new Array(2, 8, 10, 16);
 
-  this.setBase = function (base) {
-    if (this.availableBases.indexOf(base) >= 0) {
+  this.setRadix = function (base) {
+    if (this.availableRadixes.indexOf(base) >= 0) {
       this.base = base;
     }
   }
