@@ -22,45 +22,45 @@
  */
 var Converter = {
 
-  base: Config.UI_DEFAULT_BASE,
-  availableBases: new Array(2, 8, 10, 16),
-  baseByteLength: new Array(8, 3, 3, 2),
+  radix: Config.UI_DEFAULT_RADIX,
+  availableRadixes: new Array(2, 8, 10, 16),
+  radixByteLength: new Array(8, 3, 3, 2),
   eventNotifier: new EventNotifier(),
 
   addEventListener: function (event, listener) {
     this.eventNotifier.addEventListener(event, listener);
   },
 
-  setBase: function (base) {
-    if (base != this.base && this.isBaseAvailable(base)) {
-      var _base = this.base;
-      this.base = base;
+  setRadix: function (radix) {
+    if (radix != this.radix && this.isRadixAvailable(radix)) {
+      var _radix = this.radix;
+      this.radix = radix;
       this.eventNotifier.notifyEvent(Converter.EVENT.ON_BASE_CHANGE, {
-        from: _base,
-        to: base
+        from: _radix,
+        to: radix
       });
     }
   },
 
-  isBaseAvailable: function (base) {
-    return this.availableBases.indexOf(base) >= 0;
+  isRadixAvailable: function (radix) {
+    return this.availableRadixes.indexOf(radix) >= 0;
   },
 
-  getBase: function () {
-    return this.base;
+  getRadix: function () {
+    return this.radix;
   },
 
   toNumber: function (string) {
-    return parseInt(string, this.base);
+    return parseInt(string, this.radix);
   },
 
-  toString: function (number, len, base) {
-    if (!base || !this.isBaseAvailable(base)) {
-      base = this.base;
+  toString: function (number, len, radix) {
+    if (!radix || !this.isRadixAvailable(radix)) {
+      radix = this.radix;
     }
-    var s = number.toString(base);
+    var s = number.toString(radix);
     var v = s;
-    var length = (len) ? len - s.length : (this.baseByteLength[this.availableBases.indexOf(base)] - s.length);
+    var length = (len) ? len - s.length : (this.radixByteLength[this.availableRadixes.indexOf(radix)] - s.length);
     for (var i = 0; i < length; i++) {
       v = '0' + v;
     }

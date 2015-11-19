@@ -33,12 +33,21 @@ var UI = {
     this.eventNotifier.notifyEvent(event);
   },
 
+  stopRefreshing: function () {
+    if (this.interval != null) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  },
+
   startRefreshing: function () {
-    var period = 1000 / Config.UI_REFRESH_FREQUENCY;
-    var self = this;
-    self.interval = setInterval(function () {
-      self.notifyEvent(UI.EVENT.ON_REPAINT);
-    }, period);
+    if (this.interval == null) {
+      var period = 1000 / Config.UI_REFRESH_FREQUENCY;
+      var self = this;
+      self.interval = setInterval(function () {
+        self.notifyEvent(UI.EVENT.ON_REPAINT);
+      }, period);
+    }
   },
 
   init: function () {
@@ -49,6 +58,39 @@ var UI = {
       self.notifyEvent(UI.EVENT.ON_INITIALIZE);
       self.startRefreshing();
       GlassOverlay.remove();
+    });
+    this.attachListener();
+  },
+
+  attachListener: function () {
+    var self = this;
+    var simulator = Simulator.getInstance();
+    var channel = simulator.getNextFreeChannel();
+    var listener = new SimulatorEventListener(function (message) {
+      if (message.getChannel() == channel && message.getType() == Message.TYPE.CPU_EVENT_NOTIFICATION) {
+        var cpuInfo = message.getPayload();
+        console.log(cpuInfo)
+        if (!cpuInfo.sleeping && cpuInfo.powered) {
+          console.log('start')
+          self.startRefreshing();
+        } else {
+          console.log('stop')
+          self.stopRefreshing();
+        }
+      }
+    });
+    simulator.addEventListener(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, listener);
+    var requestMessage = new Message(Message.TYPE.ADD_CPU_EVENT_LISTENER, {event: Cpu.EVENT.ON_POWER_OFF}, channel);
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
+    requestMessage.setPayload({event: Cpu.EVENT.ON_POWER_ON});
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
+    requestMessage.setPayload({event: Cpu.EVENT.ON_SLEEP});
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
+    requestMessage.setPayload({event: Cpu.EVENT.ON_AWAKE});
+    simulator.exchangeMessage(requestMessage, function (message) {
     });
   },
 

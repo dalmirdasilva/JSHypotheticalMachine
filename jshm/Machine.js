@@ -28,6 +28,7 @@ importScripts('Stack.js');
 importScripts('Decoder.js');
 importScripts('Instruction.js');
 importScripts('MemoryEventListener.js');
+importScripts('CpuEventListener.js');
 importScripts('Message.js');
 importScripts('Simulator.js');
 
@@ -131,6 +132,16 @@ function processRequest(request) {
           self.postMessage(response.toHash());
         });
         memory.addEventListener((payload.event || Memory.EVENT.AFTER_WRITE), listener);
+        break;
+
+      case Message.TYPE.ADD_CPU_EVENT_LISTENER:
+        var channel = request.getChannel();
+        var payload = request.getPayload();
+        var listener = new CpuEventListener(function (cpu) {
+          var response = new Message(Message.TYPE.CPU_EVENT_NOTIFICATION, Cpu.packState(cpu), channel, true);
+          self.postMessage(response.toHash());
+        });
+        cpu.addEventListener(payload.event, listener);
         break;
 
       case Message.TYPE.GET_MEMORY_ACCESS:

@@ -1,7 +1,7 @@
 /**
- * Neander simulator - A simple simulator for the Neander hypothetical computer in javascript
+ * JS Hypothetical Machine
  *
- * Copyright (C) 2011  Dalmir da Silva <dalmirdasilva@gmail.com>
+ * Copyright (C) 2013  Dalmir da Silva <dalmirdasilva@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,15 @@
  */
 
 /**
- * Converter class
+ * CpuEventListener class
  */
-function Converter() {
+var CpuEventListener = function (handler) {
+  this.handler = handler;
+};
 
-  this.base = 10;
-  this.availableRadixes = new Array(2, 8, 10, 16);
-
-  this.setRadix = function (base) {
-    if (this.availableRadixes.indexOf(base) >= 0) {
-      this.base = base;
-    }
-  }
-
-  this.toNumber = function (string) {
-    return parseInt(string, this.base);
-  }
-
-  this.toString = function (number) {
-    return number.toString(this.base);
-  }
-}
+/**
+ * @param cpu             The cpu.
+ */
+CpuEventListener.prototype.notify = function (cpu) {
+  this.handler(cpu);
+};
