@@ -145,6 +145,7 @@ var Nokia5110View = {
   },
 
   processData: function (db) {
+    this.dram[this.address.y * this.dimension.w + this.address.x] = db & 0xff;
     if (this.horizontalAddressing) {
       if (++this.address.x >= this.dimension.w) {
         this.address.y++;
@@ -156,7 +157,6 @@ var Nokia5110View = {
     }
     this.address.x %= this.dimension.w;
     this.address.y %= this.dimension.h / 8;
-    this.dram[this.address.y * this.dimension.w + this.address.x] = db & 0xff;
   },
 
   getPixel: function (x, y) {
@@ -167,23 +167,29 @@ var Nokia5110View = {
     if (!this.powered) {
       return;
     }
-    var dc = mappedMemory[0];
-    var db = mappedMemory[1];
+    var dc = mappedMemory[0] & 0xff;
+    var db = mappedMemory[1] & 0xff;
     if (dc == 0) {
       if (db == this.OPERATION.NOP) {
+        alert(1)
         return;
       } else if ((db & this.OPERATION.FUNCTION_SET) > 0) {
+        alert(2)
         this.executeFunctionSet(db);
+      } else if ((db & this.OPERATION.SET_X_ADDRESS) > 0) {
+        alert(5)
+        this.executeSetXAddress(db);
       } else if ((db & this.OPERATION.DISPLAY_CONTROL) > 0) {
+        alert(3)
         this.executeDisplayControl(db);
       } else if ((db & this.OPERATION.SET_Y_ADDRESS) > 0) {
+        alert(4)
         this.executeSetYAddress(db);
-      } else if ((db & this.OPERATION.SET_X_ADDRESS) > 0) {
-        this.executeSetXAddress(db);
       } else {
         Logger.error('Nokia5110: Unknown operation: ' + db + '.')
       }
     } else {
+      alert(6)
       this.processData(db);
     }
     this.repaint();

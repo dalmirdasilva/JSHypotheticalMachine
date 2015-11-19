@@ -125,7 +125,7 @@ var UI = {
         var item = Storage.getItem(key);
         if (item != null) {
           var position = JSON.parse(item);
-          target.animate(position, 2000);
+          target.animate(position, 200);
         }
       }
     });
