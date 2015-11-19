@@ -118,17 +118,26 @@ var Nokia5110View = {
     switch (((db >> 1) & 0x02) | (db & 0x01)) {
       case 0:
         this.fillDram(0x00);
-        this.blankMode = true;
+        this.setBlankMode(true);
         break;
       case 1:
         this.fillDram(0xff);
         break;
       case 2:
-        this.blankMode = false;
+        this.setBlankMode(false);
         break;
       case 3:
         this.inverseMode = !this.inverseMode;
         break;
+    }
+  },
+  
+  setBlankMode: function(mode) {
+    this.blankMode = mode;
+    if (mode) {
+      
+    } else {
+      
     }
   },
 
@@ -171,25 +180,19 @@ var Nokia5110View = {
     var db = mappedMemory[1] & 0xff;
     if (dc == 0) {
       if (db == this.OPERATION.NOP) {
-        alert(1)
         return;
-      } else if ((db & this.OPERATION.FUNCTION_SET) > 0) {
-        alert(2)
-        this.executeFunctionSet(db);
       } else if ((db & this.OPERATION.SET_X_ADDRESS) > 0) {
-        alert(5)
         this.executeSetXAddress(db);
-      } else if ((db & this.OPERATION.DISPLAY_CONTROL) > 0) {
-        alert(3)
-        this.executeDisplayControl(db);
       } else if ((db & this.OPERATION.SET_Y_ADDRESS) > 0) {
-        alert(4)
         this.executeSetYAddress(db);
+      } else if ((db & this.OPERATION.FUNCTION_SET) > 0) {
+        this.executeFunctionSet(db);
+      } else if ((db & this.OPERATION.DISPLAY_CONTROL) > 0) {
+        this.executeDisplayControl(db);
       } else {
         Logger.error('Nokia5110: Unknown operation: ' + db + '.')
       }
     } else {
-      alert(6)
       this.processData(db);
     }
     this.repaint();
