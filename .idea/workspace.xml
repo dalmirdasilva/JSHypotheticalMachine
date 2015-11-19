@@ -4,29 +4,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a17336c7-05ff-4616-bf29-0661ee5ce4c5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/device/nokia5110/display.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/device/nokia5110/display.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/device/nokia5110/display.css" afterPath="$PROJECT_DIR$/jshm/CpuEventListener.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Config.js" afterPath="$PROJECT_DIR$/jshm/Config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Converter.js" afterPath="$PROJECT_DIR$/jshm/Converter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Cpu.js" afterPath="$PROJECT_DIR$/jshm/Cpu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Machine.js" afterPath="$PROJECT_DIR$/jshm/Machine.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Message.js" afterPath="$PROJECT_DIR$/jshm/Message.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/Simulator.js" afterPath="$PROJECT_DIR$/jshm/Simulator.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jshm/UI.js" afterPath="$PROJECT_DIR$/jshm/UI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror/addon/edit/closetag.js" afterPath="$PROJECT_DIR$/lib/codemirror/addon/edit/closetag.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original/converter.js" afterPath="$PROJECT_DIR$/original/converter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror/addon/hint/html-hint.js" afterPath="$PROJECT_DIR$/lib/codemirror/addon/hint/html-hint.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/device/nokia5110/nokia5110.css" afterPath="$PROJECT_DIR$/device/nokia5110/nokia5110.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/device/nokia5110/nokia5110.js" afterPath="$PROJECT_DIR$/device/nokia5110/nokia5110.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror/addon/mode/overlay.js" afterPath="$PROJECT_DIR$/lib/codemirror/addon/mode/overlay.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/settings/settings.html" afterPath="$PROJECT_DIR$/view/settings/settings.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view/settings/settings.js" afterPath="$PROJECT_DIR$/view/settings/settings.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/codemirror/mode/sparql/sparql.js" afterPath="$PROJECT_DIR$/lib/codemirror/mode/sparql/sparql.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="a17336c7-05ff-4616-bf29-0661ee5ce4c5" name="Default" comment="" />
     <ignored path="JSHypotheticalMachine.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -60,7 +38,7 @@
       <file leaf-file-name="UI.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jshm/UI.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.23776224">
+            <state vertical-scroll-proportion="1.1958042">
               <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -785,16 +763,16 @@
       <option name="number" value="Default" />
       <updated>1447808325638</updated>
       <workItem from="1447808327516" duration="1015000" />
-      <workItem from="1447809580606" duration="17542000" />
+      <workItem from="1447809580606" duration="17604000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18557000" />
+    <option name="totallyTimeSpent" value="18619000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="25" width="1928" height="1034" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -812,7 +790,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973376" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973376" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1153,7 +1131,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jshm/UI.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23776224">
+        <state vertical-scroll-proportion="1.1958042">
           <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
