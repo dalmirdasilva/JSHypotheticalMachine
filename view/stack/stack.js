@@ -32,33 +32,39 @@ var StackView = {
       self.repaint();
     });
     UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
+    var baseListener = {
+      notify: function () {
+        self.repaint(true);
+      }
+    };
+    Converter.addEventListener(Converter.EVENT.ON_BASE_CHANGE, baseListener);
   },
 
-  repaint: function () {
+  repaint: function (force) {
     var self = this;
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_TOP_OF_STACK), function (message) {
       var topOfStack = message.getPayload();
-      self.updateTopOfStack(topOfStack);
+      self.updateTopOfStack(topOfStack, force);
     });
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_STACK_BUFFER), function (message) {
       var arrayBuffer = message.getPayload();
-      self.updateStackValues(arrayBuffer);
+      self.updateStackValues(arrayBuffer, force);
     });
   },
 
-  updateTopOfStack: function (topOfStack) {
-    if (topOfStack != this.lastTos) {
+  updateTopOfStack: function (topOfStack, force) {
+    if (force || topOfStack != this.lastTos) {
       this.lastTos = topOfStack;
       $('.stack-cell-current', this.ELEMENT.stackHolder).removeClass('stack-cell-current');
       $('#stack-reg-' + topOfStack, this.ELEMENT.stackHolder).addClass('stack-cell-current');
     }
   },
 
-  updateStackValues: function (arrayBuffer) {
+  updateStackValues: function (arrayBuffer, force) {
     var array = new Uint8Array(arrayBuffer);
     for (var i = 0; i < array.length; i++) {
       var byte = array[i];
-      if (byte != this.cache[i]) {
+      if (force || byte != this.cache[i]) {
         this.cache[i] = byte;
         var text = Converter.toString(byte);
         $('#stack-reg-' + i, this.ELEMENT.stackHolder).text(text);

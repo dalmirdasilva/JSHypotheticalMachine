@@ -36,6 +36,12 @@ var MemoryView = {
       self.repaint();
     });
     UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
+    var baseListener = {
+      notify: function () {
+        self.repaint(true);
+      }
+    };
+    Converter.addEventListener(Converter.EVENT.ON_BASE_CHANGE, baseListener);
   },
 
   initComponents: function () {
@@ -66,7 +72,7 @@ var MemoryView = {
     });
   },
 
-  repaint: function () {
+  repaint: function (force) {
     var self = this;
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_CPU_PC), function (message) {
       var pc = message.getPayload();
@@ -74,7 +80,7 @@ var MemoryView = {
     });
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER), function (message) {
       var arrayBuffer = message.getPayload();
-      self.updateMemoryValues(arrayBuffer);
+      self.updateMemoryValues(arrayBuffer, force);
     });
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_MEMORY_ACCESS), function (message) {
       var memoryAccess = message.getPayload();
@@ -87,11 +93,11 @@ var MemoryView = {
     $('#memory-reg-' + current, this.ELEMENT.memoryHolder).addClass('memory-cell-current');
   },
 
-  updateMemoryValues: function (arrayBuffer) {
+  updateMemoryValues: function (arrayBuffer, force) {
     var array = new Uint8Array(arrayBuffer);
     for (var i = 0; i < array.length; i++) {
       var byte = array[i];
-      if (byte != this.cache[i]) {
+      if (force || byte != this.cache[i]) {
         this.cache[i] = byte;
         var text = Converter.toString(byte);
         $('#memory-reg-' + i, this.ELEMENT.memoryHolder).text(text);
