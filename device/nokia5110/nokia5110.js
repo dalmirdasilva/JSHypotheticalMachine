@@ -37,8 +37,8 @@ var Nokia5110View = {
     this.attachListener();
   },
 
-  repaint: function () {
-    if (!this.powered || this.blankMode) {
+  repaint: function (force) {
+    if (!force && (!this.powered || this.blankMode)) {
       return;
     }
     for (var x = 0; x < this.dimension.w; x++) {
@@ -85,19 +85,22 @@ var Nokia5110View = {
   initComponents: function () {
     var self = this;
     this.ELEMENT.nokia5110PowerButton.button().click(function () {
-      self.fillDram(0x00);
-      if (self.powered) {
-        self.screenOff();
-      } else {
-        self.screenOn();
-        self.repaint();
-      }
       self.powered = !self.powered;
+      if (self.powered) {
+        self.screenOn();
+      } else {
+        self.screenOff();
+      }
+      self.clearDisplay();
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
-      self.fillDram(0x00);
-      self.repaint();
+      self.crearDisplay();
     });
+  },
+
+  clearDisplay: function () {
+    this.fillDram(0x00);
+    this.repaint(force);
   },
 
   screenOff: function () {
