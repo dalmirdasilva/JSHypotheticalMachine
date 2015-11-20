@@ -127,8 +127,8 @@ function processRequest(request) {
       case Message.TYPE.ADD_MEMORY_EVENT_LISTENER:
         var channel = request.getChannel();
         var payload = request.getPayload();
-        var listener = new MemoryEventListener(payload.begin, payload.end, function (slice) {
-          var response = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, slice, channel, true);
+        var listener = new MemoryEventListener(payload.begin, payload.end, function (memoryInfo) {
+          var response = new Message(Message.TYPE.MEMORY_WRITE_EVENT_NOTIFICATION, memoryInfo, channel, true);
           self.postMessage(response.toHash());
         });
         memory.addEventListener((payload.event || Memory.EVENT.AFTER_WRITE), listener);

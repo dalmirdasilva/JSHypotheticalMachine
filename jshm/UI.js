@@ -25,6 +25,18 @@ var UI = {
   interval: null,
   eventNotifier: new EventNotifier(),
 
+  init: function () {
+    var self = this;
+    Simulator.getInstance().simulate(Config.MACHINE_FILE);
+    GlassOverlay.add();
+    FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function () {
+      self.notifyEvent(UI.EVENT.ON_INITIALIZE);
+      self.startRefreshing();
+      GlassOverlay.remove();
+    });
+    this.attachListener();
+  },
+
   addEventListener: function (event, listener) {
     this.eventNotifier.addEventListener(event, listener);
   },
@@ -48,18 +60,6 @@ var UI = {
         self.notifyEvent(UI.EVENT.ON_REPAINT);
       }, period);
     }
-  },
-
-  init: function () {
-    var self = this;
-    Simulator.getInstance().simulate(Config.MACHINE_FILE);
-    GlassOverlay.add();
-    FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function () {
-      self.notifyEvent(UI.EVENT.ON_INITIALIZE);
-      self.startRefreshing();
-      GlassOverlay.remove();
-    });
-    this.attachListener();
   },
 
   attachListener: function () {
@@ -96,9 +96,9 @@ var UI = {
     this.ELEMENT.draggableItems().draggable({
       handle: '.draggable-handler',
       stack: '.draggable-item',
-      stop: function (ui) {
-        var target = $(ui.target);
-        var key = self.getElementId(ui.target);
+      stop: function () {
+        var target = $(this);
+        var key = self.getFragmentUuid(this);
         var position = {
           left: target.offset().left,
           top: target.offset().top,
@@ -109,20 +109,19 @@ var UI = {
     });
   },
 
-  getElementId: function (element) {
-    var target = $(element);
-    return target.attr('id');
+  getFragmentUuid: function (element) {
+    return $(element).attr('uuid');
   },
 
   applyCustomPosition: function (reset) {
     var self = this;
-    this.ELEMENT.draggableItems().each(function (i, item) {
-      var key = self.getElementId(item);
-      var target = $(item);
+    this.ELEMENT.draggableItems().each(function () {
+      var uuid = self.getFragmentUuid(this);
+      var target = $(this);
       if (reset == true) {
         Storage.clear(key);
       } else {
-        var item = Storage.getItem(key);
+        var item = Storage.getItem(uuid);
         if (item != null) {
           var position = JSON.parse(item);
           target.animate(position, 200);

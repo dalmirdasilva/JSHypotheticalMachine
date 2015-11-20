@@ -38,7 +38,7 @@ var FragmentLauncher = {
   launch: function (fragment, callback) {
     var self = this;
     var url = self.normalizeUrl(fragment.url);
-    var holder = self.ELEMENT.holder.clone();
+    var holder = self.ELEMENT.holder.clone().attr('uuid', fragment.uuid);
     self.ELEMENT.fragmentsContainer.append(holder);
     holder.load(url, function () {
       fragment.callback();

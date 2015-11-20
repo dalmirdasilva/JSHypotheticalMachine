@@ -82,7 +82,7 @@ Memory.prototype.notifyEvent = function (event, address) {
     listeners.map(function (listener) {
       if (address >= listener.begin && address <= listener.end) {
         var slice = self.buffer.subarray(listener.begin, listener.end + 1);
-        listener.notify(slice);
+        listener.notify({slice: slice, address: address});
       }
     });
   }

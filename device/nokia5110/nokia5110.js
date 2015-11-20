@@ -34,7 +34,7 @@ var Nokia5110View = {
     this.updateMappingLabels();
     this.createCanvasContext();
     this.initComponents();
-    this.attachListener();
+    this.attachListeners();
   },
 
   repaint: function (force) {
@@ -44,7 +44,7 @@ var Nokia5110View = {
     for (var x = 0; x < this.dimension.w; x++) {
       for (var y = 0; y < this.dimension.h; y++) {
         var pixel = this.getPixel(x, y);
-        var style = (pixel != 0) ? '#022317' : '#dddddd';
+        var style = (pixel != 0) ? '#116611' : '#dddddd';
         this.ctx.fillStyle = style;
         this.ctx.fillRect(1 + x * 5, 1 + y * 5, 4, 4);
       }
@@ -64,7 +64,7 @@ var Nokia5110View = {
     this.repaint();
   },
 
-  attachListener: function () {
+  attachListeners: function () {
     var self = this;
     var simulator = Simulator.getInstance();
     var channel = simulator.getNextFreeChannel();
@@ -87,28 +87,29 @@ var Nokia5110View = {
     this.ELEMENT.nokia5110PowerButton.button().click(function () {
       self.powered = !self.powered;
       if (self.powered) {
-        self.screenOn();
+        self.powerOn();
       } else {
-        self.screenOff();
+        self.powerOff();
       }
       self.clearDisplay();
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
-      self.crearDisplay();
+      self.clearDisplay();
     });
   },
 
-  clearDisplay: function () {
+  clearDisplay: function (force) {
     this.fillDram(0x00);
     this.repaint(force);
   },
 
-  screenOff: function () {
-    this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+  powerOff: function () {
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     this.ctx.fillRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+    this.address.x = this.address.y = 0;
   },
 
-  screenOn: function () {
+  powerOn: function () {
     this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
   },
 
@@ -137,11 +138,6 @@ var Nokia5110View = {
   
   setBlankMode: function(mode) {
     this.blankMode = mode;
-    if (mode) {
-      
-    } else {
-      
-    }
   },
 
   executeSetYAddress: function (db) {
@@ -175,10 +171,11 @@ var Nokia5110View = {
     return (this.dram[Math.floor(y / 8) * this.dimension.w + x] & (1 << (y % 8))) > 0;
   },
 
-  executeOperation: function (mappedMemory) {
-    if (!this.powered) {
+  executeOperation: function (memoryInfo) {
+    if (!this.powered || memoryInfo.address == this.mapAddress.first) {
       return;
     }
+    var mappedMemory = memoryInfo.slice;
     var dc = mappedMemory[0] & 0xff;
     var db = mappedMemory[1] & 0xff;
     if (dc == 0) {

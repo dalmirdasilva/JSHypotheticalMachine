@@ -58,10 +58,13 @@ var SevenSegmentsView = {
   },
 
   clearSevenSegments: function () {
-    this.setSevenSegmentsValue(new Array(this.mapAddress.last - this.mapAddress.first + 1));
+    this.setSevenSegmentsValue({
+      slice: new Array(this.mapAddress.last - this.mapAddress.first + 1)
+    });
   },
 
-  setSevenSegmentsValue: function (mappedMemory) {
+  setSevenSegmentsValue: function (memoryInfo) {
+    var mappedMemory = memoryInfo.slice;
     var text = '';
     for (var i = 0; i < mappedMemory.length; i++) {
       text += Converter.toString(mappedMemory[i] & 0xff, 2, 16);

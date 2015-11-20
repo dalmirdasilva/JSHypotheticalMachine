@@ -91,7 +91,8 @@ var DisplayView = {
     }
   },
 
-  executeOperation: function (mappedMemory) {
+  executeOperation: function (memoryInfo) {
+    var mappedMemory = memoryInfo.slice;
     var operation = mappedMemory[0];
     if (!this.powered || operation == this.OPERATION.NO_OPERATION) {
       return;
