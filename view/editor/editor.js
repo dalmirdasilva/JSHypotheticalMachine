@@ -83,16 +83,20 @@ var EditorView = {
   },
 
   restoreProgram: function () {
-    var programText = Storage.getItem('program');
-    if (programText != null && programText != '') {
-      this.ELEMENT.editorCodeArea.val(programText);
+    var uuid = UI.getFragmentUuid(this.ELEMENT.editorHolder);
+    var item = Storage.getItem(uuid);
+    if (item.programText != null && item.programText != '') {
+      this.ELEMENT.editorCodeArea.val(item.programText);
     }
   },
 
   saveProgram: function () {
+    var uuid = UI.getFragmentUuid(this.ELEMENT.editorHolder);
     this.codeMirror.save();
     var programText = this.ELEMENT.editorCodeArea.val();
-    Storage.setItem('program', programText);
+    var item = Storage.getItem(uuid);
+    item.programText = programText;
+    Storage.setItem(uuid, item);
     this.ELEMENT.editorAssembleStatus.text('Program successfully saved.');
   },
 
@@ -120,6 +124,7 @@ var EditorView = {
   },
 
   ELEMENT: {
+    editorHolder: $('#editor-holder'),
     editorAssembleButton: $('#editor-assemble-button'),
     editorLoadButton: $('#editor-load-button'),
     editorCodeArea: $('#editor-code-area'),

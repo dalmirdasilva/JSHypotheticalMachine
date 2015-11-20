@@ -30,13 +30,17 @@ var Storage = {
 
   getItem: function (key) {
     return this.withLocalStorage(function (storage) {
-      return storage.getItem(key);
+      var item = storage.getItem(key);
+      if (item == null) {
+        return {};
+      }
+      return JSON.parse(item);
     });
   },
 
   setItem: function (key, value) {
     return this.withLocalStorage(function (storage) {
-      return storage.setItem(key, value);
+      return storage.setItem(key, JSON.stringify(value));
     });
   },
 

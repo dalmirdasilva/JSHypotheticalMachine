@@ -10,8 +10,8 @@ var Nokia5110View = {
     h: 240 + 1
   },
   mapAddress: {
-    first: 0xf0,
-    last: 0xf1
+    first: 0xfb,
+    last: 0xfc
   },
   address: {
     y: 0,

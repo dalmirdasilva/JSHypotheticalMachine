@@ -107,52 +107,21 @@ jmp :my_label
 
 This is an example of code to draw lines on a LCD:
 ```
-.def LCD_OP  0xfa
-.def LCD_ARG0  0xfb
-.def LCD_ARG1  0xfc
+.def LCD_COMMAND_VALUE 0x01
+.def INC_VALUE 0x01
+.def DATA_START_VALUE 0x00
 
-.db LCD_OP 0x00
-.db LCD_ARG0 0x00
-.db LCD_ARG1 0x00
+.def INC_ADDRESS 0xff
+.def LCD_COMMAND_ADDRESS 0xfb
+.def DATA_ADDRESS  0xfc
 
-.def X_INC 0xf9
-.def Y_INC 0xf8
-
-.db X_INC 60
-.db Y_INC 50
-
-.def NO_OP 0xf7
-.def LINETO_OP 0xf6
-
-.db NO_OP 0x00
-.db LINETO_OP 0x02
-
-jmp :begining
-
-.at 4
-    reti
-
-:begining
+.db INC_ADDRESS INC_VALUE
+.db DATA_ADDRESS DATA_START_VALUE
+.db LCD_COMMAND_ADDRESS LCD_COMMAND_VALUE
 
 :loop
-	call :no_op
-    lda LCD_ARG0
-    add X_INC
-    sta LCD_ARG0
-    
-    lda LCD_ARG1
-    add Y_INC
-    sta LCD_ARG1
-	call :line_to_op
-    jmp :loop
-
-:no_op
-	lda NO_OP
-    sta LCD_OP
-	ret
-
-:line_to_op
-	lda LINETO_OP
-    sta LCD_OP
-	ret
+	lda INC_ADDRESS
+  add DATA_ADDRESS
+	sta DATA_ADDRESS
+  jmp :loop
 ```

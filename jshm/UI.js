@@ -98,33 +98,33 @@ var UI = {
       stack: '.draggable-item',
       stop: function () {
         var target = $(this);
-        var key = self.getFragmentUuid(this);
-        var position = {
+        var uuid = self.getFragmentUuid(this);
+        var item = Storage.getItem(uuid);
+        item.position = {
           left: target.offset().left,
           top: target.offset().top,
           zIndex: target.zIndex()
         };
-        Storage.setItem(key, JSON.stringify(position));
+        Storage.setItem(uuid, item);
       }
     });
   },
 
   getFragmentUuid: function (element) {
-    return $(element).attr('uuid');
+    return $(element).closest('.fragment-holder').attr('uuid');
   },
 
   applyCustomPosition: function (reset) {
     var self = this;
     this.ELEMENT.draggableItems().each(function () {
-      var uuid = self.getFragmentUuid(this);
       var target = $(this);
+      var uuid = self.getFragmentUuid(this);
       if (reset == true) {
-        Storage.clear(key);
+        Storage.clear(uuid);
       } else {
         var item = Storage.getItem(uuid);
-        if (item != null) {
-          var position = JSON.parse(item);
-          target.animate(position, 200);
+        if (item.position != null) {
+          target.animate(item.position, 200);
         }
       }
     });
