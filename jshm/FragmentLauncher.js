@@ -22,42 +22,36 @@
  */
 var FragmentLauncher = {
 
-  launchAll: function (fragments, callback) {
+  launchAll: function (onFinished) {
     var self = this;
-    var fragmentsCounter = fragments.length;
-    fragments.map(function (fragment) {
+    var remainingFragments = Fragments.size();
+    Fragments.forEach(function (fragment) {
       self.launch(fragment, function () {
-        fragmentsCounter--;
+        remainingFragments--;
+        if (remainingFragments <= 0) {
+          onFinished();
+        }
       });
     });
-    self.waitFor(function () {
-      return (fragmentsCounter <= 0);
-    }, callback);
   },
 
-  launch: function (fragment, callback) {
+  launch: function (fragment, onFinished) {
     var self = this;
     var url = self.normalizeUrl(fragment.url);
     var holder = self.ELEMENT.holder.clone().addClass('fragment-holder').attr('uuid', fragment.uuid);
     self.ELEMENT.fragmentsContainer.append(holder);
     holder.load(url, function () {
-      fragment.callback();
-      callback();
+      fragment.onLoad();
+      onFinished();
     });
-  },
-
-  waitFor: function (check, callback) {
-    var interval;
-    interval = setInterval(function () {
-      if (check()) {
-        clearInterval(interval);
-        callback();
-      }
-    }, 1000);
   },
 
   normalizeUrl: function (url) {
     return url;
+  },
+
+  getFragmentUuidFromChild: function (child) {
+    return $(child).closest('.fragment-holder').attr('uuid');
   },
 
   ELEMENT: {

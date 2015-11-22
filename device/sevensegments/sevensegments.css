@@ -24,8 +24,8 @@
 }
 
 #sevensegments-holder {
-  left: 1090px;
-  top: 369px;
+  left: 1080px;
+  top: 68px;
 }
 
 #sevensegments-title {
@@ -38,9 +38,9 @@
   margin: 4px;
   width: 300px;
   height: 80px;
-  color: #07ef06;
+  color: #ef611d;
   letter-spacing: 3px;
 }
 #sevensegments-body.off {
-  color: #dcffcd;
+  color: #ffbcb5;
 }

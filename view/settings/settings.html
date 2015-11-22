@@ -11,18 +11,21 @@
   <div id="settings-body" class="view-body">
     <table>
       <tr>
-        <td>Base:</td>
+        <td>Radix:</td>
         <td>
-          <select id="settings-radix-select">
-            <option value="2">bin</option>
-            <option value="10">dec</option>
-            <option value="16">hex</option>
-          </select>
+          <div id="settings-radix">
+            <input type="radio" id="settings-radix-2" radix="2" name="radio"><label for="settings-radix-2">Bin</label>
+            <input type="radio" id="settings-radix-8" radix="8" name="radio"><label for="settings-radix-8">Oct</label>
+            <input type="radio" id="settings-radix-10" radix="10" name="radio"><label for="settings-radix-10">Dec</label>
+            <input type="radio" id="settings-radix-16" radix="16" name="radio" checked="checked"><label for="settings-radix-16">Hex</label>
+          </div>
         </td>
       </tr>
       <tr>
         <td>Custom positions:</td>
-        <td><button id="settings-reset-position-button">Reset</button></td>
+        <td>
+          <button id="settings-reset-position-button">Reset</button>
+        </td>
       </tr>
     </table>
   </div>

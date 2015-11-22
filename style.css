@@ -164,3 +164,12 @@ input, button, label {
   font-weight: bold;
   text-shadow: 1px 1px 0 #fff;
 }
+
+.ui-button {
+  padding: 0px;
+}
+
+.ui-state-active > span {
+  background-color: #cccccc;
+  color: #000000;
+}

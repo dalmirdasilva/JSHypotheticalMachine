@@ -29,7 +29,7 @@ var UI = {
     var self = this;
     Simulator.getInstance().simulate(Config.MACHINE_FILE);
     GlassOverlay.add();
-    FragmentLauncher.launchAll(DEFAULT_FRAGMENTS, function () {
+    FragmentLauncher.launchAll(function () {
       self.notifyEvent(UI.EVENT.ON_INITIALIZE);
       self.startRefreshing();
       GlassOverlay.remove();
@@ -92,13 +92,12 @@ var UI = {
   },
 
   updateDraggableItems: function () {
-    var self = this;
     this.ELEMENT.draggableItems().draggable({
       handle: '.draggable-handler',
       stack: '.draggable-item',
       stop: function () {
         var target = $(this);
-        var uuid = self.getFragmentUuid(this);
+        var uuid = FragmentLauncher.getFragmentUuidFromChild(this);
         var item = Storage.getItem(uuid);
         item.position = {
           left: target.offset().left,
@@ -110,22 +109,19 @@ var UI = {
     });
   },
 
-  getFragmentUuid: function (element) {
-    return $(element).closest('.fragment-holder').attr('uuid');
+  resetCustomPosition: function () {
+    this.ELEMENT.draggableItems().each(function () {
+      var uuid = FragmentLauncher.getFragmentUuidFromChild(this);
+      Storage.clear(uuid);
+    });
   },
 
-  applyCustomPosition: function (reset) {
-    var self = this;
+  applyCustomPosition: function () {
     this.ELEMENT.draggableItems().each(function () {
-      var target = $(this);
-      var uuid = self.getFragmentUuid(this);
-      if (reset == true) {
-        Storage.clear(uuid);
-      } else {
-        var item = Storage.getItem(uuid);
-        if (item.position != null) {
-          target.animate(item.position, 200);
-        }
+      var uuid = FragmentLauncher.getFragmentUuidFromChild(this);
+      var item = Storage.getItem(uuid);
+      if (item.position != null) {
+        $(this).animate(item.position, 200);
       }
     });
   },

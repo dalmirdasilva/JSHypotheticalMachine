@@ -18,8 +18,8 @@
  */
 
 #settings-holder {
-  left: 1011px;
-  top: 116px;
+  left: 9px;
+  top: 587px;
   min-width: 70px;
 }
 
@@ -36,5 +36,5 @@
 }
 
 .ui-selectmenu-button {
-  min-width: 70px;
+
 }

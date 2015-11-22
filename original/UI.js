@@ -60,7 +60,7 @@ function UI(cpu) {
       ui.sleepClick();
     });
     this.update();
-  }
+  };
 
   this.powerClick = function () {
     if (this.cpuPowered) {
@@ -71,7 +71,7 @@ function UI(cpu) {
       ui.powerCpuOn();
     }
     this.update();
-  }
+  };
 
   this.sleepClick = function () {
     if (cpu.isSleeping()) {
@@ -80,7 +80,7 @@ function UI(cpu) {
       cpu.sleep();
     }
     this.update();
-  }
+  };
 
   this.powerCpuOn = function () {
     var self = this;
@@ -88,22 +88,22 @@ function UI(cpu) {
     this.refreshInterval = setInterval(function () {
       self.update();
     }, 1000 / cpu.getClockFrequency());
-  }
+  };
 
   this.powerCpuOff = function () {
     cpu.powerOff();
     clearInterval(this.refreshInterval);
-  }
+  };
 
   this.clockTick = function () {
     cpu.clockTick();
     this.update();
-  }
+  };
 
   this.reset = function () {
     cpu.reset();
     this.update();
-  }
+  };
 
   this.update = function () {
     this.updateMemoryGrid();
@@ -113,7 +113,7 @@ function UI(cpu) {
     this.updateButtons();
     this.updateExecutionPosition();
     this.updateMemoryHolderScroll();
-  }
+  };
 
   this.updateButtons = function () {
     var powerButton = $("#power-button");
@@ -138,12 +138,12 @@ function UI(cpu) {
       }
       $("#clock-tick-button").removeAttr("disabled");
     }
-  }
+  };
 
   this.updateExecutionPosition = function () {
     $(".memory-reg-position").html("");
     $("#memory-reg-position-" + cpu.getPc()).html("&gt;");
-  }
+  };
 
   this.updateMemoryHolderScroll = function () {
     var firstMemoryPosition = $("#memory-reg-position-0");
@@ -154,7 +154,7 @@ function UI(cpu) {
     if (memoryHolderScrollTop > (cpu.getPc() * memoryPositionHeight) || (cpu.getPc() * memoryPositionHeight) > memoryHolderScrollTop + memoryHolderHeight) {
       $("#memory-grid-holder").scrollTop(cpu.getPc() * memoryPositionHeight);
     }
-  }
+  };
 
   this.updateMemoryAccess = function () {
     var memoryAccess = cpu.getMemoryAccess();

@@ -85,13 +85,13 @@ var Nokia5110View = {
   initComponents: function () {
     var self = this;
     this.ELEMENT.nokia5110PowerButton.button().click(function () {
+      self.clearDisplay(true);
       self.powered = !self.powered;
       if (self.powered) {
         self.powerOn();
       } else {
         self.powerOff();
       }
-      self.clearDisplay();
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
       self.clearDisplay();
