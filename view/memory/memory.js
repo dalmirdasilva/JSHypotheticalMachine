@@ -53,20 +53,18 @@ var MemoryView = {
         }
       );
     });
-    this.ELEMENT.memoryCellEditInput.keypress(function (e) {
-      if (e.which == 13) {
-        var position = self.ELEMENT.memoryCellEditInput.attr('position');
-        var value = Converter.toNumber(self.ELEMENT.memoryCellEditInput.val());
-        Simulator.getInstance().exchangeMessage(
-          new Message(Message.TYPE.WRITE_MEMORY_CELL, {address: position, value: value}),
-          function (message) {
-            if (message.getPayload()) {
-              self.repaint();
-            }
+    this.ELEMENT.memoryCellEditInput.change(function (e) {
+      var position = self.ELEMENT.memoryCellEditInput.attr('position');
+      var value = Converter.toNumber(self.ELEMENT.memoryCellEditInput.val());
+      Simulator.getInstance().exchangeMessage(
+        new Message(Message.TYPE.WRITE_MEMORY_CELL, {address: position, value: value}),
+        function (message) {
+          if (message.getPayload()) {
+            self.repaint();
           }
-        );
-        self.ELEMENT.memoryCellEditInput.hide();
-      }
+        }
+      );
+      self.ELEMENT.memoryCellEditInput.hide();
     }).blur(function () {
       self.ELEMENT.memoryCellEditInput.hide();
     });

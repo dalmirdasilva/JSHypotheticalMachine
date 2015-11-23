@@ -29,8 +29,8 @@ var SettingsView = {
 
   initComponents: function () {
     var self = this;
-    this.ELEMENT.resetPositionButton.button().click(function () {
-      self.resetPosition();
+    this.ELEMENT.resetSavedPositionButton.button().click(function () {
+      self.resetSavedPosition();
     });
     this.ELEMENT.settingsRadix.buttonset().change(function (item) {
       var radix = parseInt($(item.target).attr('radix'));
@@ -39,8 +39,8 @@ var SettingsView = {
     });
   },
 
-  resetPosition: function () {
-    UI.resetCustomPosition();
+  resetSavedPosition: function () {
+    UI.resetSavedElementPosition();
   },
 
   getStorageItem: function () {
@@ -66,7 +66,7 @@ var SettingsView = {
   },
 
   ELEMENT: {
-    resetPositionButton: $('#settings-reset-position-button'),
+    resetSavedPositionButton: $('#settings-reset-saved-position-button'),
     settingsRadix: $('#settings-radix'),
     settingsRadixButton: {
       2: $('#settings-radix-2'),

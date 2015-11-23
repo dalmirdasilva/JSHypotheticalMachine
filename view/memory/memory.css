@@ -78,5 +78,6 @@
 }
 
 .memory-cell-current {
-  background-color: #bbbbbb;
+  background-color: #ffe7bf;
+  border-bottom: 1px solid #bba98c;
 }

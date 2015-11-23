@@ -109,10 +109,13 @@ var UI = {
     });
   },
 
-  resetCustomPosition: function () {
+  resetSavedElementPosition: function () {
     this.ELEMENT.draggableItems().each(function () {
       var uuid = FragmentLauncher.getFragmentUuidFromChild(this);
-      Storage.clear(uuid);
+      var item = Storage.getItem(uuid);
+      if (item.position )
+      delete item.position;
+      Storage.setItem(uuid, item);
     });
   },
 

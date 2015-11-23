@@ -44,8 +44,7 @@ var Nokia5110View = {
     for (var x = 0; x < this.dimension.w; x++) {
       for (var y = 0; y < this.dimension.h; y++) {
         var pixel = this.getPixel(x, y);
-        var style = (pixel != 0) ? '#116611' : '#dddddd';
-        this.ctx.fillStyle = style;
+        this.ctx.fillStyle = (pixel != 0) ? '#116611' : '#dddddd';
         this.ctx.fillRect(1 + x * 5, 1 + y * 5, 4, 4);
       }
     }
@@ -84,7 +83,11 @@ var Nokia5110View = {
 
   initComponents: function () {
     var self = this;
-    this.ELEMENT.nokia5110PowerButton.button().click(function () {
+    this.ELEMENT.nokia5110PowerButton.button({
+      icons: {
+        primary: "ui-icon-power"
+      }
+    }).click(function () {
       self.clearDisplay(true);
       self.powered = !self.powered;
       if (self.powered) {

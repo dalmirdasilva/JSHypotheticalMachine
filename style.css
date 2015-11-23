@@ -95,8 +95,14 @@ input, button, label {
   color: #aaa;
   position: absolute;
   bottom: 0px;
+  right: 6px;
   padding: 10px 4px;
   text-align: right;
+}
+
+.footer > a {
+  text-decoration: none;
+  color: #0055aa;
 }
 
 .header {

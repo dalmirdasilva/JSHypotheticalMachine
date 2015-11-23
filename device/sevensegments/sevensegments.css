@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: segments7;
-  src: url('chrome-extension://lolennlgkogllmfmomjdihpkpakeedfi/ext/fonts/segments7.ttf');
+  src: url('../../ext/fonts/segments7.ttf');
 }
 
 #sevensegments-holder {
