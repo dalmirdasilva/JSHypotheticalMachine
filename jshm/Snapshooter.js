@@ -20,50 +20,78 @@
 /**
  * Snapshooter object
  */
-var Snapshooter = function () {
+var Snapshooter = function (cpu, memory, stack) {
+  this.cpu = cpu;
+  this.memory = memory;
+  this.stack = stack;
 };
 
 Snapshooter.prototype.saveState = function () {
-  this.saveCpuState();
-  this.saveMemoryState();
-  this.saveStackState();
+  try {
+    this.saveCpuState();
+    this.saveMemoryState();
+    this.saveStackState();
+  } catch(e) {
+    Logger.error('Cannot save the state: (' + e + ');');
+  }
 };
 
 Snapshooter.prototype.restoreState = function () {
-  this.restoreCpuState();
-  this.restoreMemoryState();
-  this.restoreStackState();
-};
-
-Snapshooter.prototype.resetState = function () {
-  this.resetCpuState();
-  this.resetMemoryState();
-  this.resetStackState();
-};
-
-Snapshooter.prototype.restoreCpuState = function () {
+  try {
+    this.restoreCpuState();
+    this.restoreMemoryState();
+    this.restoreStackState();
+  } catch(e) {
+    Logger.error('Cannot restore the state: (' + e + ');');
+  }
 };
 
 Snapshooter.prototype.saveCpuState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    item.cpuState = Cpu.packState(self.cpu);
+  });
 };
 
-Snapshooter.prototype.resetCpuState = function () {
-};
-
-Snapshooter.prototype.restoreMemoryState = function () {
+Snapshooter.prototype.restoreCpuState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    Cpu.unpackState(self.cpu, item.cpuState);
+  });
 };
 
 Snapshooter.prototype.saveMemoryState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    item.memoryState = Cpu.packState(self.memory);
+  });
 };
 
-Snapshooter.prototype.resetMemoryState = function () {
-};
-
-Snapshooter.prototype.restoreStackState = function () {
+Snapshooter.prototype.restoreMemoryState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    Cpu.unpackState(self.memory, item.memoryState);
+  });
 };
 
 Snapshooter.prototype.saveStackState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    item.stackState = Cpu.packState(self.stack);
+  });
 };
 
-Snapshooter.prototype.resetStackState = function () {
+Snapshooter.prototype.restoreStackState = function () {
+  var self = this;
+  this.withStorageItem(function (item) {
+    Cpu.unpackState(self.stack, item.stackState);
+  });
+};
+
+Snapshooter.prototype.withStorageItem = function (fn) {
+  if (fn) {
+    var item = Storage.getItem('snapshooter');
+    fn(item);
+    Storage.setItem('snapshooter', item);
+  }
 };

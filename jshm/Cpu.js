@@ -278,6 +278,14 @@ Cpu.packState = function (cpu) {
   };
 };
 
+Cpu.unpackState = function (cpu, state) {
+  cpu.pc = state.pc;
+  cpu.ac = state.ac;
+  cpu.flags = state.flags;
+  cpu.sleeping = state.sleeping;
+  cpu.powered = state.powered;
+};
+
 Cpu.EVENT = {
   ON_SLEEP: 0x00,
   ON_AWAKE: 0x01,
