@@ -28,21 +28,21 @@ function Memory(size) {
 
   this.size = function () {
     return this.data.length;
-  }
+  };
 
   this.read = function (address) {
     return (this.data[address] & this.mask);
-  }
+  };
 
   this.write = function (address, data) {
     if (address < this.size()) {
       this.data[address] = (data & this.mask);
     }
-  }
+  };
 
   this.erase = function () {
     for (var i = 0; i < this.size(); i++) {
       this.data[i] = 0;
     }
-  }
+  };
 }

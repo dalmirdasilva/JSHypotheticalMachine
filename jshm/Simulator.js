@@ -28,7 +28,7 @@ var Simulator = function () {
   this.nextFreeChannel = 0;
 };
 
-Simulator.prototype.broadcastMessageHandler = function (message) {
+Simulator.prototype.handleBroadcastMessage = function (message) {
   this.notifyEvent(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, message);
 };
 
@@ -42,7 +42,7 @@ Simulator.prototype.simulate = function (path) {
         self.processExceptionReport(message);
       }
       if (message.isBroadcast()) {
-        self.broadcastMessageHandler(message);
+        self.handleBroadcastMessage(message);
       } else {
         var handler = self.messageHandlerQueue.shift();
         if (handler && (typeof handler === 'function')) {
@@ -90,7 +90,8 @@ Simulator.prototype.getNextFreeChannel = function () {
 };
 
 Simulator.prototype.processExceptionReport = function (message) {
-  Logger.error('Exception reported: ' + message.getPayload());
+  var error = message.getPayload();
+  Logger.error('Exception reported. Message: ' + error.message + ', stack: ' + error.stack);
 };
 
 Simulator.EVENT = {

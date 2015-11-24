@@ -32,12 +32,12 @@ var StackView = {
       self.repaint();
     });
     UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
-    var baseListener = {
+    var radixListener = {
       notify: function () {
         self.repaint(true);
       }
     };
-    Converter.addEventListener(Converter.EVENT.ON_BASE_CHANGE, baseListener);
+    Converter.addEventListener(Converter.EVENT.ON_RADIX_CHANGE, radixListener);
   },
 
   repaint: function (force) {
@@ -52,22 +52,22 @@ var StackView = {
     });
   },
 
-  updateTopOfStack: function (topOfStack, force) {
-    if (force || topOfStack != this.lastTos) {
-      this.lastTos = topOfStack;
-      $('.stack-cell-current', this.ELEMENT.stackHolder).removeClass('stack-cell-current');
-      $('#stack-reg-' + topOfStack, this.ELEMENT.stackHolder).addClass('stack-cell-current');
+  updateTopOfStack: function (tos, force) {
+    if (force || tos != this.lastTos) {
+      this.lastTos = tos;
+      this.ELEMENT.currentCell().removeClass('stack-cell-current');
+      this.ELEMENT.topOfStack(tos).addClass('stack-cell-current');
     }
   },
 
   updateStackValues: function (arrayBuffer, force) {
-    var array = new Uint8Array(arrayBuffer);
+    var array = new Uint8Array(arrayBuffer).reverse();
     for (var i = 0; i < array.length; i++) {
       var byte = array[i];
       if (force || byte != this.cache[i]) {
         this.cache[i] = byte;
         var text = Converter.toString(byte);
-        $('#stack-reg-' + i, this.ELEMENT.stackHolder).text(text);
+        this.ELEMENT.topOfStack(i).text(text);
       }
     }
   },
@@ -107,6 +107,12 @@ var StackView = {
     stackGridTr: $('<tr></tr>'),
     stackGridTd: $('<td></td>'),
     stackBody: $('#stack-body'),
-    stackHolder: $('#stack-holder')
+    stackHolder: $('#stack-holder'),
+    topOfStack: function (tos) {
+      return $('#stack-reg-' + tos, this.stackHolder);
+    },
+    currentCell: function () {
+      return $('.stack-cell-current', this.stackHolder);
+    }
   }
 };

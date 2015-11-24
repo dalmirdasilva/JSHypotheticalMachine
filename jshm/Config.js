@@ -22,7 +22,7 @@
  */
 var Config = {
   SIMULATOR_OSC_MAX_FREQUENCY: 150,
-  SIMULATOR_OSC_INITIAL_FREQUENCY: 50,
+  SIMULATOR_OSC_INITIAL_FREQUENCY: 30,
   SIMULATOR_CPU_PRESCALLER: 1,
   SIMULATOR_MEMORY_SIZE: 256,
   SIMULATOR_MEMORY_ADDRESS_MASK: 0xff,
@@ -31,5 +31,18 @@ var Config = {
   UI_REFRESH_FREQUENCY: 15,
   INTERRUPT_VECTOR: 4,
   MACHINE_FILE: 'jshm/Machine.js',
-  SEND_LOG: false
+  DEVICES : {
+    NOKIA_5110: {
+      MAP_ADDRESS: {
+        FIRST: 0xeb,
+        LAST: 0xec
+      }
+    },
+    SEVEN_SEGMENTS: {
+      MAP_ADDRESS: {
+        FIRST: 0xeb,
+        LAST: 0xed
+      }
+    }
+  }
 };

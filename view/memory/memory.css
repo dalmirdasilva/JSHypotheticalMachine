@@ -19,7 +19,7 @@
 
 #memory-holder {
   left: 510px;
-  top: 259px;
+  top: 247px;
 }
 
 #memory-title {
@@ -78,5 +78,6 @@
 }
 
 .memory-cell-current {
-  background-color: #eeb949;
+  background-color: #ffe7bf;
+  border-bottom: 1px solid #bba98c;
 }

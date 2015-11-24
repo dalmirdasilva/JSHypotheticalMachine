@@ -10,8 +10,8 @@ var Nokia5110View = {
     h: 240 + 1
   },
   mapAddress: {
-    first: 0xfb,
-    last: 0xfc
+    first: Config.DEVICES.NOKIA_5110.MAP_ADDRESS.FIRST,
+    last: Config.DEVICES.NOKIA_5110.MAP_ADDRESS.LAST
   },
   address: {
     y: 0,
@@ -44,8 +44,7 @@ var Nokia5110View = {
     for (var x = 0; x < this.dimension.w; x++) {
       for (var y = 0; y < this.dimension.h; y++) {
         var pixel = this.getPixel(x, y);
-        var style = (pixel != 0) ? '#116611' : '#dddddd';
-        this.ctx.fillStyle = style;
+        this.ctx.fillStyle = (pixel != 0) ? '#116611' : '#dddddd';
         this.ctx.fillRect(1 + x * 5, 1 + y * 5, 4, 4);
       }
     }
@@ -84,14 +83,17 @@ var Nokia5110View = {
 
   initComponents: function () {
     var self = this;
-    this.ELEMENT.nokia5110PowerButton.button().click(function () {
-      self.powered = !self.powered;
+    this.ELEMENT.nokia5110PowerButton.button({
+      icons: {
+        primary: "ui-icon-power"
+      }
+    }).click(function () {
+     self.powered = !self.powered;
       if (self.powered) {
         self.powerOn();
       } else {
         self.powerOff();
       }
-      self.clearDisplay();
     });
     this.ELEMENT.nokia5110ClearButton.button().click(function () {
       self.clearDisplay();
@@ -104,6 +106,7 @@ var Nokia5110View = {
   },
 
   powerOff: function () {
+    this.clearDisplay(true);
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     this.ctx.fillRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
     this.address.x = this.address.y = 0;
@@ -111,6 +114,7 @@ var Nokia5110View = {
 
   powerOn: function () {
     this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+    this.clearDisplay();
   },
 
   executeFunctionSet: function (db) {

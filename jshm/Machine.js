@@ -34,7 +34,7 @@ importScripts('Simulator.js');
 
 var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
 var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
-var stack = new Stack(Config.SIMULATOR_STACK_SIZE);
+var stack = new Stack(memory, 0xff, Config.SIMULATOR_STACK_SIZE);
 var decoder = new Decoder();
 var cpu = new Cpu();
 
@@ -165,7 +165,7 @@ function processRequest(request) {
     self.postMessage(response.toHash());
   } catch (e) {
     response.setType(Message.TYPE.EXCEPTION_REPORT);
-    response.setPayload(e.message);
+    response.setPayload({message: e.message, stack: e.stack});
     self.postMessage(response.toHash());
   }
 }

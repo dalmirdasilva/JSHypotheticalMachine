@@ -24,13 +24,6 @@ var OscillatorView = {
 
   cache: {frequency: Config.SIMULATOR_OSC_INITIAL_FREQUENCY, clocking: true},
 
-  ELEMENT: {
-    oscillatorSlider: $('#oscillator-slider'),
-    oscillatorSliderLabel: $('#oscillator-slider-label'),
-    oscillatorClockingButton: $('#oscillator-clocking-button'),
-    oscillatorClockOutButton: $('#oscillator-clock-out-button')
-  },
-
   init: function () {
     this.initComponents();
     this.updateOscillatorLabel(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
@@ -39,15 +32,15 @@ var OscillatorView = {
   setOscillatorFrequency: function (frequency) {
     var self = this;
     Simulator.getInstance().exchangeMessage(
-      new Message(Message.TYPE.SET_OSC_FREQUENCY, frequency),
-      function (message) {
-        if (message.getPayload() != frequency) {
-          self.ELEMENT.oscillatorSlider.slider({value: self.cache.frequency});
-        } else {
-          self.cache.frequency = frequency;
-          self.updateOscillatorLabel(frequency);
+        new Message(Message.TYPE.SET_OSC_FREQUENCY, frequency),
+        function (message) {
+          if (message.getPayload() != frequency) {
+            self.ELEMENT.oscillatorSlider.slider({value: self.cache.frequency});
+          } else {
+            self.cache.frequency = frequency;
+            self.updateOscillatorLabel(frequency);
+          }
         }
-      }
     );
   },
 
@@ -71,21 +64,28 @@ var OscillatorView = {
     this.ELEMENT.oscillatorClockOutButton.button().click(function () {
       if (!self.cache.clocking) {
         Simulator.getInstance().exchangeMessage(
-          new Message(Message.TYPE.SET_OSC_CLOCK, Oscillator.ACTION.CLOCKOUT_NOW),
-          function (message) {
-          }
+            new Message(Message.TYPE.SET_OSC_CLOCK, Oscillator.ACTION.CLOCKOUT_NOW),
+            function (message) {
+            }
         );
       }
     });
     this.ELEMENT.oscillatorClockingButton.button().click(function () {
       Simulator.getInstance().exchangeMessage(
-        new Message(Message.TYPE.SET_OSC_CLOCK, self.cache.clocking ? Oscillator.ACTION.STOP_CLOCKING : Oscillator.ACTION.RESUME_CLOCKING),
-        function (message) {
-          if (message.getPayload()) {
-            self.cache.clocking = !self.cache.clocking;
+          new Message(Message.TYPE.SET_OSC_CLOCK, self.cache.clocking ? Oscillator.ACTION.STOP_CLOCKING : Oscillator.ACTION.RESUME_CLOCKING),
+          function (message) {
+            if (message.getPayload()) {
+              self.cache.clocking = !self.cache.clocking;
+            }
           }
-        }
       );
     });
+  },
+
+  ELEMENT: {
+    oscillatorSlider: $('#oscillator-slider'),
+    oscillatorSliderLabel: $('#oscillator-slider-label'),
+    oscillatorClockingButton: $('#oscillator-clocking-button'),
+    oscillatorClockOutButton: $('#oscillator-clock-out-button')
   }
 };

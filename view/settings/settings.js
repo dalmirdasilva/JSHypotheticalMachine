@@ -24,28 +24,56 @@ var SettingsView = {
 
   init: function () {
     this.initComponents();
+    this.restoreRadix();
   },
 
   initComponents: function () {
     var self = this;
-    this.ELEMENT.resetPositionButton.button().click(function () {
-      self.resetPosition();
+    this.ELEMENT.resetSavedPositionButton.button().click(function () {
+      self.resetSavedPosition();
     });
-    this.ELEMENT.decimalRadixSelect.selectmenu({
-      select: function (item) {
-        var radix = $(item.target).val();
-        Converter.setRadix(parseInt(radix));
-      }
+    this.ELEMENT.settingsRadix.buttonset().change(function (item) {
+      var radix = parseInt($(item.target).attr('radix'));
+      Converter.setRadix(radix);
+      self.saveRadix(radix);
     });
   },
 
-  resetPosition: function () {
-    UI.applyCustomPosition(true);
+  resetSavedPosition: function () {
+    UI.resetSavedElementPosition();
+  },
+
+  getStorageItem: function () {
+    return Storage.getItem(FRAGMENTS.SettingsView.uuid);
+  },
+
+  setStorageItem: function (item) {
+    Storage.setItem(FRAGMENTS.SettingsView.uuid, item);
+  },
+
+  saveRadix: function (radix) {
+    var item = this.getStorageItem();
+    item.radix = radix;
+    this.setStorageItem(item);
+  },
+
+  restoreRadix: function () {
+    var item = this.getStorageItem();
+    if (item.radix) {
+      Converter.setRadix(item.radix);
+      this.ELEMENT.settingsRadixButton[item.radix].attr('checked', 'checked').button('refresh');
+    }
   },
 
   ELEMENT: {
-    resetPositionButton: $('#settings-reset-position-button'),
-    decimalRadixSelect: $('#settings-radix-select'),
+    resetSavedPositionButton: $('#settings-reset-saved-position-button'),
+    settingsRadix: $('#settings-radix'),
+    settingsRadixButton: {
+      2: $('#settings-radix-2'),
+      8: $('#settings-radix-8'),
+      10: $('#settings-radix-10'),
+      16: $('#settings-radix-16')
+    },
     settingsBody: $('#settings-body'),
     settingsHolder: $('#settings-holder')
   }

@@ -25,17 +25,17 @@ function Converter() {
   this.base = 10;
   this.availableRadixes = new Array(2, 8, 10, 16);
 
-  this.setRadix = function (base) {
+  this.setBase = function (base) {
     if (this.availableRadixes.indexOf(base) >= 0) {
       this.base = base;
     }
-  }
+  };
 
   this.toNumber = function (string) {
     return parseInt(string, this.base);
-  }
+  };
 
   this.toString = function (number) {
     return number.toString(this.base);
-  }
+  };
 }

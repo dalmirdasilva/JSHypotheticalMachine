@@ -46,6 +46,7 @@ var EditorView = {
       self.codeMirror.save();
       var code = self.ELEMENT.editorCodeArea.val();
       self.assembler = new Assembler();
+      self.ELEMENT.editorAssembledAreaDeletableEntry().remove();
       try {
         var data = self.assembler.assemble(code);
         self.showAssembledData(data);
@@ -83,7 +84,7 @@ var EditorView = {
   },
 
   restoreProgram: function () {
-    var uuid = UI.getFragmentUuid(this.ELEMENT.editorHolder);
+    var uuid = FragmentLauncher.getFragmentUuidFromChild(this.ELEMENT.editorHolder);
     var item = Storage.getItem(uuid);
     if (item.programText != null && item.programText != '') {
       this.ELEMENT.editorCodeArea.val(item.programText);
@@ -91,7 +92,7 @@ var EditorView = {
   },
 
   saveProgram: function () {
-    var uuid = UI.getFragmentUuid(this.ELEMENT.editorHolder);
+    var uuid = FragmentLauncher.getFragmentUuidFromChild(this.ELEMENT.editorHolder);
     this.codeMirror.save();
     var programText = this.ELEMENT.editorCodeArea.val();
     var item = Storage.getItem(uuid);
@@ -101,7 +102,7 @@ var EditorView = {
   },
 
   showAssembledData: function (data) {
-    $('.editor-assembled-area-deletable-entry').remove();
+    this.ELEMENT.editorAssembledAreaDeletableEntry().remove();
     this.ELEMENT.editorAssembledAreaEntry.hide();
     var mnemonicPositions = this.assembler.getMnemonicPositions();
     for (var i = 0; i < data.length; i++) {
@@ -124,6 +125,9 @@ var EditorView = {
   },
 
   ELEMENT: {
+    editorAssembledAreaDeletableEntry: function () {
+      return $('.editor-assembled-area-deletable-entry')
+    },
     editorHolder: $('#editor-holder'),
     editorAssembleButton: $('#editor-assemble-button'),
     editorLoadButton: $('#editor-load-button'),

@@ -8,12 +8,12 @@ function Stack(size) {
       throw "Stack underflow."
     }
     return this.stack.pop();
-  }
+  };
 
   this.push = function (data) {
     if (this.stack.length == this.size) {
       throw "Stack overflow."
     }
     return this.stack.push(data);
-  }
+  };
 } 
