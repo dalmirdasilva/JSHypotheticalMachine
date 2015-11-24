@@ -23,8 +23,8 @@
 var Converter = {
 
   radix: Config.UI_DEFAULT_RADIX,
-  availableRadixes: new Array(2, 8, 10, 16),
-  radixByteLength: new Array(8, 3, 3, 2),
+  availableRadixes: [2, 8, 10, 16],
+  radixByteLength: [8, 3, 3, 2],
   eventNotifier: new EventNotifier(),
 
   addEventListener: function (event, listener) {

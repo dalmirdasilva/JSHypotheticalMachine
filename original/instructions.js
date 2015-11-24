@@ -23,7 +23,7 @@
 
 function Nop() {
   this.exec = function (cpu) {
-  }
+  };
 }
 
 function Sta() {
@@ -31,7 +31,7 @@ function Sta() {
     var address = cpu.readMemory(cpu.nextPc());
     cpu.writeMemory(address, cpu.getAc());
     cpu.updateFlags();
-  }
+  };
 }
 
 function Lda() {
@@ -40,7 +40,7 @@ function Lda() {
     var value = cpu.readMemory(address);
     cpu.setAc(value);
     cpu.updateFlags();
-  }
+  };
 }
 
 function Add() {
@@ -50,7 +50,7 @@ function Add() {
     var ac = cpu.getAc();
     cpu.setAc(ac + value);
     cpu.updateFlags();
-  }
+  };
 }
 
 function Or() {
@@ -60,7 +60,7 @@ function Or() {
     var ac = cpu.getAc();
     cpu.setAc(ac | value);
     cpu.updateFlags();
-  }
+  };
 }
 
 function And() {
@@ -70,7 +70,7 @@ function And() {
     var ac = cpu.getAc();
     cpu.setAc(ac & value);
     cpu.updateFlags();
-  }
+  };
 }
 
 function Not() {
@@ -78,14 +78,14 @@ function Not() {
     var ac = cpu.getAc();
     cpu.setAc(~ac);
     cpu.updateFlags();
-  }
+  };
 }
 
 function Jmp() {
   this.exec = function (cpu) {
     var to = cpu.readMemory(cpu.nextPc());
     cpu.setPc(to);
-  }
+  };
 }
 
 function Jn() {
@@ -94,7 +94,7 @@ function Jn() {
     if (cpu.n) {
       cpu.setPc(to);
     }
-  }
+  };
 }
 
 function Jz() {
@@ -103,13 +103,13 @@ function Jz() {
     if (cpu.z) {
       cpu.setPc(to);
     }
-  }
+  };
 }
 
 function Hlt() {
   this.exec = function (cpu) {
     cpu.sleep();
-  }
+  };
 }
 
 function Call() {
@@ -117,11 +117,11 @@ function Call() {
     var address = cpu.readMemory(cpu.nextPc());
     cpu.pushStack(cpu.getPc());
     cpu.setPc(address);
-  }
+  };
 }
 
 function Ret() {
   this.exec = function (cpu) {
     cpu.setPc(cpu.popStack());
-  }
+  };
 }

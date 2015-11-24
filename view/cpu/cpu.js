@@ -85,7 +85,11 @@ var CpuView = {
         }
       );
     });
-    this.ELEMENT.cpuResetButton.button().click(function () {
+    this.ELEMENT.cpuResetButton.button({
+      icons: {
+        primary: "ui-icon-arrowrefresh-1-w"
+      }
+    }).click(function () {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.RESET_CPU),
         function (message) {
           if (!message.getPayload()) {

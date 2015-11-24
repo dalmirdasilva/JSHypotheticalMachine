@@ -18,8 +18,8 @@
  */
 
 #settings-holder {
-  left: 1011px;
-  top: 116px;
+  left: 9px;
+  top: 587px;
   min-width: 70px;
 }
 
@@ -35,6 +35,6 @@
   padding: 4px;
 }
 
-.ui-selectmenu-button {
-  min-width: 70px;
+#settings-reset-saved-position-button {
+  margin-left: -1px;
 }

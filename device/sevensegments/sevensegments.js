@@ -16,8 +16,8 @@ var SevenSegmentsView = {
   },
 
   updateMappingLabel: function () {
-    this.ELEMENT.sevensegmentsMapFirst.text(Converter.toString(this.mapAddress.first, 2));
-    this.ELEMENT.sevensegmentsMapLast.text(Converter.toString(this.mapAddress.last, 2));
+    this.ELEMENT.sevensegmentsMapFirst.text(Converter.toString(this.mapAddress.first, 2, 16));
+    this.ELEMENT.sevensegmentsMapLast.text(Converter.toString(this.mapAddress.last, 2, 16));
   },
 
   initLibrary: function () {

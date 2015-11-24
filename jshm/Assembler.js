@@ -71,7 +71,7 @@ Assembler.prototype.assembleLine = function (line) {
     this.assembleDefine(line);
     return;
   }
-  var chunks = line.split(" ");
+  var chunks = line.split(' ');
   for (var i = 0; i < chunks.length; i++) {
     this.assembleChunk(chunks[i]);
   }
@@ -100,22 +100,30 @@ Assembler.prototype.assembleChunk = function (chunk) {
 };
 
 Assembler.prototype.assembleDataDefinition = function (line) {
-  var parts = line.split(' ');
-  if (parts.length != 3) {
-    throw new Error('Wrong data definition: ' + line + ' (line: ' + this.currentLineNumber + ').');
+  var parts = line.split(' '), value;
+  if (parts.length < 3) {
+    throw new Error('Wrong data definition: ' + line + ' (line: ' + this.currentLineNumber + '). Not long enough.');
   }
-  for (var i = 1; i <= 2; i++) {
-    if (isNaN(parts[i])) {
-      parts[i] = this.tryGetFromDefine(parts[i]);
-      if (parts[i] == undefined) {
-        throw new Error('Wrong data definition: ' + line + ' (line: ' + this.currentLineNumber + ').');
-      }
+  var address = parts[1];
+  if (isNaN(address)) {
+    address = this.tryGetFromDefine(parts[1]);
+    if (address == undefined) {
+      throw new Error('Wrong data definition: ' + line + ' (line: ' + this.currentLineNumber + '). ' + parts[1] + ' is not an address.');
     }
   }
-  this.dataDefinition.push({
-    address: parseInt(parts[1]),
-    data: parseInt(parts[2])
-  });
+  for (var i = 2; i < parts.length; i++) {
+    value = parts[i];
+    if (isNaN(value)) {
+      value = this.tryGetFromDefine(value);
+      if (value == undefined) {
+        throw new Error('Wrong data definition: ' + line + ' (line: ' + this.currentLineNumber + '). ' + parts[i] + ' is not a value.');
+      }
+    }
+    this.dataDefinition.push({
+      address: parseInt(address++),
+      data: parseInt(value)
+    });
+  }
 };
 
 Assembler.prototype.assemblePositionDefinition = function (line) {
@@ -144,7 +152,6 @@ Assembler.prototype.replaceSymbols = function () {
       var symbolAddress = this.symbolTable[piece];
       if (symbolAddress == undefined) {
         throw new Error('Reference to undefined symbol: ' + piece + ' (line: ' + this.currentLineNumber + ').');
-        return;
       }
       assembledDataContent[i] = symbolAddress;
     }
@@ -161,9 +168,8 @@ Assembler.prototype.addNopInstructionOnGaps = function () {
 };
 
 Assembler.prototype.addSymbolToTable = function (symbol) {
-  var symbol = symbol.split(' ')[0];
-  var currentAddress = this.assembledData.content().length;
-  this.symbolTable[symbol] = currentAddress;
+  symbol = symbol.split(' ')[0];
+  this.symbolTable[symbol] = this.assembledData.content().length;
 };
 
 Assembler.prototype.addDataDefinition = function () {
@@ -205,8 +211,8 @@ Assembler.prototype.isTheLineEmpty = function (line) {
 Assembler.prototype.init = function () {
   this.assembledData = new SeekableArray();
   this.symbolTable = {};
-  this.dataDefinition = new Array();
-  this.defineTable = new Array();
+  this.dataDefinition = [];
+  this.defineTable = [];
   this.mnemonicPositions = [];
 };
 
@@ -248,7 +254,7 @@ Assembler.prototype.getOpcodeFromMnemonic = function (mnemonic) {
 
 Assembler.prototype.getInstructionHasParam = function (mnemonic) {
   for (var i in Instruction.nameMap) {
-    if (Instruction.nameMap[i] == mnemonic) {
+    if (Instruction.nameMap.hasOwnProperty(i) && Instruction.nameMap[i] == mnemonic) {
       return Instruction.hasParam[i];
     }
   }
