@@ -20,34 +20,25 @@
             Assembly
           </div>
           <div id="editor-code-area-holder">
-                            <textarea id="editor-code-area">
-.def INC 0xf0
-.def COUNT 0xfc
-.def ZERO 0xf2
+            <textarea id="editor-code-area">
+.def LCD_COMMAND_VALUE 0x01
+.def INC_VALUE 0x01
+.def DATA_START_VALUE 0x00
 
-.db COUNT 0x00
-.db INC 0x01
-.db ZERO 0x00
+.def INC_ADDRESS 0xef
+.def LCD_COMMAND_ADDRESS 0xeb
+.def DATA_ADDRESS  0xec
 
-jmp :beginning
-
-.at 4
-	lda ZERO
-  sta COUNT
-  reti
-
-:beginning
+.db INC_ADDRESS INC_VALUE
+.db DATA_ADDRESS DATA_START_VALUE
+.db LCD_COMMAND_ADDRESS LCD_COMMAND_VALUE
 
 :loop
-  lda COUNT
-  add INC
-  sta COUNT
-  jz :done
+  lda INC_ADDRESS
+  add DATA_ADDRESS
+  sta DATA_ADDRESS
   jmp :loop
-
-:done
-  hlt
-                            </textarea>
+              </textarea>
           </div>
         </td>
         <td valign="top">

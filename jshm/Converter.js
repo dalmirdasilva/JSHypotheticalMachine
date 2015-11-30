@@ -33,10 +33,10 @@ var Converter = {
 
   setRadix: function (radix) {
     if (radix != this.radix && this.isRadixAvailable(radix)) {
-      var _radix = this.radix;
+      var previousRadix = this.radix;
       this.radix = radix;
-      this.eventNotifier.notifyEvent(Converter.EVENT.ON_BASE_CHANGE, {
-        from: _radix,
+      this.eventNotifier.notifyEvent(Converter.EVENT.ON_RADIX_CHANGE, {
+        from: previousRadix,
         to: radix
       });
     }
@@ -69,5 +69,5 @@ var Converter = {
 };
 
 Converter.EVENT = {
-  ON_BASE_CHANGE: 0x00
+  ON_RADIX_CHANGE: 0x00
 };

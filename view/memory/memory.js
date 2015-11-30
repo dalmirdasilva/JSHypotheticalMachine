@@ -41,7 +41,7 @@ var MemoryView = {
         self.repaint(true);
       }
     };
-    Converter.addEventListener(Converter.EVENT.ON_BASE_CHANGE, baseListener);
+    Converter.addEventListener(Converter.EVENT.ON_RADIX_CHANGE, baseListener);
   },
 
   initComponents: function () {
