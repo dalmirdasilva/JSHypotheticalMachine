@@ -61,7 +61,7 @@ var StackView = {
   },
 
   updateStackValues: function (arrayBuffer, force) {
-    var array = new Uint8Array(arrayBuffer);
+    var array = new Uint8Array(arrayBuffer).reverse();
     for (var i = 0; i < array.length; i++) {
       var byte = array[i];
       if (force || byte != this.cache[i]) {

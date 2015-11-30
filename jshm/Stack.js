@@ -20,9 +20,9 @@
 /**
  * Stack class
  */
-var Stack = function (memory, address, size) {
+var Stack = function (memory, baseAddress, size) {
   this.memory = memory;
-  this.address = address;
+  this.baseAddress = baseAddress;
   this.tos = 0;
   this.size = size || Config.SIMULATOR_STACK_SIZE;
 };
@@ -32,14 +32,14 @@ Stack.prototype.pop = function () {
     throw new Error('Stack underflow.');
   }
   this.tos--;
-  return this.memory.buffer[this.address - this.tos];
+  return this.memory.buffer[this.baseAddress - this.tos];
 };
 
 Stack.prototype.push = function (b) {
   if (this.tos >= this.size) {
     throw new Error('Stack overflow.');
   }
-  this.memory.buffer[this.address - this.tos++] = b;
+  this.memory.buffer[this.baseAddress - this.tos++] = b;
 };
 
 Stack.prototype.getSize = function () {
@@ -51,7 +51,7 @@ Stack.prototype.getTop = function () {
 };
 
 Stack.prototype.getBuffer = function () {
-  return this.memory.buffer.slice(this.address - this.size, this.address);
+  return this.memory.buffer.slice(this.baseAddress - this.size + 1, this.baseAddress + 1);
 };
 
 Stack.prototype.erase = function () {
