@@ -124,7 +124,7 @@ var UI = {
       var uuid = FragmentLauncher.getFragmentUuidFromChild(this);
       var item = Storage.getItem(uuid);
       if (item.position != null) {
-        $(this).animate(item.position, 200);
+        $(this).css(item.position, 200);
       }
     });
   },

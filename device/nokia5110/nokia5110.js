@@ -88,8 +88,7 @@ var Nokia5110View = {
         primary: "ui-icon-power"
       }
     }).click(function () {
-      self.clearDisplay(true);
-      self.powered = !self.powered;
+     self.powered = !self.powered;
       if (self.powered) {
         self.powerOn();
       } else {
@@ -107,6 +106,7 @@ var Nokia5110View = {
   },
 
   powerOff: function () {
+    this.clearDisplay(true);
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     this.ctx.fillRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
     this.address.x = this.address.y = 0;
@@ -114,6 +114,7 @@ var Nokia5110View = {
 
   powerOn: function () {
     this.ctx.clearRect(0, 0, this.extrinsicDimension.w, this.extrinsicDimension.h);
+    this.clearDisplay();
   },
 
   executeFunctionSet: function (db) {

@@ -37,7 +37,8 @@ var CpuView = {
       self.repaint();
     });
     UI.addEventListener(UI.EVENT.ON_REPAINT, listener);
-    self.initComponents();
+    this.initComponents();
+    this.attachListeners();
   },
 
   repaint: function () {
@@ -75,62 +76,78 @@ var CpuView = {
 
   initComponents: function () {
     var self = this;
-    $(".cpu-button").buttonset();
     this.ELEMENT.cpuInterruptButton.button().click(function () {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.INTERRUPT_CPU),
-        function (message) {
-          if (!message.getPayload()) {
-            Logger.debug("Could not interrupt the CPU.");
+          function (message) {
+            if (!message.getPayload()) {
+              Logger.debug('Could not interrupt the CPU.');
+            }
           }
-        }
       );
     });
     this.ELEMENT.cpuResetButton.button({
       icons: {
-        primary: "ui-icon-arrowrefresh-1-w"
+        primary: 'ui-icon-arrowrefresh-1-w'
       }
     }).click(function () {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.RESET_CPU),
-        function (message) {
-          if (!message.getPayload()) {
-            Logger.debug("Could not reset the CPU.");
+          function (message) {
+            if (!message.getPayload()) {
+              Logger.debug('Could not reset the CPU.');
+            }
           }
-        }
       );
     });
     this.ELEMENT.cpuSleepButton.button().click(function () {
       Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.SET_CPU_SLEEP, !self.cache.sleeping),
-        function (message) {
-          if (message.getPayload()) {
-            self.cache.sleeping = !self.cache.sleeping;
+          function () {
           }
-        }
       );
     });
     this.ELEMENT.cpuPowerButton.button({
       icons: {
-        primary: "ui-icon-power"
+        primary: 'ui-icon-power'
       }
     }).click(function () {
       Simulator.getInstance().exchangeMessage(
-        new Message(Message.TYPE.SET_CPU_POWER, !self.cache.powered),
-        function (message) {
-          if (message.getType() == Message.TYPE.SET_CPU_POWER) {
-            self.cache.powered = !self.cache.powered;
+          new Message(Message.TYPE.SET_CPU_POWER, !self.cache.powered),
+          function (message) {
+            if (message.getType() == Message.TYPE.SET_CPU_POWER) {
+              self.cache.powered = !self.cache.powered;
+            }
           }
-        }
       );
     });
   },
 
+  attachListeners: function () {
+    var self = this;
+    var simulator = Simulator.getInstance();
+    var channel = simulator.getNextFreeChannel();
+    var listener = new SimulatorEventListener(function (message) {
+      if (message.getChannel() == channel && message.getType() == Message.TYPE.CPU_EVENT_NOTIFICATION) {
+        var payload = message.getPayload();
+        self.cache.sleeping = payload.sleeping;
+        self.ELEMENT.cpuSleepButton.prop('checked', payload.sleeping).button('refresh');
+      }
+    });
+    simulator.addEventListener(Simulator.EVENT.BROADCAST_MESSAGE_RECEIVED, listener);
+    var requestMessage = new Message(Message.TYPE.ADD_CPU_EVENT_LISTENER, {event: Cpu.EVENT.ON_SLEEP}, channel);
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
+    requestMessage.setPayload({event: Cpu.EVENT.ON_AWAKE});
+    simulator.exchangeMessage(requestMessage, function (message) {
+    });
+  },
+
   ELEMENT: {
-    zBox: $("#z-box"),
-    nBox: $("#n-box"),
-    pcBox: $("#pc-box"),
-    acBox: $("#ac-box"),
-    cpuInterruptButton: $("#cpu-interrupt-button"),
-    cpuResetButton: $("#cpu-reset-button"),
-    cpuSleepButton: $("#cpu-sleep-button"),
-    cpuPowerButton: $("#cpu-power-button")
+    zBox: $('#z-box'),
+    nBox: $('#n-box'),
+    pcBox: $('#pc-box'),
+    acBox: $('#ac-box'),
+    cpuInterruptButton: $('#cpu-interrupt-button'),
+    cpuResetButton: $('#cpu-reset-button'),
+    cpuSleepButton: $('#cpu-sleep-button'),
+    cpuPowerButton: $('#cpu-power-button')
   }
 };
