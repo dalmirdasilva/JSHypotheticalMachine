@@ -51,7 +51,7 @@ Stack.prototype.getTop = function () {
 };
 
 Stack.prototype.getBuffer = function () {
-  return this.memory.buffer.slice(this.address - this.tos, this.address);
+  return this.memory.buffer.slice(this.address - this.size, this.address);
 };
 
 Stack.prototype.erase = function () {

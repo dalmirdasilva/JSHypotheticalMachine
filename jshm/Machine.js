@@ -165,7 +165,7 @@ function processRequest(request) {
     self.postMessage(response.toHash());
   } catch (e) {
     response.setType(Message.TYPE.EXCEPTION_REPORT);
-    response.setPayload(e.message);
+    response.setPayload({message: e.message, stack: e.stack});
     self.postMessage(response.toHash());
   }
 }

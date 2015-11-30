@@ -90,7 +90,8 @@ Simulator.prototype.getNextFreeChannel = function () {
 };
 
 Simulator.prototype.processExceptionReport = function (message) {
-  Logger.error('Exception reported: ' + message.getPayload());
+  var error = message.getPayload();
+  Logger.error('Exception reported. Message: ' + error.message + ', stack: ' + error.stack);
 };
 
 Simulator.EVENT = {

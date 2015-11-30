@@ -31,5 +31,18 @@ var Config = {
   UI_REFRESH_FREQUENCY: 15,
   INTERRUPT_VECTOR: 4,
   MACHINE_FILE: 'jshm/Machine.js',
-  SEND_LOG: false
+  DEVICES : {
+    NOKIA_5110: {
+      MAP_ADDRESS: {
+        FIRST: 0xeb,
+        LAST: 0xec
+      }
+    },
+    SEVEN_SEGMENTS: {
+      MAP_ADDRESS: {
+        FIRST: 0xeb,
+        LAST: 0xed
+      }
+    }
+  }
 };

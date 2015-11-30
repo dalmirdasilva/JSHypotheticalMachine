@@ -10,8 +10,8 @@ var Nokia5110View = {
     h: 240 + 1
   },
   mapAddress: {
-    first: 0xfb,
-    last: 0xfc
+    first: Config.DEVICES.NOKIA_5110.MAP_ADDRESS.FIRST,
+    last: Config.DEVICES.NOKIA_5110.MAP_ADDRESS.LAST
   },
   address: {
     y: 0,

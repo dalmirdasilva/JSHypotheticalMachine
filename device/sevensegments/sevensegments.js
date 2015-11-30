@@ -3,8 +3,8 @@ var SevenSegmentsView = {
   powered: true,
   display: null,
   mapAddress: {
-    first: 0xfb,
-    last: 0xfd
+    first: Config.DEVICES.SEVEN_SEGMENTS.MAP_ADDRESS.FIRST,
+    last: Config.DEVICES.SEVEN_SEGMENTS.MAP_ADDRESS.LAST
   },
 
   init: function () {
