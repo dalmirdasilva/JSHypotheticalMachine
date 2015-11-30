@@ -20,10 +20,11 @@
 /**
  * Stack class
  */
-var Stack = function (size) {
-  this.size = size || Config.SIMULATOR_STACK_SIZE;
-  this.buffer = new Uint8Array(size);
+var Stack = function (memory, address, size) {
+  this.memory = memory;
+  this.address = address;
   this.tos = 0;
+  this.size = size || Config.SIMULATOR_STACK_SIZE;
 };
 
 Stack.prototype.pop = function () {
@@ -31,32 +32,14 @@ Stack.prototype.pop = function () {
     throw new Error('Stack underflow.');
   }
   this.tos--;
-  var top = this.buffer[this.tos];
-  this.buffer[this.tos] = 0x00;
-  return top;
+  return this.memory.buffer[this.address - this.tos];
 };
 
 Stack.prototype.push = function (b) {
   if (this.tos >= this.size) {
     throw new Error('Stack overflow.');
   }
-  this.buffer[this.tos++] = b;
-};
-
-Stack.prototype.erase = function () {
-  this.buffer.set(new Uint8Array(this.size), 0);
-  this.tos = 0;
-};
-
-Stack.prototype.read = function (address) {
-  return this.buffer[address];
-};
-
-Stack.prototype.peek = function () {
-  if (this.tos > 0) {
-    return this.buffer[this.tos - 1];
-  }
-  return 0;
+  this.memory.buffer[this.address - this.tos++] = b;
 };
 
 Stack.prototype.getSize = function () {
@@ -68,9 +51,10 @@ Stack.prototype.getTop = function () {
 };
 
 Stack.prototype.getBuffer = function () {
-  return this.buffer;
+  return this.memory.buffer.slice(this.address - this.tos, this.address);
 };
 
-Stack.prototype.setBuffer = function (buffer) {
-  this.buffer.set(new Uint8Array(buffer), 0);
+Stack.prototype.erase = function () {
+  this.getBuffer().set(new Uint8Array(this.size), 0);
+  this.tos = 0;
 };

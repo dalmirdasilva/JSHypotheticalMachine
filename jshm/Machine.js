@@ -34,7 +34,7 @@ importScripts('Simulator.js');
 
 var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
 var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
-var stack = new Stack(Config.SIMULATOR_STACK_SIZE);
+var stack = new Stack(memory, 0xff, Config.SIMULATOR_STACK_SIZE);
 var decoder = new Decoder();
 var cpu = new Cpu();
 
