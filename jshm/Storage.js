@@ -29,11 +29,14 @@ var Storage = {
   },
 
   getItem: function (key) {
+    console.log('getItem')
     return this.withLocalStorage(function (storage) {
       var item = storage.getItem(key);
       if (item == null) {
+        console.log('aqui')
         return {};
       }
+      console.log('aqui mesmo')
       return JSON.parse(item);
     });
   },
@@ -72,8 +75,10 @@ var Storage = {
 
   withLocalStorage: function (fn) {
     if (this.hasSupport()) {
+
       return fn(window.localStorage);
     }
+    console.log('return null')
     return null;
   }
 };

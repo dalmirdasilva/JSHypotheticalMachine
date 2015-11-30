@@ -19,6 +19,7 @@
 
 importScripts('Config.js');
 importScripts('Logger.js');
+importScripts('Storage.js');
 importScripts('EventNotifier.js');
 importScripts('OscillatorEventListener.js');
 importScripts('Oscillator.js');
@@ -31,17 +32,18 @@ importScripts('MemoryEventListener.js');
 importScripts('CpuEventListener.js');
 importScripts('Message.js');
 importScripts('Simulator.js');
+importScripts('Snapshooter.js');
 
 var oscillator = new Oscillator(Config.SIMULATOR_OSC_INITIAL_FREQUENCY);
 var memory = new Memory(Config.SIMULATOR_MEMORY_SIZE);
 var stack = new Stack(memory, 0xff, Config.SIMULATOR_STACK_SIZE);
 var decoder = new Decoder();
 var cpu = new Cpu();
-
 cpu.setOscillator(oscillator);
 cpu.setMemory(memory);
 cpu.setStack(stack);
 cpu.setDecoder(decoder);
+var snapshooter = new Snapshooter(cpu, memory, stack);
 
 function processRequest(request) {
   var response = new Message(request.getType(), true);
@@ -160,6 +162,18 @@ function processRequest(request) {
 
       case Message.TYPE.ERASE_MEMORY:
         memory.erase();
+        break;
+
+      case Message.TYPE.CREATE_SNAPSHOT:
+        snapshooter.saveState();
+        break;
+
+      case Message.TYPE.RESTORE_SNAPSHOT:
+        snapshooter.restoreState();
+        break;
+
+      case Message.TYPE.DISCARD_SNAPSHOT:
+        snapshooter.discardState();
         break;
     }
     self.postMessage(response.toHash());

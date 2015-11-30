@@ -46,6 +46,16 @@ Snapshooter.prototype.restoreState = function () {
   }
 };
 
+Snapshooter.prototype.discardState = function () {
+  try {
+    this.discardCpuState();
+    this.discardMemoryState();
+    this.discardStackState();
+  } catch(e) {
+    Logger.error('Cannot discard the state: (' + e + ');');
+  }
+};
+
 Snapshooter.prototype.saveCpuState = function () {
   var self = this;
   this.withStorageItem(function (item) {
@@ -56,41 +66,66 @@ Snapshooter.prototype.saveCpuState = function () {
 Snapshooter.prototype.restoreCpuState = function () {
   var self = this;
   this.withStorageItem(function (item) {
-    Cpu.unpackState(self.cpu, item.cpuState);
+    if (item.hasOwnProperty('cpuState')) {
+      Cpu.unpackState(self.cpu, item.cpuState);
+    }
+  });
+};
+
+Snapshooter.prototype.discardCpuState = function () {
+  this.withStorageItem(function (item) {
+    delete item.cpuState;
   });
 };
 
 Snapshooter.prototype.saveMemoryState = function () {
   var self = this;
   this.withStorageItem(function (item) {
-    item.memoryState = Cpu.packState(self.memory);
+    item.memoryState = self.memory.getBuffer();
   });
 };
 
 Snapshooter.prototype.restoreMemoryState = function () {
   var self = this;
   this.withStorageItem(function (item) {
-    Cpu.unpackState(self.memory, item.memoryState);
+    if (item.hasOwnProperty('memoryState')) {
+      self.memory.setBuffer(item.memoryState);
+    }
+  });
+};
+
+Snapshooter.prototype.discardMemoryState = function () {
+  this.withStorageItem(function (item) {
+    delete item.memoryState;
   });
 };
 
 Snapshooter.prototype.saveStackState = function () {
   var self = this;
   this.withStorageItem(function (item) {
-    item.stackState = Cpu.packState(self.stack);
+    item.stackState = self.stack.getBuffer();
   });
 };
 
 Snapshooter.prototype.restoreStackState = function () {
   var self = this;
   this.withStorageItem(function (item) {
-    Cpu.unpackState(self.stack, item.stackState);
+    if (item.hasOwnProperty('stackState')) {
+      self.stack.setBuffer(item.stackState);
+    }
+  });
+};
+
+Snapshooter.prototype.discardStackState = function () {
+  this.withStorageItem(function (item) {
+    delete item.stackState;
   });
 };
 
 Snapshooter.prototype.withStorageItem = function (fn) {
   if (fn) {
     var item = Storage.getItem('snapshooter');
+    console.log(item)
     fn(item);
     Storage.setItem('snapshooter', item);
   }

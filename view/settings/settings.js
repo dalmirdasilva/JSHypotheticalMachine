@@ -29,13 +29,27 @@ var SettingsView = {
 
   initComponents: function () {
     var self = this;
+    var simulator = Simulator.getInstance();
     this.ELEMENT.resetSavedPositionButton.button().click(function () {
       self.resetSavedPosition();
     });
-    this.ELEMENT.settingsRadix.buttonset().change(function (item) {
+    this.ELEMENT.radixButtonSet.buttonset().change(function (item) {
       var radix = parseInt($(item.target).attr('radix'));
       Converter.setRadix(radix);
       self.saveRadix(radix);
+    });
+    this.ELEMENT.snapshotButtonSet.buttonset();
+    this.ELEMENT.createSnapshotButton.click(function () {
+      simulator.exchangeMessage(new Message(Message.TYPE.CREATE_SNAPSHOT), function () {
+      });
+    });
+    this.ELEMENT.restoreSnapshotButton.click(function () {
+      simulator.exchangeMessage(new Message(Message.TYPE.RESTORE_SNAPSHOT), function () {
+      });
+    });
+    this.ELEMENT.discardSnapshotButton.click(function () {
+      simulator.exchangeMessage(new Message(Message.TYPE.DISCARD_SNAPSHOT), function () {
+      });
     });
   },
 
@@ -61,19 +75,23 @@ var SettingsView = {
     var item = this.getStorageItem();
     if (item.radix) {
       Converter.setRadix(item.radix);
-      this.ELEMENT.settingsRadixButton[item.radix].attr('checked', 'checked').button('refresh');
+      this.ELEMENT.radixButton[item.radix].attr('checked', 'checked').button('refresh');
     }
   },
 
   ELEMENT: {
     resetSavedPositionButton: $('#settings-reset-saved-position-button'),
-    settingsRadix: $('#settings-radix'),
-    settingsRadixButton: {
+    radixButtonSet: $('#settings-radix-button-set'),
+    radixButton: {
       2: $('#settings-radix-2'),
       8: $('#settings-radix-8'),
       10: $('#settings-radix-10'),
       16: $('#settings-radix-16')
     },
+    snapshotButtonSet: $('#settings-snapshot-button-set'),
+    createSnapshotButton: $('#settings-create-snapshot-button'),
+    restoreSnapshotButton: $('#settings-restore-snapshot-button'),
+    discardSnapshotButton: $('#settings-discard-snapshot-button'),
     settingsBody: $('#settings-body'),
     settingsHolder: $('#settings-holder')
   }
