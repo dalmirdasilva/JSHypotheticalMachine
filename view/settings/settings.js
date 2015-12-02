@@ -22,6 +22,8 @@
  */
 var SettingsView = {
 
+  snapshooter: new Snapshooter(Simulator.getInstance()),
+
   init: function () {
     this.initComponents();
     this.restoreRadix();
@@ -29,7 +31,6 @@ var SettingsView = {
 
   initComponents: function () {
     var self = this;
-    var simulator = Simulator.getInstance();
     this.ELEMENT.resetSavedPositionButton.button().click(function () {
       self.resetSavedPosition();
     });
@@ -40,16 +41,13 @@ var SettingsView = {
     });
     this.ELEMENT.snapshotButtonSet.buttonset();
     this.ELEMENT.createSnapshotButton.click(function () {
-      simulator.exchangeMessage(new Message(Message.TYPE.CREATE_SNAPSHOT), function () {
-      });
+      self.snapshooter.saveState();
     });
     this.ELEMENT.restoreSnapshotButton.click(function () {
-      simulator.exchangeMessage(new Message(Message.TYPE.RESTORE_SNAPSHOT), function () {
-      });
+      self.snapshooter.restoreState();
     });
     this.ELEMENT.discardSnapshotButton.click(function () {
-      simulator.exchangeMessage(new Message(Message.TYPE.DISCARD_SNAPSHOT), function () {
-      });
+      self.snapshooter.discardState();
     });
   },
 

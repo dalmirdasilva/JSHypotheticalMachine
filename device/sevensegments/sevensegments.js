@@ -20,9 +20,6 @@ var SevenSegmentsView = {
     this.ELEMENT.sevensegmentsMapLast.text(Converter.toString(this.mapAddress.last, 2, 16));
   },
 
-  initLibrary: function () {
-  },
-
   initComponents: function () {
     var self = this;
     this.ELEMENT.sevensegmentsPowerButton.button().click(function () {

@@ -20,17 +20,15 @@
 /**
  * Snapshooter object
  */
-var Snapshooter = function (cpu, memory, stack) {
-  this.cpu = cpu;
-  this.memory = memory;
-  this.stack = stack;
+var Snapshooter = function (simulator) {
+  this.simulator = simulator;
 };
 
 Snapshooter.prototype.saveState = function () {
   try {
     this.saveCpuState();
-    this.saveMemoryState();
-    this.saveStackState();
+    //this.saveMemoryState();
+   // this.saveStackState();
   } catch(e) {
     Logger.error('Cannot save the state: (' + e + ');');
   }
@@ -39,8 +37,8 @@ Snapshooter.prototype.saveState = function () {
 Snapshooter.prototype.restoreState = function () {
   try {
     this.restoreCpuState();
-    this.restoreMemoryState();
-    this.restoreStackState();
+   // this.restoreMemoryState();
+    //this.restoreStackState();
   } catch(e) {
     Logger.error('Cannot restore the state: (' + e + ');');
   }
@@ -58,8 +56,11 @@ Snapshooter.prototype.discardState = function () {
 
 Snapshooter.prototype.saveCpuState = function () {
   var self = this;
-  this.withStorageItem(function (item) {
-    item.cpuState = Cpu.packState(self.cpu);
+  this.simulator.exchangeMessage(new Message(Message.TYPE.GET_CPU_INFORMATION), function (message) {
+    var cpuState = message.getPayload();
+    self.withStorageItem(function (item) {
+      item.cpuState = cpuState;
+    });
   });
 };
 
@@ -67,7 +68,8 @@ Snapshooter.prototype.restoreCpuState = function () {
   var self = this;
   this.withStorageItem(function (item) {
     if (item.hasOwnProperty('cpuState')) {
-      Cpu.unpackState(self.cpu, item.cpuState);
+      self.simulator.exchangeMessage(new Message(Message.TYPE.SET_CPU_INFORMATION, item.cpuState), function () {
+      });
     }
   });
 };
@@ -80,8 +82,12 @@ Snapshooter.prototype.discardCpuState = function () {
 
 Snapshooter.prototype.saveMemoryState = function () {
   var self = this;
-  this.withStorageItem(function (item) {
-    item.memoryState = self.memory.getBuffer();
+
+  this.simulator.exchangeMessage(new Message(Message.TYPE.GET_CPU_INFORMATION), function (message) {
+    var memoryState = message.getPayload();
+    self.withStorageItem(function (item) {
+      item.memoryState = memoryState;
+    });
   });
 };
 
