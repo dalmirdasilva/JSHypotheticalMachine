@@ -72,9 +72,9 @@ var MemoryView = {
 
   repaint: function (force) {
     var self = this;
-    Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_CPU_PC), function (message) {
-      var pc = message.getPayload();
-      self.updateCurrentPosition(pc);
+    Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_CPU_INFORMATION), function (message) {
+      var cpu = message.getPayload();
+      self.updateCurrentPosition(cpu.pc);
     });
     Simulator.getInstance().exchangeMessage(new Message(Message.TYPE.GET_MEMORY_BUFFER), function (message) {
       var arrayBuffer = message.getPayload();

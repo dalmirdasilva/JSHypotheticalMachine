@@ -8,7 +8,6 @@ var SevenSegmentsView = {
   },
 
   init: function () {
-    this.initLibrary();
     this.initComponents();
     this.attachListener();
     this.updateMappingLabel();

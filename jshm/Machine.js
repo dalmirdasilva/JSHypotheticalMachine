@@ -48,16 +48,8 @@ function processRequest(request) {
   try {
     switch (request.getType()) {
 
-      case Message.TYPE.GET_SERIALIZED_CPU:
-        response.setPayload(JSON.stringify(cpu));
-        break;
-
       case Message.TYPE.RESET_CPU:
         cpu.reset();
-        break;
-
-      case Message.TYPE.GET_CPU_PC:
-        response.setPayload(cpu.getPc());
         break;
 
       case Message.TYPE.GET_CPU_INFORMATION:
