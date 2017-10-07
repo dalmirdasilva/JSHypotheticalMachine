@@ -1,0 +1,367 @@
+{
+  "Description": "Template to Provision Resource Dependencies and Launch app on AWS Elastic Beanstalk.",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "Stack": {
+      "Type": "String",
+      "Description": "Stack identifier",
+      "AllowedPattern": "dev|staging|prod",
+      "ConstraintDescription": "Must be one of the following: dev | staging | prod"
+    }
+  },
+  "Mappings": {
+    "Global": {
+      "Constants": {
+        "ApplicationName": "jshm",
+        "ProjectTag": "dalmirdasilva",
+        "ApplicationTag": "jshm",
+        "DatabaseName": "jshmdb",
+      }
+    },
+    "StackMap": {
+      "dev": {
+        "a" : ""
+      },
+      "staging": {
+        "a" : ""
+      },
+      "prod": {
+        "a" : ""
+      }
+    }
+  },
+  "Resources": {
+    "Application": {
+      "Type" : "AWS::ElasticBeanstalk::Application",
+      "Properties" : {
+        "ApplicationName" : {
+          "Fn::FindInMap": [
+            "Global",
+            "Constants",
+            "ApplicationName"
+          ]
+        },
+        "Description" : "Application Name"
+      }
+    },
+    "InstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            } 
+          ]
+        },
+        "Path": "/",
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
+        ],
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  {
+                    "Fn::FindInMap": [
+                      "Global",
+                      "Constants",
+                      "ApplicationName"
+                    ]
+                  }, {
+                    "Ref": "AWS::StackName"
+                  },
+                  "police"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ssm:GetParameters",
+                    "ssm:GetParameter",
+                    "ssm:GetParametersByPath",
+                    "ssm:DescribeParameters"
+                  ],
+                  "Resource": {
+                    "Fn::Join": [
+                      ":", [
+                        "arn:aws:ssm",
+                        {
+                          "Ref": "AWS::Region"
+                        }, {
+                          "Ref": "AWS::AccountId"
+                        },{
+                          "Fn::FindInMap": [
+                            "Global",
+                            "Constants",
+                            "ApplicationName"
+                          ]
+                        }, {
+                          "Ref": "AWS::StackName"
+                        },
+                        "/*"
+                      ]
+                    ]
+                  }
+                }, {
+                  "Effect": "Allow",
+                  "Action": [
+                    "kms:Decrypt"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+        ]
+      }
+    },
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "InstanceRole"
+          }
+        ]
+      }
+    },
+    "LoadBalancerSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Load Balancer Security Group",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "FromPort": "80",
+            "ToPort": "80",
+            "IpProtocol": "tcp"
+          }, {
+            "CidrIp": "0.0.0.0/0",
+            "FromPort": "443",
+            "ToPort": "443",
+            "IpProtocol": "tcp"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          }, {
+            "Key": "Project",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ProjectTag"
+              ]
+            }
+          }, {
+            "Key": "Application",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ApplicationTag"
+              ]
+            }
+          }, {
+            "Key": "Stack",
+            "Value": {
+              "Ref": "Stack"
+            }
+          }
+        ]
+      }
+    },
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "EC2 Instance Security Group",
+        "SecurityGroupIngress": [
+          {
+            "FromPort": "80",
+            "ToPort": "80",
+            "SourceSecurityGroupName": {
+              "Ref": "LoadBalancerSecurityGroup"
+            },
+            "IpProtocol": "tcp"
+          }, {
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "SourceSecurityGroupName": {
+              "Ref": "LoadBalancerSecurityGroup"
+            },
+            "IpProtocol": "tcp"
+          }, {
+            "FromPort": "22",
+            "ToPort": "22",
+            "SourceSecurityGroupName": {
+              "Ref": "LoadBalancerSecurityGroup"
+            },
+            "IpProtocol": "tcp"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          }, {
+            "Key": "Project",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ProjectTag"
+              ]
+            }
+          }, {
+            "Key": "Application",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ApplicationTag"
+              ]
+            }
+          }, {
+            "Key": "Stack",
+            "Value": {
+              "Ref": "Stack"
+            }
+          }
+        ]
+      }
+    },
+    "ConfigurationTemplate": {
+      "Type": "AWS::ElasticBeanstalk::ConfigurationTemplate",
+      "Properties": {
+        "ApplicationName": {
+          "Fn::FindInMap": [
+            "Global",
+            "Constants",
+            "ApplicationName"
+          ]
+        },
+        "Description": "AWS ElasticBeanstalk Configuration Template",
+        "OptionSettings": [
+          {
+            "OptionName": "MaxSize",
+            "Namespace": "aws:autoscaling:asg",
+            "Value": "1"
+          }, {
+            "OptionName": "MinSize",
+            "Namespace": "aws:autoscaling:asg",
+            "Value": "1"
+          }, {
+            "OptionName": "InstanceType",
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "Value": "t2.micro"
+          }, {
+            "OptionName": "SecurityGroups",
+            "Namespace": "aws:elb:loadbalancer",
+            "Value": {
+              "Fn::GetAtt": [
+                "LoadBalancerSecurityGroup",
+                "GroupId"
+              ]
+            }
+          }, {
+            "OptionName": "IamInstanceProfile",
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "Value": {
+              "Ref": "InstanceProfile"
+            }
+          }, {
+            "OptionName": "SecurityGroups",
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "Value": {
+              "Ref": "InstanceSecurityGroup"
+            }
+          }, {
+            "OptionName": "AWS_REGION",
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "Value": {
+              "Ref": "AWS::Region"
+            }
+          }
+        ],
+        "SolutionStackName": "64bit Amazon Linux 2017.03 v2.7.5 running Multi-container Docker 17.03.2-ce (Generic)"
+      }
+    },
+    "Environment": {
+      "Type": "AWS::ElasticBeanstalk::Environment",
+      "DependsOn": [
+        "Application",
+        "InstanceSecurityGroup",
+        "ConfigurationTemplate"
+      ],
+      "Properties": {
+        "ApplicationName": {
+          "Fn::FindInMap": [
+            "Global",
+            "Constants",
+            "ApplicationName"
+          ]
+        },
+        "EnvironmentName": {
+          "Ref": "AWS::StackName"
+        },
+        "Description": "AWS ElasticBeanstalk Environment",
+        "TemplateName": {
+          "Ref": "ConfigurationTemplate"
+        },
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ProjectTag"
+              ]
+            }
+          }, {
+            "Key": "Application",
+            "Value": {
+              "Fn::FindInMap": [
+                "Global",
+                "Constants",
+                "ApplicationTag"
+              ]
+            }
+          }, {
+            "Key": "Stack",
+            "Value": {
+              "Ref": "Stack"
+            }
+          }
+        ],
+        "OptionSettings": []
+      }
+    }
+  },
+  "Outputs": {
+  }
+}
